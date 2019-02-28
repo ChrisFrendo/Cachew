@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 // set up express app
 const app = express();
-
+app.use(cors());
 // connect to mongodb
 mongoose.connect('mongodb://localhost/cachew');
 mongoose.Promise = global.Promise;

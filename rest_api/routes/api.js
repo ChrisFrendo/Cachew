@@ -13,8 +13,10 @@ router.get('/participant', function(req, res, next){
 
 //  add a new participants to the db
 router.post('/participant', function(req, res, next){
-  Participant.create(req.body).then(function(student){
-    res.send(student);
+  Participant.create(req.body).then(function(participant){
+    console.log("successfuly handled post request");
+    console.log(participant);
+    res.send(participant);
   }).catch(next);
 });
 
