@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // create participant Schema & model
 const ParticipantSchema = new Schema({
-  username:{
+username:{
   type:String,
   required:[true, 'Username field is required'],
   unique:true
@@ -11,6 +11,11 @@ const ParticipantSchema = new Schema({
 password:{
   type:String,
   required:[true, 'Password field is required']
+},
+usertype: {
+  type: String,
+  required: [true, 'UserType field is required'],
+  enum: ['participant', 'surveyor']
 },
 dob:{
   type:Date,
