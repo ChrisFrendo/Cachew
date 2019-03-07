@@ -14,8 +14,8 @@ const StudySchema = new Schema({
     default: Date.now(),
   },
   userId: {
-    type: Schema.ObjectId,
-    required: true
+    type: Schema.ObjectId
+    // required: true
   },
   questions: [{
     type: Schema.ObjectId,

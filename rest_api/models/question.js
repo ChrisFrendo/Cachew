@@ -7,11 +7,25 @@ const QuestionSchema = new Schema({
     type: String,
     required: true
   },
-  question_type: {
+  type: {
     type: String,
-    enum: ["scale", "freetext", "bool", "mult"],
+    enum: ["scale", "freetext", "boolean", "multiple"],
     required: true
   },
+  scale: {
+    min:{
+      type: Number
+    },
+    max: {
+      type: Number
+    }
+  },
+  boolean: {
+    type: Boolean
+  },
+  multiple: [{
+    type: String
+  }],
   content: {
     type: String,
     required: true,

@@ -8,15 +8,29 @@ const Study = require('../models/study');
 
 // get a list of participants from the db
 router.get('/participant', function(req, res, next){
-  res.send({type: 'GET'});
+  // Participant.findOne({username: req.query.username}).then(function(participants){
+  //   console.log(participants.password);
+  //   res.send(participants.password);
+  // }).catch(next);
+});
+
+router.get('/login', function(req, res, next){
+  console.log('here');
+  Participant.findOne({username: req.query.username, password: req.query.password}).then(function(participant){
+    console.log(participant);
+    if (participant !== null){
+      res.status(200);
+    } else {
+      res.status(400);
+    }
+  }).catch(next);
 });
 
 //  add a new participants to the db
 router.post('/participant', function(req, res, next){
   Participant.create(req.body).then(function(participant){
-    console.log("successfuly handled post request");
-    console.log(participant);
-    res.send(participant);
+    console.log("successfuly handled participant post request");
+    res.status(200).send(participant);
   }).catch(next);
 });
 
@@ -42,7 +56,8 @@ router.get('/question', function(req, res, next){
 //  add a new question to the db
 router.post('/question', function(req, res, next){
   Question.create(req.body).then(function(question){
-    res.send(question);
+    console.log("successfuly handled question post request");
+    res.status(200).send(question);
   }).catch(next);
 });
 
@@ -68,8 +83,9 @@ router.get('/study', function(req, res, next){
 
 //  add a new study to the db
 router.post('/study', function(req, res, next){
-  Study.create(req.body).then(function(question){
-    res.send(question);
+  Study.create(req.body).then(function(study){
+    console.log("successfuly handled study post request");
+    res.status(200).send(study);
   }).catch(next);
 });
 

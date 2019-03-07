@@ -18,15 +18,20 @@ app.use('/api', require('./routes/api'));
 // error handling middleware
 app.use(function (err, req, res, next) {
     console.log(err.name);
-    if (err.name === ("ValidationError")) {
+    console.log(err.message);
+    if (err.name == ("ValidationError")) {
         res.status(422).send({
           error: err.name,
           description: 'Invalid data entered',
           err_message: err.message
         });
     } else {
-        console.log(err.message);
-        res.status(420).send("Some Error Occured");
+        // console.log(err.message);
+        res.status(420).send({
+          error: err.name,
+          description: 'username already exists',
+          err_message: err.message
+        });
     }
 });
 
