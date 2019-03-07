@@ -1,20 +1,24 @@
-
-<ion-content padding="true">
-  <div class="spacer" style="width: 320px; height: 150px;"></div>
-  <div class="list">
-    <ion-input type="text"  placeholder="Username"></ion-input>
-    <ion-input type="password"  placeholder="Password"></ion-input>
-    <ion-button expand="full" color="tertiary" (click)="handleClick()">Log In</ion-button>
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-title>SurveySays</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding="true"  scroll="false">
+  <div class="center-elements">
+    <!-- <div class="spacer" style="width: 320px; height: 150px;"></div> -->
+    <div class="list">
+        <ion-input type="text" name="username" required [(ngModel)]="credentials.username" placeholder="Username"></ion-input>
+        <ion-input type="password" name="password" clear-on-edit=true maxlength=12 required [(ngModel)]="credentials.password" placeholder="Password"></ion-input>
+      <ion-button expand="full" color="tertiary" (click)="handleClick()">Log In</ion-button>
+    </div>
+    <div class="text-center">
+        <div class="spacer" style="width: 320px; height: 20px;"></div>
+        <h5  class="app-font-13" style="text-align: center;">Not a member?</h5>
+        <ion-row>
+          <ion-col text-center>
+            <ion-button size="small" center fill="outline" color="tertiary" (click)="goToSignUp()">Sign Up</ion-button>
+          </ion-col>
+        </ion-row>
+    </div>
   </div>
-  <div class="text-center">
-      <div class="spacer" style="width: 320px; height: 20px;"></div>
-      <h5  class="app-font-13" style="text-align: center;">Not a member?</h5>
-      <ion-row>
-        <ion-col text-center>
-          <ion-button size="small" center fill="outline" color="tertiary" (click)="goToSignUp()">Sign Up</ion-button>
-        </ion-col>
-      </ion-row>
-  </div>
-
-
 </ion-content>

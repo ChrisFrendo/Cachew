@@ -1,7 +1,11 @@
 .app-font-13 {
     font-size: 13px;
 }
-ion-option-button.button {
-  display: -webkit-inline-flex;
-  -webkit-align-items: center;
+.center-elements{
+    width: 100%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-left: -50%;
+    margin-top: -15%;
 }

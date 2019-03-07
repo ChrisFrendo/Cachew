@@ -8,6 +8,11 @@ import {Router} from '@angular/router';
 })
 export class LogInPage {
 
+  credentials = {
+    username: '',
+    password: ''
+  };
+
   constructor(private router: Router) {}
 
   goToSignUp(){

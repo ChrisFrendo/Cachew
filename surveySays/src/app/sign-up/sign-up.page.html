@@ -1,9 +1,19 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>signUp</ion-title>
+  <ion-toolbar color="tertiary">
+    <ion-title>Sign Up</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-
+<ion-content padding  scroll="false">
+  <div class="center-elements">
+    <ion-input readonly placeholder="Username">{{Username}}</ion-input>
+    <ion-button expand="full" color="tertiary" [(ngModel)]="username" (click)="generateUsername()">Generate Username</ion-button>
+    <div>
+        <ion-row>
+          <ion-col text-center>
+            <ion-button size="small" center fill="outline" color="tertiary" (click)="confirm()">Confirm</ion-button>
+          </ion-col>
+        </ion-row>
+    </div>
+  </div>
 </ion-content>
