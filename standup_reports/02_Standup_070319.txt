@@ -1,0 +1,29 @@
+Kelsey
+
+-Fixed otptions regarding question type
+-Working on requests
+-Post requests
+
+Chris
+
+-Created login, register and dashboard for website
+-Currently helping with creating application front-end
+-Problems with username generation api
+
+Esther 
+
+-Kept researching angular
+-Working on signup and dashboard of app
+-Problems with angular and ionic
+
+Tristan
+
+-Was understanding website code
+-Still understanding code
+-Problems with connecting to api
+
+Francesca
+
+-Research
+-Understand angular and ionic
+-Problems with app creation
