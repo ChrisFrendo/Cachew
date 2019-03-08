@@ -14,6 +14,15 @@ router.get('/participant', function(req, res, next){
   // }).catch(next);
 });
 
+router.get('/usernamegen', function(req, res, next){
+  var generateName = require('sillyname');
+  var sillyName = generateName();
+
+  var username = sillyName.split(" ");
+
+  res.status(200).send(username[0]);
+});
+
 router.get('/login', function(req, res, next){
   console.log('here');
   Participant.findOne({username: req.query.username, password: req.query.password}).then(function(participant){
