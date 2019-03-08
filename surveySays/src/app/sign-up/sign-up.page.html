@@ -6,11 +6,22 @@
 
 <ion-content padding  scroll="false">
   <div class="center-elements">
-    <ion-input readonly placeholder="Username">{{Username}}</ion-input>
-    <ion-button expand="full" color="tertiary" [(ngModel)]="username" (click)="generateUsername()">Generate Username</ion-button>
-    <div>
-        <ion-row>
-          <ion-col text-center>
+      <!-- <div>
+       <ion-label placeholder="Username">{{username}}</ion-label>
+       <!-- <ion-button expand="full" color="tertiary" [(ngModel)]="username" (click)="generateUsername()">Generate Username</ion-button> -->
+       <!-- <ion-label placeholder="Password">{{username}}</ion-label>
+       <ion-label placeholder="Salary">{{username}}</ion-label>
+       <ion-label placeholder="Industry">{{username}}</ion-label>
+       </div> -->
+      <div>
+
+            <ion-input placeholder="Username" [(ngModel)]="username"></ion-input>
+            <!-- <ion-button expand="full" color="tertiary" [(ngModel)]="username" (click)="generateUsername()">Generate Username</ion-button> -->
+            <ion-input type="Password" placeholder="Password" [(ngModel)]="password"></ion-input>
+            <ion-input placeholder="Salary" [(ngModel)]="salary"></ion-input>
+            <ion-input [(ngModel)]="industry" placeholder="Industry"></ion-input>
+            <ion-row>
+            <ion-col text-center>
             <ion-button size="small" center fill="outline" color="tertiary" (click)="confirm()">Confirm</ion-button>
           </ion-col>
         </ion-row>

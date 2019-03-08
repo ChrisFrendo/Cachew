@@ -8,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 export class DetailsPage implements OnInit {
 
   constructor() { }
-
+    public form = [
+      {val: 'Pepperoni', isChecked:true},
+      {val: 'Sausage', isChecked: false},
+      {val: 'Mushroom', isChecked: false}
+    ];
   ngOnInit() {
   }
 
