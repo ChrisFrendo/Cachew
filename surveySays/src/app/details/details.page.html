@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-title>Sign Up</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-content padding="false" scroll="false">
+    <div class="center-elements">
+      <ion-item *ngFor="let entry of form">
+         <ion-label>{{entry.val}}</ion-label>
+         <ion-checkbox slot="end" [(ngModel)]="entry.username"></ion-checkbox>
+      </ion-item>
+    </div>
+  </ion-content>
+</ion-content>
