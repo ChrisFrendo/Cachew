@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // create participant Schema & model
-const ParticipantSchema = new Schema({
+const UserSchema = new Schema({
 username:{
   type:String,
-  unique:true,
+  unique: true,
   required:[true, 'Username field is required']
 },
 password:{
@@ -15,8 +15,8 @@ password:{
 usertype: {
   type: String,
   // required: [true, 'UserType field is required'],
-  enum: ['participant', 'surveyor'],
-  default: 'surveyor' // remove this after front-ends explicitly code this in their post request body
+  enum: ['participant', 'researcher'],
+  default: 'researcher' // remove this after front-ends explicitly code this in their post request body
 },
 dob:{
   type:Date
@@ -32,6 +32,6 @@ industry:{
 }
 });
 
-const Participant = mongoose.model('participant', ParticipantSchema);
+const User = mongoose.model('user', UserSchema);
 
-module.exports = Participant;
+module.exports = User;

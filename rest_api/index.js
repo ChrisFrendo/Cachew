@@ -7,7 +7,8 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 // connect to mongodb
-mongoose.connect('mongodb://localhost/cachew');
+mongoose.connect('mongodb://localhost/cachew', { useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 app.use(bodyParser.json());

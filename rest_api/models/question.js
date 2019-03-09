@@ -12,6 +12,10 @@ const QuestionSchema = new Schema({
     enum: ["scale", "freetext", "boolean", "multiple"],
     required: true
   },
+  time: {
+    type: Date,
+    default: Date.now(),
+  },
   scale: {
     min:{
       type: Number
