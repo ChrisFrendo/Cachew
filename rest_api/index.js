@@ -20,20 +20,7 @@ app.use('/api', require('./routes/api'));
 app.use(function (err, req, res, next) {
     console.log(err.name);
     console.log(err.message);
-    if (err.name == ("ValidationError")) {
-        res.status(422).send({
-          error: err.name,
-          description: 'Invalid data entered',
-          err_message: err.message
-        });
-    } else {
-        // console.log(err.message);
-        res.status(420).send({
-          error: err.name,
-          description: 'username already exists',
-          err_message: err.message
-        });
-    }
+    res.status(422).send(err);
 });
 
 // listen for request

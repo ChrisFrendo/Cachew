@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+var questionTypes = ["Scale", "Free Text", "Boolean", "Multiple Choice"];
+
 // create question Schema & model
 const QuestionSchema = new Schema({
   title: {
@@ -9,7 +11,7 @@ const QuestionSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ["scale", "freetext", "boolean", "multiple"],
+    enum: questionTypes,
     required: true
   },
   time: {
@@ -33,9 +35,13 @@ const QuestionSchema = new Schema({
   content: {
     type: String,
     required: true,
-  }
+  },
+  answers: [{
+    type: String
+  }]
 });
 
 const Question = mongoose.model('question', QuestionSchema);
 
 module.exports = Question;
+module.exports.questionTypes = questionTypes;

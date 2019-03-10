@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user');
+const User = require('../models/user.js');
 const Question = require('../models/question');
 const Study = require('../models/study');
 var bcrypt = require('bcrypt');
@@ -9,7 +9,34 @@ var jwt    = require('jsonwebtoken');
 var app = express();
 app.set('superSecret', 'someSecret');
 
-// Participant DB ROUTES
+// reference endpoints
+
+// all return array of strings
+router.get('/references/users/genders', function(req, res, next){
+  res.status(200).send(User.genders);
+});
+
+router.get('/references/users/usertypes', function(req, res, next){
+  res.status(200).send(User.userTypes);
+});
+
+router.get('/references/users/countries', function(req, res, next){
+  res.status(200).send(User.countries);
+});
+
+router.get('/references/users/jobroles', function(req, res, next){
+  res.status(200).send(User.jobRoles);
+});
+
+router.get('/references/questions/questiontypes', function(req, res, next){
+  res.status(200).send(Question.questionTypes);
+});
+
+router.get('/references/study/genres', function(req, res, next){
+  res.status(200).send(Study.genres);
+});
+
+// user DB ROUTES
 
 // get a list of participants from the db
 router.get('/user', function(req, res, next){
@@ -28,13 +55,25 @@ router.get('/usernamegen', function(req, res, next){
   res.status(200).send(username[0]);
 });
 
-router.post('/login', function(req, res, next){
+router.post('/login/participant', function(req, res, next){
+  validateLogin('participant', req, res, next);
+});
+
+router.post('/login/researcher', function(req, res, next){
+  validateLogin('researcher', req, res, next);
+});
+
+function validateLogin(userTypeCheck, req, res, next){
   var username = req.body.username;
   var password = req.body.password;
 
   User.findOne({username: username})
     .then(function(user) {
+      if (user.usertype === userTypeCheck){
         return bcrypt.compare(password, user.password);
+      } else {
+        res.status(401).send();
+      }
     }).catch(function(err){
       res.status(403).send("Username or password Incorrect");
       next();
@@ -42,22 +81,24 @@ router.post('/login', function(req, res, next){
     .then(function(samePassword) {
         if(!samePassword) {
             res.status(403).send("Username or password Incorrect");
-        }
-        const payload = {
-          username: username
-        };
-           var token = jwt.sign(payload, app.get('superSecret'), {
-           expiresIn: 86400
-       });
+        } else {
+
+          const payload = {
+            username: username
+          };
+             var token = jwt.sign(payload, app.get('superSecret'), {
+             expiresIn: 86400
+         });
+       }
        console.log("tokenised successfuly");
-        res.status(200).send({token: token});
+       res.status(200).send({token: token});
     })
     .catch(function(error){
         console.log("Error authenticating user");
         console.log(error);
         next();
     });
-});
+}
 
 //  add a new participants to the db
 router.post('/register', function(req, res, next){
@@ -185,4 +226,5 @@ router.delete('/study/:id', function(req, res, next){
     res.send(question);
   });
 });
+
 module.exports = router;
