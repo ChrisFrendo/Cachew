@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/user.js');
 const Question = require('../models/question');
 const Study = require('../models/study');
+const Answer = require('../models/answers')
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
 

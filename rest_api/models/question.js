@@ -37,7 +37,7 @@ const QuestionSchema = new Schema({
     required: true,
   },
   answers: [{
-    type: String
+    type: Schema.ObjectId
   }]
 });
 

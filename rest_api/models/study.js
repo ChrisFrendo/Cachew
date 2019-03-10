@@ -16,8 +16,7 @@ const StudySchema = new Schema({
     // required: true
   },
   targets: [{
-    type: String,
-    enum: User.jobRoles
+    type: Schema.Types.Mixed
   }],
   genres: [{
     type: String,
