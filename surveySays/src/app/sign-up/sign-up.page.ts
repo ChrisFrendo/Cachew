@@ -10,17 +10,21 @@ import {HttpClient} from '@angular/common/http';
 export class SignUpPage {
   constructor(private router: Router, private http: HttpClient) { }
 
-  username: string;
-  password: string;
+user = {
+username: "string",
+password: "string"
+};
 
-
+  signForm(){
+    console.log(this.user);
+  }
 
   generateUsername(){
-    this.http.get('http://localhost:4000/api/usernamegen')
-    .subscribe( data => {
-      this.username = data.username;
-    });
-     // this.username = "Testing";
+    // this.http.get('http://localhost:4000/api/usernamegen')
+    // .subscribe( data => {
+    //   this.username = data.username;
+    // });
+     this.user.username = "Testing";
   }
 
   post(){

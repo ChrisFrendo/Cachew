@@ -23,6 +23,6 @@ export class LogInPage {
     //     .subscribe(data => {
     //        console.log(data);
     //      });
-    this.router.navigateByUrl('/sign-up');
+    this.router.navigateByUrl('/details');
   }
 }

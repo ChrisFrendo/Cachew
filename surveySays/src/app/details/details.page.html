@@ -8,29 +8,42 @@
   <div class="center-elements" color="tertiary" fill="outline">
     <ion-card color="tertiary">
       <ion-card-content>
-        <ion-list>
-          <ion-item>
-            <ion-radio-group>
-              <ion-grid>
-                <ion-row>
+        <form (ngSubmit)="detailForm()">
+            <ion-item>
+              <ion-radio-group>
+                <ion-grid>
+                  <ion-row>
+                    <ion-radio (ionSelect)="gender(false)" center fill="outline" color="tertiary"></ion-radio>
+                    <ion-icon class="segment-button" name="woman"></ion-icon>
 
-                  <ion-radio ionSelect center fill="outline" color="tertiary" value="female" [(ngModel)]="female"></ion-radio>
-                  <ion-icon class="segment-button" name="woman"></ion-icon>
+                    <ion-radio (ionSelect)="gender(true)" center fill="outline" color="tertiary"></ion-radio>
+                    <ion-icon class="segment-button" name="man"></ion-icon>
+                  </ion-row>
+                </ion-grid>
+              </ion-radio-group>
+            </ion-item>
+            <ion-item>
+              <ion-label>Date Of Birth</ion-label>
+              <ion-icon name="calendar"></ion-icon>
+              <ion-datetime display-format="DD/MM/YYYY" picker-format="DDDD MMMM YYYY"></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>Country</ion-label>
+              <ion-select [compareWith]="compareWith">
+                <ion-select-option *ngFor="let user of users">{{user.first + ' ' + user.last}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
 
-                  <ion-radio ionSelect center fill="outline" color="tertiary" value="male" [(ngModel)]="male"></ion-radio>
-                  <ion-icon class="segment-button" name="man" size="10"></ion-icon>
-                </ion-row>
-              </ion-grid>
-            </ion-radio-group>
-          </ion-item>
-          <ion-item>
-            <ion-label color="dark">Age</ion-label>
-            <ion-input color="dark" inputmode="numeric" fill="solid" maxlength=2 type="tel" name="age" required [(ngModel)]="age"></ion-input>
-          </ion-item>
-          <ion-item>
-            
-          </ion-item>
-        </ion-list>
+            </ion-item>
+        </form>
+        <div class="text-center">
+            <ion-row>
+              <ion-col text-center>
+                <ion-button size="small" center fill="outline" color="light" (click)="post()">Sign Up</ion-button>
+              </ion-col>
+            </ion-row>
+        </div>
       </ion-card-content>
     </ion-card>
   </div>
