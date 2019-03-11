@@ -53,7 +53,7 @@ router.get('/usernamegen', function(req, res, next){
 
   var username = sillyName.split(" ");
 
-  res.status(200).send(username[0]);
+  res.status(200).send({username: username[0]});
 });
 
 router.post('/login/participant', function(req, res, next){
