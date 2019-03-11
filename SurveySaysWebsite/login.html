@@ -45,14 +45,14 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div>
-                  <form class="user" id="loginForm" onsubmit="login()" method="post">
+                  <form class="user" id="loginForm" method="post">
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="loginUsername" placeholder="Username" required="true">
                     </div>
                     <div class="form-group">
                       <input type="password" class="form-control form-control-user" id="loginPassword" placeholder="Password" required="true">
                     </div>
-                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Login">
+                    <input type="reset" onclick="login()" class="btn btn-primary btn-user btn-block" value="Login">
                   <hr>
                   <div class="text-center">
                     <a class="small" href="register.html">Create an Account!</a>
