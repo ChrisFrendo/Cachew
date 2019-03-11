@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-log-in',
@@ -8,15 +9,20 @@ import {Router} from '@angular/router';
 })
 export class LogInPage {
 
-  credentials = {
-    username: '',
-    password: ''
-  };
+  username: string;
+  password: string;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router/*, public http: Http*/) {}
 
-  goToSignUp(){
+  post(){
+    //  let postData = {
+    //   "username": this.username,
+    //   "password": this.password,
+    // }
+    // this.http.post('http://local')
+    //     .subscribe(data => {
+    //        console.log(data);
+    //      });
     this.router.navigateByUrl('/sign-up');
   }
-
 }

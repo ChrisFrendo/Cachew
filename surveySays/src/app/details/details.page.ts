@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-details',
@@ -7,13 +9,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailsPage implements OnInit {
 
-  constructor() { }
-    public form = [
-      {val: 'Pepperoni', isChecked:true},
-      {val: 'Sausage', isChecked: false},
-      {val: 'Mushroom', isChecked: false}
-    ];
-  ngOnInit() {
+  constructor(private router: Router/*, public http: Http*/) {}
+
+  female: boolean;
+  male: boolean;
+  age: number;
+
+  post(){
+    //  let postData = {
+    //   "username": this.username,
+    //   "password": this.password,
+    // }
+    // this.http.post('http://local')
+    //     .subscribe(data => {
+    //        console.log(data);
+    //      });
+    this.router.navigateByUrl('/sign-up');
   }
 
+  ngOnInit(){
+
+  }
 }
