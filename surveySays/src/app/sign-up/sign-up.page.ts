@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-sign-up',
@@ -8,13 +8,19 @@ import {Http} from '@angular/http';
   styleUrls: ['./sign-up.page.scss'],
 })
 export class SignUpPage {
-  constructor(private router: Router/*, public http: Http*/) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   username: string;
   password: string;
 
+
+
   generateUsername(){
-     this.username = "Testing";
+    this.http.get('http://localhost:4000/api/usernamegen')
+    .subscribe( data => {
+      this.username = data.username;
+    });
+     // this.username = "Testing";
   }
 
   post(){
@@ -26,7 +32,7 @@ export class SignUpPage {
     //     .subscribe(data => {
     //        console.log(data);
     //      });
-    this.router.navigateByUrl('/details');
+    this.router.navigateByUrl('/log-in');
   }
 
 }
