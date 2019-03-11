@@ -5,26 +5,35 @@
 </ion-header>
 
 <ion-content padding  scroll="false">
-  <div class="center-elements">
-      <!-- <div>
-       <ion-label placeholder="Username">{{username}}</ion-label>
-       <!-- <ion-button expand="full" color="tertiary" [(ngModel)]="username" (click)="generateUsername()">Generate Username</ion-button> -->
-       <!-- <ion-label placeholder="Password">{{username}}</ion-label>
-       <ion-label placeholder="Salary">{{username}}</ion-label>
-       <ion-label placeholder="Industry">{{username}}</ion-label>
-       </div> -->
-      <div>
-
-            <ion-input placeholder="Username" [(ngModel)]="username"></ion-input>
-            <!-- <ion-button expand="full" color="tertiary" [(ngModel)]="username" (click)="generateUsername()">Generate Username</ion-button> -->
-            <ion-input type="Password" placeholder="Password" [(ngModel)]="password"></ion-input>
-            <ion-input placeholder="Salary" [(ngModel)]="salary"></ion-input>
-            <ion-input [(ngModel)]="industry" placeholder="Industry"></ion-input>
+  <div class="center-elements" color="tertiary" fill="outline">
+    <ion-card >
+      <ion-card-content>
+          <ion-grid>
             <ion-row>
-            <ion-col text-center>
-            <ion-button size="small" center fill="outline" color="tertiary" (click)="confirm()">Confirm</ion-button>
-          </ion-col>
-        </ion-row>
-    </div>
+              <ion-col>
+                 <ion-input readonly [(ngModel)]="username" placeholder="Username"></ion-input>
+              </ion-col>
+              <ion-col size="2.5">
+                <ion-button  expand="full" color="tertiary"  fill="clear" (click)="generateUsername()"><ion-icon name="search"></ion-icon></ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input type="password" name="password" clear-on-edit=true maxlength=12 required [(ngModel)]="password" placeholder="Password"></ion-input>
+               </ion-col>
+               <ion-col size="2.5">
+                 <ion-button  expand="full" color="tertiary" fill="clear" (click)="generateUsername()"><ion-icon name="checkmark"></ion-icon></ion-button>
+               </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div>
+            <ion-row>
+              <ion-col text-center>
+                <ion-button disabled=false size="small" center fill="outline" color="tertiary" (click)="post()">Confirm</ion-button>
+              </ion-col>
+            </ion-row>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

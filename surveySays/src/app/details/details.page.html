@@ -4,13 +4,34 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-content padding="false" scroll="false">
-    <div class="center-elements">
-      <ion-item *ngFor="let entry of form">
-         <ion-label>{{entry.val}}</ion-label>
-         <ion-checkbox slot="end" [(ngModel)]="entry.username"></ion-checkbox>
-      </ion-item>
-    </div>
-  </ion-content>
+<ion-content padding  scroll="false">
+  <div class="center-elements" color="tertiary" fill="outline">
+    <ion-card color="tertiary">
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-radio-group>
+              <ion-grid>
+                <ion-row>
+
+                  <ion-radio ionSelect center fill="outline" color="tertiary" value="female" [(ngModel)]="female"></ion-radio>
+                  <ion-icon class="segment-button" name="woman"></ion-icon>
+
+                  <ion-radio ionSelect center fill="outline" color="tertiary" value="male" [(ngModel)]="male"></ion-radio>
+                  <ion-icon class="segment-button" name="man" size="10"></ion-icon>
+                </ion-row>
+              </ion-grid>
+            </ion-radio-group>
+          </ion-item>
+          <ion-item>
+            <ion-label color="dark">Age</ion-label>
+            <ion-input color="dark" inputmode="numeric" fill="solid" maxlength=2 type="tel" name="age" required [(ngModel)]="age"></ion-input>
+          </ion-item>
+          <ion-item>
+            
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
