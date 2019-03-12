@@ -7,7 +7,12 @@ import {Http} from '@angular/http';
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
 })
+
 export class DetailsPage {
+
+
+    gender: string;
+    xp: number;
 
   constructor(private router: Router/*, public http: Http*/) {}
   // var  user {
@@ -20,7 +25,7 @@ export class DetailsPage {
   //   }
 
 
-  gender(genderCheck: boolean){
+  genderFn(genderCheck: boolean){
   //   if(genderCheck){
   //     this.user.gender = "Male";
   //   }
@@ -29,7 +34,7 @@ export class DetailsPage {
   //   }
   }
 
-  users: any[] = [
+  countries: any[] = [
     {
       id: 1,
       first: 'Alice',
@@ -39,13 +44,48 @@ export class DetailsPage {
       id: 2,
       first: 'Bob',
       last: 'Davis',
-    },
-    {
-      id: 3,
-      first: 'Charlie',
-      last: 'Rosenburg',
     }
   ];
+
+  industries: any[] = [
+    {
+      id: 1,
+      first: 'Alice',
+      last: 'Smith',
+    },
+    {
+      id: 2,
+      first: 'Bob',
+      last: 'Davis',
+    }
+  ];
+
+  roles: any[] = [
+    {
+      id: 1,
+      first: 'Alice',
+      last: 'Smith',
+    },
+    {
+      id: 2,
+      first: 'Bob',
+      last: 'Davis',
+    }
+  ];
+
+  salaries: any[] = [
+    {
+      id: 1,
+      first: 'Alice',
+      last: 'Smith',
+    },
+    {
+      id: 2,
+      first: 'Bob',
+      last: 'Davis',
+    }
+  ];
+
 
   compareWithFn = (o1, o2) => {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;

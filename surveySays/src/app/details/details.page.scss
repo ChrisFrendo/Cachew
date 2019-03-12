@@ -1,10 +1,20 @@
 .center-elements{
     width: 100%;
     position: absolute;
-    top: 40%;
+    top: 15%;
     left: 50%;
     margin-left: -50%;
     margin-top: -15%;
+}
+.right-align{
+    position: absolute;
+    right: 5%;
+}
+.top-align{
+    position: absolute;
+    top: 25%;
+    left: 5%;
+
 }
 .segment-button{
   font-size: 1.7rem;

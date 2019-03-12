@@ -4,19 +4,19 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding  scroll="false">
-  <div class="center-elements" color="tertiary" fill="outline">
+<ion-content padding>
+  <div class="center-elements">
     <ion-card color="tertiary">
       <ion-card-content>
         <form (ngSubmit)="detailForm()">
             <ion-item>
               <ion-radio-group>
                 <ion-grid>
-                  <ion-row>
-                    <ion-radio (ionSelect)="gender(false)" center fill="outline" color="tertiary"></ion-radio>
+                  <ion-row class="top-align">
+                    <ion-radio (ionSelect)="genderFn(false)" center fill="outline" color="tertiary"></ion-radio>
                     <ion-icon class="segment-button" name="woman"></ion-icon>
 
-                    <ion-radio (ionSelect)="gender(true)" center fill="outline" color="tertiary"></ion-radio>
+                    <ion-radio (ionSelect)="genderFn(true)" center fill="outline" color="tertiary"></ion-radio>
                     <ion-icon class="segment-button" name="man"></ion-icon>
                   </ion-row>
                 </ion-grid>
@@ -24,22 +24,52 @@
             </ion-item>
             <ion-item>
               <ion-label>Date Of Birth</ion-label>
-              <ion-icon name="calendar"></ion-icon>
-              <ion-datetime display-format="DD/MM/YYYY" picker-format="DDDD MMMM YYYY"></ion-datetime>
+              <ion-icon  name="calendar"></ion-icon>
+              <ion-datetime display-format="DD/MM/YYYY" picker-format="DDDD MMMM YYYY" placeholder="Date"></ion-datetime>
             </ion-item>
             <ion-item>
               <ion-label>Country</ion-label>
               <ion-select [compareWith]="compareWith">
-                <ion-select-option *ngFor="let user of users">{{user.first + ' ' + user.last}}</ion-select-option>
+                <ion-select-option *ngFor="let country of countries">{{country.first + ' ' + country.last}}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-
+              <ion-label>Student</ion-label>
+              <ion-checkbox color="tertiary"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Industry</ion-label>
+              <ion-select [compareWith]="compareWith">
+                <ion-select-option required *ngFor="let industry of industries">{{industry.first + ' ' + industry.last}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Job Role</ion-label>
+              <ion-select [compareWith]="compareWith">
+                <ion-select-option required *ngFor="let role of roles">{{role.first + ' ' + role.last}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-grid>
+                <ion-row align-items-end>
+                    <ion-label class="top-align">Years of Experience</ion-label>
+                  <ion-col offset="10.43">
+                    <ion-input type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+            <ion-item>
+              <ion-label>Salary</ion-label>
+              <ion-select [compareWith]="compareWith">
+                <ion-select-option *ngFor="let salary of salaries">{{salary.first + ' ' + salary.last}}</ion-select-option>
+              </ion-select>
             </ion-item>
         </form>
         <div class="text-center">
             <ion-row>
               <ion-col text-center>
+                <div class="spacer" style="width: 320px; height: 15px;"></div>
                 <ion-button size="small" center fill="outline" color="light" (click)="post()">Sign Up</ion-button>
               </ion-col>
             </ion-row>
