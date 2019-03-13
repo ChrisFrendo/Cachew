@@ -10,7 +10,6 @@ import {Http} from '@angular/http';
 
 export class DetailsPage {
 
-
     gender: string;
     xp: number;
 
@@ -26,12 +25,14 @@ export class DetailsPage {
 
 
   genderFn(genderCheck: boolean){
-  //   if(genderCheck){
-  //     this.user.gender = "Male";
-  //   }
-  //   else{
-  //     this.user.gender = "Female";
-  //   }
+    // if(genderCheck){
+    //   gender = "Male";
+    // }
+    // else{
+    //   gender = "Female";
+    // }
+    // console.log(this.user);
+
   }
 
   countries: any[] = [

@@ -12,12 +12,18 @@
             <ion-item>
               <ion-radio-group>
                 <ion-grid>
-                  <ion-row class="top-align">
+                  <ion-row>
+                    <ion-item>
                     <ion-radio (ionSelect)="genderFn(false)" center fill="outline" color="tertiary"></ion-radio>
                     <ion-icon class="segment-button" name="woman"></ion-icon>
+                  </ion-item>
 
+
+                    <ion-item>
                     <ion-radio (ionSelect)="genderFn(true)" center fill="outline" color="tertiary"></ion-radio>
                     <ion-icon class="segment-button" name="man"></ion-icon>
+                  </ion-item>
+
                   </ion-row>
                 </ion-grid>
               </ion-radio-group>
@@ -54,7 +60,7 @@
                 <ion-row align-items-end>
                     <ion-label class="top-align">Years of Experience</ion-label>
                   <ion-col offset="10.43">
-                    <ion-input type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input>
+                    <ion-input  placeholder="- -"  type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input>
                   </ion-col>
                 </ion-row>
               </ion-grid>
