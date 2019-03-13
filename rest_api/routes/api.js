@@ -22,11 +22,15 @@ router.get('/references/users/usertypes', function(req, res, next){
 });
 
 router.get('/references/users/countries', function(req, res, next){
-  res.status(200).send(User.countries);
+  res.status(200).send(JSON.stringify({array: User.countries}));
 });
 
 router.get('/references/users/jobroles', function(req, res, next){
-  res.status(200).send(User.jobRoles);
+  res.status(200).send(JSON.stringify({array: User.jobRoles}));
+});
+
+router.get('/references/users/salaries', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: User.salaries}));
 });
 
 router.get('/references/questions/questiontypes', function(req, res, next){
