@@ -67,7 +67,8 @@ const UserSchema = new Schema({
   }],
   timezones:{
     type:String,
-    enum:timezone
+    enum:timezone,
+    required:[true, 'TimeZone is required']
   }
 });
 
