@@ -46,7 +46,7 @@ router.get('/references/users/industry', function(req, res, next){
 });
 
 router.get('/references/users/timezone', function(req, res, next){
-  res.status(200).send(JSON.stringify({array: User.timezone}));
+  res.status(200).send(JSON.stringify({array: User.timezones}));
 });
 
 // user DB ROUTES
@@ -128,6 +128,7 @@ router.post('/register', function(req, res, next){
           console.log("successfuly handled user post request");
           res.status(200).send(user);
         }).catch(function(error){
+          console.log(error);
           res.status(400).send(error.message);
         });
     })
