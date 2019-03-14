@@ -38,23 +38,25 @@
               <form class="user" id="registerForm">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" required="true" class="center form-control form-control-user" id="inputUsername" placeholder="Username">
+                    <input type="text" required="true" class="center form-control" id="inputUsername" placeholder="Username">
                   </div>
-<<<<<<< HEAD
-                </div>      
-                <input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block">
-=======
+
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <!-- <input type="text" required="true" class="center form-control form-control-user" id="inputTimeZone" placeholder="Time zone"> -->
+                    <select class="custom-select" name="timezone" id="inputTimeZone">
+
+                    </select>
+                  </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" required="true" class="form-control form-control-user" id="inputPassword" placeholder="Password">
+                    <input type="password" required="true" class="form-control" id="inputPassword" placeholder="Password">
                   </div>
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" required="true" class="form-control form-control-user" id="confirmPassword" placeholder="Confirm Password">
+                    <input type="password" required="true" class="form-control" id="confirmPassword" placeholder="Confirm Password">
                   </div>
                 </div>
-                <input type="reset" onclick="register()" value="Register Account" class="btn btn-primary btn-user btn-block">
->>>>>>> 865a1728288d17ab69c4b13ecadf1efdb5a65467
+                <input type="reset" onclick="register()" value="Register Account" class="btn btn-primary btn-block">
               </form>
               <hr>
               <div class="text-center">

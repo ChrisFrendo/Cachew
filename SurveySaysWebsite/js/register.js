@@ -1,8 +1,43 @@
+var timezoneSelect = document.getElementById("inputTimeZone");
+
+var timezones = [];
+
+  var ip = "10.68.112.7";
+
+var getTimeZonesUrl = "http://"+ip+":4000/api/references/users/timezone";
+
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getTimeZonesUrl,
+  async: false,
+  success: function(data){
+    timezones = JSON.parse(data).array;
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+//Create and append the options
+for (var i = 0; i < timezones.length; i++) {
+    var option = document.createElement("option");
+    option.setAttribute("value", timezones[i]);
+    option.text = timezones[i];
+    if (i == 0){
+      option.setAttribute("selected", 'selected');
+    }
+    timezoneSelect.appendChild(option);
+}
+
+
+
 function register(){
   // gets data from form and puts it in variables
   var username = document.getElementById('inputUsername').value;
   var password = document.getElementById('inputPassword').value;
   var confirmPassword = document.getElementById('confirmPassword').value;
+  var timeZone = document.getElementById('inputTimeZone').value;
 
   if (username == "" || password == "" || confirmPassword == ""){
     window.alert("All fields must be filled");
@@ -14,7 +49,7 @@ function register(){
     return false;
   }
 
-  var getUserTypeURL = 'http://localhost:4000/api/references/users/usertypes';
+  var getUserTypeURL = 'http://'+ip+':4000/api/references/users/usertypes';
   var userTypes;
 
   $.ajax({
@@ -37,13 +72,13 @@ function register(){
   obj.username = username;
   obj.password = password;
   obj.usertype = userTypes;
-
+  obj.timezones = timeZone;
 
   // creates json string from gathered data
   var jsonString = JSON.stringify(obj);
 
   // Sending and receiving data in JSON format using ajax
-  var url = "http://localhost:4000/api/register";
+  var url = "http://"+ip+":4000/api/register";
 
   $.ajax({
     contentType: 'application/json',
