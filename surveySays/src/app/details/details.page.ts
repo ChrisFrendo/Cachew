@@ -1,6 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
+import { ToastController } from '@ionic/angular';
+import { async } from 'q';
 
 @Component({
   selector: 'app-details',
@@ -10,7 +12,7 @@ import { Http } from '@angular/http';
 
 export class DetailsPage {
 
-  ip: string = '10.68.112.7';
+  ip: string = '192.168.1.83';
 
   alive = true;
 
@@ -19,17 +21,19 @@ export class DetailsPage {
   roles: Array<string>;
   salaries: Array<number>;
   industries: Array<string>;
+  timezones: Array<string>;
 
   gender: string;
   countrySelect: string;
   industrySelect: string;
   jobRoleSelect: string;
   salarySelect: string;
+  timezoneSelect: string;
   xp: number;
   dob: any;
   student: any;
 
-  constructor(private router: Router, public http: Http) {}
+  constructor(private router: Router, public http: Http, public toastController: ToastController) {}
 
   ngOnInit(){
 
@@ -49,6 +53,9 @@ export class DetailsPage {
       this.industries = JSON.parse((<any>data)._body).array;
     })
 
+    this.http.get('http://'+this.ip+':4000/api/references/users/timezone').subscribe(data => {
+      this.timezones = JSON.parse((<any>data)._body).array;
+    })
   }
 
   genderFn(genderCheck: boolean){
@@ -62,6 +69,7 @@ export class DetailsPage {
 
   username: string;
   password: string;
+  confirmPassword: string;
   usertype = 'participant';
 
   generateUsername(){
@@ -78,21 +86,44 @@ export class DetailsPage {
   }
 
   signUp(){
-    let postData = {
-     "username": this.username,
-     "password": this.password,
-     "usertype": this.usertype,
-     "gender": this.gender,
-     "country": this.countrySelect,
-     "industry": this.industrySelect,
-     "jobrole": this.jobRoleSelect,
-     "yearsExp": this.xp,
-     "salary": this.salarySelect,
-     "dob": this.dob,
-     "student": this.student
-   }
+    if (this.password != this.confirmPassword){
+      this.presentToast();
+      this.password = "";
+      this.confirmPassword = "";
+      return;
+    }
 
-   console.log(postData);
+    let postData = {
+      "username": this.username,
+      "password": this.password,
+      "usertype": this.usertype,
+      "gender": this.gender,
+      "country": this.countrySelect,
+      "industry": this.industrySelect,
+      "jobrole": this.jobRoleSelect,
+      "yearsExp": this.xp,
+      "salary": this.salarySelect,
+      "dob": this.dob,
+      "student": this.student,
+      "timezones": this.timezoneSelect
+    }
+
+    // var newParticipant = JSON.stringify(postData);
+
+    this.http.post('http://'+this.ip+':4000/api/register', postData).subscribe(data => {
+      console.log("register requrest successful");
+      // add error handling
+    })
+
+    this.router.navigateByUrl('/log-in');
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Passwords do not match',
+      duration: 2000
+    });
+    toast.present();
   }
 
 }
