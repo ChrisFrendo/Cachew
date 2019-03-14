@@ -22,11 +22,15 @@ router.get('/references/users/usertypes', function(req, res, next){
 });
 
 router.get('/references/users/countries', function(req, res, next){
-  res.status(200).send(User.countries);
+  res.status(200).send(JSON.stringify({array: User.countries}));
 });
 
 router.get('/references/users/jobroles', function(req, res, next){
-  res.status(200).send(User.jobRoles);
+  res.status(200).send(JSON.stringify({array: User.jobRoles}));
+});
+
+router.get('/references/users/salaries', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: User.salaries}));
 });
 
 router.get('/references/questions/questiontypes', function(req, res, next){
@@ -35,6 +39,14 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 
 router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(Study.genres);
+});
+
+router.get('/references/users/industry', function(req, res, next){
+  res.status(200).send(User.industries);
+});
+
+router.get('/references/users/timezone', function(req, res, next){
+  res.status(200).send(User.timezone);
 });
 
 // user DB ROUTES
@@ -56,30 +68,32 @@ router.get('/usernamegen', function(req, res, next){
   res.status(200).send({username: username[0]});
 });
 
-router.post('/login/participant', function(req, res, next){
+router.get('/login/participant', function(req, res, next){
   validateLogin('participant', req, res, next);
 });
 
-router.post('/login/researcher', function(req, res, next){
+router.get('/login/researcher', function(req, res, next){
   validateLogin('researcher', req, res, next);
 });
 
 function validateLogin(userTypeCheck, req, res, next){
-  var username = req.body.username;
-  var password = req.body.password;
+  var username = req.query.username;
+  var password = req.query.password;
+
+  console.log(username);
 
   User.findOne({username: username})
     .then(function(user) {
       if (user.usertype === userTypeCheck){
         return bcrypt.compare(password, user.password);
       } else {
-        res.status(401).send();
+        return false;
       }
     }).catch(function(err){
-      res.status(403).send("Username or password Incorrect");
-      next();
+      return false;
     })
     .then(function(samePassword) {
+      console.log(samePassword);
         if(!samePassword) {
             res.status(403).send("Username or password Incorrect");
         } else {
@@ -90,6 +104,7 @@ function validateLogin(userTypeCheck, req, res, next){
              var token = jwt.sign(payload, app.get('superSecret'), {
              expiresIn: 86400
          });
+
        }
        console.log("tokenised successfuly");
        res.status(200).send({token: token});

@@ -1,5 +1,7 @@
 {
   "name": "surveySays",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

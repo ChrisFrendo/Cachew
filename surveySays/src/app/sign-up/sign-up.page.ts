@@ -12,27 +12,23 @@ export class SignUpPage {
 
   username: string;
   password: string;
-
-
+  usertype = 'participant';
+  ip: string = '192.168.1.83';
 
   generateUsername(){
-    this.http.get('http://localhost:4000/api/usernamegen')
+    this.http.get('http://'+this.ip+':4000/api/usernamegen')
     .subscribe( data => {
-      this.username = data.username;
+      this.username = (<any>data).username;
     });
-     // this.username = "Testing";
   }
 
   post(){
-    //  let postData = {
-    //   "username": this.username,
-    //   "password": this.password,
-    // }
-    // this.http.post('http://local')
-    //     .subscribe(data => {
-    //        console.log(data);
-    //      });
-    this.router.navigateByUrl('/log-in');
+     let postData = {
+      "username": this.username,
+      "password": this.password,
+      "usertype": this.usertype
+    }
+    console.log(postData);
   }
 
 }
