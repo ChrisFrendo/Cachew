@@ -18,7 +18,7 @@ export class DetailsPage {
   countries: Array<string>;
   roles: Array<string>;
   salaries: Array<number>;
-  industries: Array<string> = ['Gaming','Payment Gateways', 'App dev'];
+  industries: Array<string>;
 
   gender: string;
   countrySelect: string;
@@ -43,6 +43,10 @@ export class DetailsPage {
 
     this.http.get('http://'+this.ip+':4000/api/references/users/jobroles').subscribe(data => {
       this.roles = JSON.parse((<any>data)._body).array;
+    })
+
+    this.http.get('http://'+this.ip+':4000/api/references/users/industry').subscribe(data => {
+      this.industries = JSON.parse((<any>data)._body).array;
     })
 
   }
