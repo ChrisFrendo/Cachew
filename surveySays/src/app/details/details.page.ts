@@ -87,7 +87,7 @@ export class DetailsPage {
 
   signUp(){
     if (this.password != this.confirmPassword){
-      this.presentToast();
+      this.presentToast("Passwords do not match");
       this.password = "";
       this.confirmPassword = "";
       return;
@@ -112,15 +112,16 @@ export class DetailsPage {
 
     this.http.post('http://'+this.ip+':4000/api/register', postData).subscribe(data => {
       console.log("register requrest successful");
+      this.presentToast("Register Successful");
+      this.router.navigateByUrl('/log-in');
       // add error handling
     })
 
-    this.router.navigateByUrl('/log-in');
   }
 
-  async presentToast() {
+  async presentToast(displayMessage) {
     const toast = await this.toastController.create({
-      message: 'Passwords do not match',
+      message: displayMessage,
       duration: 2000
     });
     toast.present();
