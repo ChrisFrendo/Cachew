@@ -37,6 +37,14 @@ router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(Study.genres);
 });
 
+router.get('/references/users/industry', function(req, res, next){
+  res.status(200).send(User.industries);
+});
+
+router.get('/references/users/timezone', function(req, res, next){
+  res.status(200).send(User.timezone);
+});
+
 // user DB ROUTES
 
 // get a list of participants from the db
