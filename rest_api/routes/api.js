@@ -42,11 +42,11 @@ router.get('/references/study/genres', function(req, res, next){
 });
 
 router.get('/references/users/industry', function(req, res, next){
-  res.status(200).send(User.industries);
+  res.status(200).send(JSON.stringify({array: User.industries}));
 });
 
 router.get('/references/users/timezone', function(req, res, next){
-  res.status(200).send(User.timezone);
+  res.status(200).send(JSON.stringify({array: User.timezone}));
 });
 
 // user DB ROUTES

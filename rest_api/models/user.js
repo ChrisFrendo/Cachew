@@ -79,6 +79,6 @@ module.exports.genders = genders;
 module.exports.userTypes = userTypes;
 module.exports.countries = countries;
 module.exports.jobRoles = jobRoles;
-module.exports.industry = industries;
+module.exports.industries = industries;
 module.exports.timezones = timezone;
 module.exports.salaries = salaries;
