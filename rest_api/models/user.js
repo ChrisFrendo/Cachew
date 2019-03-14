@@ -69,6 +69,10 @@ const UserSchema = new Schema({
     type:String,
     enum:timezone,
     required:[true, 'TimeZone is required']
+  },
+  student: {
+    type: Boolean,
+    default: false
   }
 });
 
