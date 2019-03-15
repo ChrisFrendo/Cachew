@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding scroll="false">
   <div *ngIf="alive">
   <div class="center-elements">
 
@@ -104,46 +104,49 @@
     </div>
   </div>
 
-  <div *ngIf="!alive" class="center-elements" color="tertiary" fill="outline">
-    <ion-card >
+  <div *ngIf="!alive" class="center-elements2" color="tertiary" fill="outline">
+    <ion-card color="tertiary">
       <ion-card-content>
       <ion-grid>
+        <ion-item>
         <ion-row>
           <ion-col>
-            <ion-input readonly=true [(ngModel)]="username" placeholder="Username"></ion-input>
+            <ion-input readonly=true [(ngModel)]="username" placeholder="Generate Username"></ion-input>
           </ion-col>
           <ion-col size="2.5">
-            <ion-button  expand="full" color="tertiary"  fill="clear" (click)="generateUsername()"><ion-icon name="search"></ion-icon></ion-button>
+            <ion-button expand="full" color="tertiary" fill="clear" (click)="generateUsername()"><ion-icon name="search"></ion-icon></ion-button>
           </ion-col>
         </ion-row>
+        </ion-item>
 
+        <ion-item>
         <ion-row>
           <ion-col>
-            <ion-input type="password" name="password" required [(ngModel)]="password" placeholder="Password"></ion-input>
-          </ion-col>
-          <ion-col size="2.5">
-            <!-- <div *ngIf="passwordCheck">
-              <ion-label  expand="full" color="tertiary" disabled="false" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-label>
-            </div> -->
+            <ion-input type="password" name="password" required [(ngModel)]="password" placeholder="Password" (ionChange)="enable()"></ion-input>
           </ion-col>
         </ion-row>
+        </ion-item>
 
+        <ion-item>
         <ion-row>
           <ion-col>
-            <ion-input type="password" name="confirmPassword" (click)="enable()" required [(ngModel)]="confirmPassword" placeholder="Confirm Password"></ion-input>
+            <ion-input type="password" name="confirmPassword" required [(ngModel)]="confirmPassword" placeholder="Confirm Password" (ionChange)="enable()"></ion-input>
           </ion-col>
           <ion-col size="2.5">
             <div *ngIf="passwordCheck">
-              <ion-label  expand="full" color="tertiary" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-label>
+              <ion-label  color="tertiary" class="rightTopAlign" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-label>
             </div>
           </ion-col>
         </ion-row>
+        </ion-item>
       </ion-grid>
 
       <div>
         <ion-row>
           <ion-col text-center>
-            <ion-button disabled=false size="small" center fill="outline" color="tertiary" (click)="signUp()">Confirm</ion-button>
+            <div class="spacer" style="width: 320px; height: 15px;"></div>
+            <ion-button size="small" center fill="outline" color="light" (click)="back()">Back</ion-button>
+            <ion-button size="small" center fill="outline" color="light" (click)="signUp()">Confirm</ion-button>
           </ion-col>
         </ion-row>
       </div>

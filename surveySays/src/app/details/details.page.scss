@@ -5,6 +5,15 @@
     left: 50%;
     margin-left: -50%;
 }
+
+.center-elements2{
+    width: 100%;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    margin-left: -50%;
+}
+
 .full-width{
   width: 100%;
 }
@@ -21,7 +30,8 @@
   font-size: 1.7rem;
   color:black;
 }
-
-.icon{
-  color:black;
+.rightTopAlign{
+  position: absolute;
+  right: 5%;
+  top: 28%;
 }

@@ -105,6 +105,12 @@ export class DetailsPage {
     if(this.password == this.confirmPassword){
       this.passwordCheck=true;
     }
+  else{
+      this.passwordCheck=false;
+    }
+    if(!this.password || !this.confirmPassword){
+      this.passwordCheck=false;
+    }
   }
 
   // return this.http.request(new Request(this.requestoptions))
@@ -115,10 +121,19 @@ export class DetailsPage {
   //       });
   // }
 
+  back(){
+    this.alive = !this.alive;
+  }
+
   signUp(){
 
     if (!this.usernameCheck){
       this.presentToast("Enter username");
+      return;
+    }
+
+    if (this.password.length < 8){
+      this.presentToast("Password length must be at least 8 characters!");
       return;
     }
 
@@ -129,7 +144,7 @@ export class DetailsPage {
 
     if (this.password != this.confirmPassword){
       this.presentToast("Passwords do not match");
-      this.password = "";
+      // this.password = "";
       this.confirmPassword = "";
       return;
     }
