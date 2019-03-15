@@ -12,7 +12,7 @@ import { async } from 'q';
 
 export class DetailsPage {
 
-  ip: string = '192.168.1.83';
+  ip: string = '10.60.10.241';
 
   alive = true;
 
@@ -82,7 +82,7 @@ export class DetailsPage {
   postData;
 
   post(){
-    this.alive = false;
+    this.alive = !this.alive;
   }
 
   signUp(){

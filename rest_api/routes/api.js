@@ -118,6 +118,8 @@ function validateLogin(userTypeCheck, req, res, next){
 
 //  add a new participants to the db
 router.post('/register', function(req, res, next){
+console.log(req.body);
+
   var password = req.body.password;
   var BCRYPT_SALT_ROUNDS = 12;
 
