@@ -110,7 +110,7 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-input [(ngModel)]="username" placeholder="Username"></ion-input>
+            <ion-input readonly=true [(ngModel)]="username" placeholder="Username"></ion-input>
           </ion-col>
           <ion-col size="2.5">
             <ion-button  expand="full" color="tertiary"  fill="clear" (click)="generateUsername()"><ion-icon name="search"></ion-icon></ion-button>
@@ -122,13 +122,20 @@
             <ion-input type="password" name="password" required [(ngModel)]="password" placeholder="Password"></ion-input>
           </ion-col>
           <ion-col size="2.5">
-            <ion-button  expand="full" color="tertiary" fill="clear" (click)="generateUsername()"><ion-icon name="checkmark"></ion-icon></ion-button>
+            <!-- <div *ngIf="passwordCheck">
+              <ion-label  expand="full" color="tertiary" disabled="false" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-label>
+            </div> -->
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col>
-            <ion-input type="password" name="confirmPassword" required [(ngModel)]="confirmPassword" placeholder="Confirm Password"></ion-input>
+            <ion-input type="password" name="confirmPassword" (click)="enable()" required [(ngModel)]="confirmPassword" placeholder="Confirm Password"></ion-input>
+          </ion-col>
+          <ion-col size="2.5">
+            <div *ngIf="passwordCheck">
+              <ion-label  expand="full" color="tertiary" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-label>
+            </div>
           </ion-col>
         </ion-row>
       </ion-grid>

@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import { Http } from '@angular/http';
+import { Http} from '@angular/http';
 import { ToastController } from '@ionic/angular';
 import { async } from 'q';
 
@@ -15,7 +15,7 @@ export class DetailsPage {
   ip: string = '10.60.10.241';
 
   alive = true;
-
+  passwordCheck = false;
 
   countries: Array<string>;
   roles: Array<string>;
@@ -67,6 +67,7 @@ export class DetailsPage {
     }
   }
 
+  usernameCheck: boolean = false;
   username: string;
   password: string;
   confirmPassword: string;
@@ -77,15 +78,55 @@ export class DetailsPage {
     .subscribe( data => {
       this.username = JSON.parse((<any>data)._body).username;
     });
+    this.usernameCheck=true;
   }
 
   postData;
 
   post(){
+    if (!this.gender){
+      this.presentToast("Select Gender");
+      return;
+    }
+
+    if (!this.dob){
+      this.presentToast("Select Date Of Birth");
+      return;
+    }
+
+    if (!this.timezoneSelect){
+      this.presentToast("Select timezone");
+      return;
+    }
     this.alive = !this.alive;
   }
 
+  enable(){
+    if(this.password == this.confirmPassword){
+      this.passwordCheck=true;
+    }
+  }
+
+  // return this.http.request(new Request(this.requestoptions))
+  //       .catch((error: any) => {
+  //           if (error.status === 400){
+  //             this.presentToast("User already exists");
+  //           }
+  //       });
+  // }
+
   signUp(){
+
+    if (!this.usernameCheck){
+      this.presentToast("Enter username");
+      return;
+    }
+
+    if (!this.password || !this.confirmPassword){
+      this.presentToast("Enter password");
+      return;
+    }
+
     if (this.password != this.confirmPassword){
       this.presentToast("Passwords do not match");
       this.password = "";
