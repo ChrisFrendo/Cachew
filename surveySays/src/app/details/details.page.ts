@@ -39,22 +39,37 @@ export class DetailsPage {
 
     this.http.get('http://'+this.ip+':4000/api/references/users/salaries').subscribe(data => {
       this.salaries = JSON.parse((<any>data)._body).array;
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
     })
 
     this.http.get('http://'+this.ip+':4000/api/references/users/countries').subscribe(data => {
       this.countries = JSON.parse((<any>data)._body).array;
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
     })
 
     this.http.get('http://'+this.ip+':4000/api/references/users/jobroles').subscribe(data => {
       this.roles = JSON.parse((<any>data)._body).array;
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
     })
 
     this.http.get('http://'+this.ip+':4000/api/references/users/industry').subscribe(data => {
       this.industries = JSON.parse((<any>data)._body).array;
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
     })
 
     this.http.get('http://'+this.ip+':4000/api/references/users/timezone').subscribe(data => {
       this.timezones = JSON.parse((<any>data)._body).array;
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
     })
   }
 
@@ -77,8 +92,12 @@ export class DetailsPage {
     this.http.get('http://'+this.ip+':4000/api/usernamegen')
     .subscribe( data => {
       this.username = JSON.parse((<any>data)._body).username;
+      this.usernameCheck=true;
+    }, error => {
+      this.presentToast("Error when generating username. Please try again later");
+      console.log(error);
     });
-    this.usernameCheck=true;
+
   }
 
   postData;
@@ -105,21 +124,13 @@ export class DetailsPage {
     if(this.password == this.confirmPassword){
       this.passwordCheck=true;
     }
-  else{
+    else{
       this.passwordCheck=false;
     }
     if(!this.password || !this.confirmPassword){
       this.passwordCheck=false;
     }
   }
-
-  // return this.http.request(new Request(this.requestoptions))
-  //       .catch((error: any) => {
-  //           if (error.status === 400){
-  //             this.presentToast("User already exists");
-  //           }
-  //       });
-  // }
 
   back(){
     this.alive = !this.alive;
@@ -132,13 +143,13 @@ export class DetailsPage {
       return;
     }
 
-    if (this.password.length < 8){
-      this.presentToast("Password length must be at least 8 characters!");
+    if (!this.password || !this.confirmPassword){
+      this.presentToast("Enter password");
       return;
     }
 
-    if (!this.password || !this.confirmPassword){
-      this.presentToast("Enter password");
+    if (this.password.length < 8){
+      this.presentToast("Password length must be at least 8 characters!");
       return;
     }
 
@@ -171,6 +182,15 @@ export class DetailsPage {
       this.presentToast("Register Successful");
       this.router.navigateByUrl('/log-in');
       // add error handling
+    },
+    error => {
+      if (error.status == 400){
+        this.presentToast("Error when registering. Please Check that inputs are correct");
+      } else if (error.status == 404){
+        this.presentToast("Error when registering. Please try again later");
+
+      }
+      console.log(error);
     })
 
   }
