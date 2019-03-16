@@ -10,14 +10,14 @@
         <div class="list">
             <ion-input type="text" name="username" required [(ngModel)]="username" placeholder="Username"></ion-input>
             <ion-input type="password" name="password" clear-on-edit=true maxlength=12 required [(ngModel)]="password" placeholder="Password"></ion-input>
-          <ion-button expand="full" color="tertiary" (click)="handleClick()">Log In</ion-button>
+          <ion-button expand="full" color="tertiary" (click)="login()">Log In</ion-button>
         </div>
         <div class="text-center">
             <div class="spacer" style="width: 320px; height: 20px;"></div>
             <h5  class="app-font-13" style="text-align: center;">Not a member?</h5>
             <ion-row>
               <ion-col text-center>
-                <ion-button size="small" center fill="outline" color="tertiary" (click)="post()">Sign Up</ion-button>
+                <ion-button size="small" center fill="outline" color="tertiary" (click)="register()">Sign Up</ion-button>
               </ion-col>
             </ion-row>
         </div>

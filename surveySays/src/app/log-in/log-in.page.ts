@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {Http} from '@angular/http';
+import { ToastController } from '@ionic/angular';
+import { async } from 'q';
 
 @Component({
   selector: 'app-log-in',
@@ -9,20 +11,34 @@ import {Http} from '@angular/http';
 })
 export class LogInPage {
 
+  ip: string = '192.168.1.83';
+
   username: string;
   password: string;
 
-  constructor(private router: Router/*, public http: Http*/) {}
+  constructor(private router: Router, private http: Http, private toastController: ToastController) {}
 
-  post(){
-    //  let postData = {
-    //   "username": this.username,
-    //   "password": this.password,
-    // }
-    // this.http.post('http://local')
-    //     .subscribe(data => {
-    //        console.log(data);
-    //      });
+  login(){
+    var url = "http://"+this.ip+":4000/api/login/participant?username=" + this.username + "&password=" + this.password;
+
+    this.http.get(url).subscribe(data => {
+        console.log(JSON.parse((<any>data)._body).token);
+        this.presentToast("Login Successful");
+    }, error => {
+        console.log(error);
+        this.presentToast("Login Failed");
+    })
+  }
+
+  register(){
     this.router.navigateByUrl('/details');
+  }
+
+  async presentToast(displayMessage) {
+    const toast = await this.toastController.create({
+      message: displayMessage,
+      duration: 2000
+    });
+    toast.present();
   }
 }

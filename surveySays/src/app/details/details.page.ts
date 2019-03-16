@@ -12,7 +12,7 @@ import { async } from 'q';
 
 export class DetailsPage {
 
-  ip: string = '10.60.10.241';
+  ip: string = '192.168.1.83';
 
   alive = true;
   passwordCheck = false;
@@ -33,7 +33,7 @@ export class DetailsPage {
   dob: any;
   student: any;
 
-  constructor(private router: Router, public http: Http, public toastController: ToastController) {}
+  constructor(private router: Router, private http: Http, private toastController: ToastController) {}
 
   ngOnInit(){
 
