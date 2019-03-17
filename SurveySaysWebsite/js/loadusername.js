@@ -16,8 +16,10 @@ $.ajax({
   },
   error: function(jqXHR, exception){
     console.log(jqXHR); // make website redirect to login page since token sent is not correct (i.e. user not logged in)
+    window.location.assign("login.html");
+    window.localStorage.clear();
   },
   type: 'GET',
   url: url,
-  async: true
+  async: false
 });

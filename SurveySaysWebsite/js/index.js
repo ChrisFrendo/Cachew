@@ -1,4 +1,4 @@
 function logout(){
-  window.localStorage.removeItem('token');
+  window.localStorage.clear();
   window.location.assign("login.html");
 }

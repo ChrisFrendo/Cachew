@@ -20,7 +20,7 @@ function login(){
         }
     },
     error: function(jqXHR, exception){
-      window.alert("Account not found, please check username and password");
+      window.alert("Something went wrong");
     },
     type: 'GET',
     url: url,
