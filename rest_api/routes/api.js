@@ -176,6 +176,12 @@ router.use(function(req, res, next) {
   }
 });
 
+// Get username
+router.get('/users/username', function(req, res, next){
+  var username = req.decoded.username;
+  res.status(200).send(username);
+});
+
 // update a participants in the db
 router.put('/user/:id', function(req, res, next){
   res.send({type: 'PUT'});
