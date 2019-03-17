@@ -47,7 +47,7 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 });
 
 router.get('/references/study/genres', function(req, res, next){
-  res.status(200).send(Study.genres);
+  res.status(200).send(JSON.stringify({array: Study.genres}));
 });
 
 

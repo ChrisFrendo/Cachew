@@ -6,7 +6,7 @@ $(document).ready(function() {
     e.preventDefault();
     $("#testForm").append("<div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div>");
     $("#testForm").append("<div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div>");
-    $("#testForm").append("<div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea><span class='input-group-addon btn btn-primary'>Remove Question</span></div>");
+    $("#testForm").append("<div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div>");
     var questionTypeSelect = document.getElementsByName("questionType");
 
     //Create and append the options
@@ -26,6 +26,7 @@ $(document).ready(function() {
 
 
 var questionTypes = [];
+var genres = [];
 
 var ip = '192.168.1.83';
 
@@ -45,7 +46,30 @@ $.ajax({
   }
 });
 
+var getGenresURL = "http://"+ip+":4000/api/references/study/genres";
+var studyGenresSelect = document.getElementById("studyGenresSelect");
 
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getGenresURL,
+  async: false,
+  success: function(data){
+    genres = JSON.parse(data).array;
+    for (var i = 0; i < genres.length; i++) {
+        var option = document.createElement("option");
+        option.setAttribute("value", genres[i]);
+        option.text = genres[i];
+        if (i == 0){
+          option.setAttribute("selected", 'selected');
+        }
+        studyGenresSelect.appendChild(option);
+    }
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
 
 
 var token = JSON.parse(localStorage.getItem("token"));
@@ -59,6 +83,8 @@ function submitStudy(){
   }
 
   var studyTitle = document.getElementById('studyTitle').value;
+  var studyGenres = $('#studyGenresSelect').val();
+  var studyTargets = document.getElementById('studyTargets').value;
   var questionIds = [];
 
   var questionTitles = document.getElementsByName('questionTitle');
@@ -99,6 +125,20 @@ function submitStudy(){
   var study = new Object();
   study.title = studyTitle;
   study.questions = questionIds;
+  var targets = studyTargets.split(";");
+
+  for (var i = 0; i < targets.length; i++) {
+    targets[i] = targets[i].trim();
+  }
+
+  targets.length = targets.length -1;
+
+  if (targets == ""){
+    targets[0] = "generic";
+  }
+
+  study.genres = studyGenres;
+  study.targets = targets;
 
   var studyJsonString = JSON.stringify(study);
 
@@ -127,7 +167,7 @@ function submitStudy(){
 function deleteQuestion(id){
 
   var deleteQuestionUrl = "http://"+ip+":4000/api/question?token="+token;
-  
+
   let questionID = {
     id: id
   }
