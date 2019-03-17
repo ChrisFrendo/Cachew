@@ -33,13 +33,6 @@ router.get('/references/users/salaries', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.salaries}));
 });
 
-router.get('/references/questions/questiontypes', function(req, res, next){
-  res.status(200).send(Question.questionTypes);
-});
-
-router.get('/references/study/genres', function(req, res, next){
-  res.status(200).send(Study.genres);
-});
 
 router.get('/references/users/industry', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.industries}));
@@ -48,6 +41,15 @@ router.get('/references/users/industry', function(req, res, next){
 router.get('/references/users/timezone', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.timezones}));
 });
+
+router.get('/references/questions/questiontypes', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Question.questionTypes}));
+});
+
+router.get('/references/study/genres', function(req, res, next){
+  res.status(200).send(Study.genres);
+});
+
 
 // user DB ROUTES
 
@@ -218,9 +220,9 @@ router.put('/question/:id', function(req, res, next){
 });
 
 // delete a question from the db
-router.delete('/question/:id', function(req, res, next){
-  Question.findOneAndDelete({_id: req.params.id}).then(function(question){
-    res.send(question);
+router.delete('/question', function(req, res, next){
+  Question.findOneAndDelete({_id: req.body.id}).then(function(question){
+    res.status(200).send(question);
   });
 });
 

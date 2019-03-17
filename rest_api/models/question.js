@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var questionTypes = ["Scale", "Free Text", "Boolean", "Multiple Choice"];
+var questionTypes = ["Free Text", "Scale", "Boolean", "Multiple Choice"];
 
 // create question Schema & model
 const QuestionSchema = new Schema({
