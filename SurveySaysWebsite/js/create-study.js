@@ -4,9 +4,8 @@ var count= 0;
 $(document).ready(function() {
   $("#btnNewQuestion").click(function(e) {
     e.preventDefault();
-    $("#testForm").append("<div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div>");
-    $("#testForm").append("<div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div>");
-    $("#testForm").append("<div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div>");
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div>");
+
     var questionTypeSelect = document.getElementsByName("questionType");
 
     //Create and append the options
@@ -162,6 +161,12 @@ function submitStudy(){
     async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
   });
 
+}
+
+function removeQuestion(e) {
+  e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+  count--;
+  window.alert("REMOVED QUESTION");
 }
 
 function deleteQuestion(id){
