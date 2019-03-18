@@ -1,0 +1,23 @@
+Esther
+
+-Did register and login design, and validation for both
+-Creating dashboard page
+-Problems with tabs 
+
+Chris
+
+-Fixed login and register on both website and app. Updated create study page. Make tokens work on front end
+-Helping App team with dashboard and setting up server
+-Connecting to server from home
+
+Daniel
+
+-Added fields to schemas
+-Working on targets array for study schema
+-Problems with adding targets
+
+Francesca
+
+-Updated login and register wireframes
+-Creating dashboard wireframe
+-Learning curve balsamic
