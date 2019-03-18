@@ -1,7 +1,7 @@
 var username = document.getElementById('username');
 
 
-var ip = '192.168.1.83';
+var ip = '10.60.10.66';
 
 var token = JSON.parse(localStorage.getItem("token"));
 

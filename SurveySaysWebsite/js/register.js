@@ -2,7 +2,7 @@ var timezoneSelect = document.getElementById("inputTimeZone");
 
 var timezones = [];
 
-var ip = '192.168.1.83';
+var ip = '10.60.10.66';
 
 var getTimeZonesUrl = "http://"+ip+":4000/api/references/users/timezone";
 
