@@ -25,10 +25,12 @@ export class LogInPage {
     this.http.get(url).subscribe(data => {
         this.storage.set('token', JSON.parse((<any>data)._body).token);
         this.presentToast("Login Successful");
+        this.router.navigateByUrl('/dashboard');
     }, error => {
         console.log(error);
         this.presentToast("Login Failed");
     })
+  
   }
 
   register(){

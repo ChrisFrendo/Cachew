@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Http} from '@angular/http';
+import { ToastController } from '@ionic/angular';
+import { async } from 'q';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,8 +12,11 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
+  ip: string = '10.60.10.66';
 
-  constructor(private menu: MenuController) { }
+  roles: Array<string>;
+
+  constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
   openFirst() {
     this.menu.enable(true, 'first');
@@ -25,5 +33,25 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
+    this.http.get('http://'+this.ip+':4000/api/references/users/jobroles').subscribe(data => {
+      this.roles = JSON.parse((<any>data)._body).array;
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
+    })
+  }
+
+  delete(index: number){
+    console.log(index);
+    this.storage.get('token').then((val) => {
+      console.log('Your token is', val);
+
+      this.http.delete('http://'+this.ip+':4000/api/references/users/jobroles?token=' + val + '&index='+index).subscribe(data => {
+        this.roles = JSON.parse((<any>data)._body).array;
+      }, error => {
+        this.presentToast("Error when retrieving data. Please try again later");
+        console.log(error);
+      })
+    })
   }
 }
