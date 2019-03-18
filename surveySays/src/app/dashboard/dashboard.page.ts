@@ -26,5 +26,4 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
   }
-
 }
