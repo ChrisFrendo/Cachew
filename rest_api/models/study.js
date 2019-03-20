@@ -10,6 +10,7 @@ const StudySchema = new Schema({
   title: {
     type: String,
     required: true,
+    unique: true
   },
   userId: {
     type: Schema.ObjectId,
@@ -23,7 +24,10 @@ const StudySchema = new Schema({
     enum: genres
   }],
   questions: [{
-    type: Schema.ObjectId,
+    type: Schema.ObjectId
+  }],
+  subscribers: [{
+    type: String
   }]
 });
 

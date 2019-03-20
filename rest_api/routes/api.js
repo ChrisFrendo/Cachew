@@ -33,7 +33,6 @@ router.get('/references/users/salaries', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.salaries}));
 });
 
-
 router.get('/references/users/industry', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.industries}));
 });
@@ -229,10 +228,19 @@ router.delete('/question', function(req, res, next){
 
 // Study DB ROUTES
 
-// get a list of studies from the db
-router.get('/study', function(req, res, next){
-  res.send({type: 'GET'});
+// get a list of subscribed to studies from the db
+router.get('/study/subscribed', function(req, res, next){
+  Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
+    if (err){
+      res.status(400).send(err.message);
+      next();
+    }
+
+    res.status(200).send({array: studies});
+  });
 });
+
+
 
 //  add a new study to the db
 router.post('/study', function(req, res, next){
@@ -242,16 +250,27 @@ router.post('/study', function(req, res, next){
   }).catch(next);
 });
 
-// update a study in the db
-router.put('/study/:id', function(req, res, next){
-  res.send({type: 'PUT'});
+// update a subscriber to a study in the db
+router.put('/study', function(req, res, next){
+
+  User.findOne({username: req.decoded.username}).then(function(user){
+    console.log(req.body);
+    User.findByIdAndUpdate({_id: user._id}, {$push: {subscriptions: req.body.subscriptions}}).then(function(){
+      User.findOne({_id: user._id}).then(function(NewUser){
+        res.status(200).send(NewUser);
+      })
+    })
+  })
+
 });
 
 // delete a study from the db
-router.delete('/study/:id', function(req, res, next){
-  Study.findOneAndDelete({_id: req.params.id}).then(function(question){
-    res.send(question);
-  });
+router.put('/study/subscribed', function(req, res, next){
+  console.log("HELLO ESTHER GHAJJEJT JIEN");
+  console.log(req.body);
+  console.log(req.decoded.username);
+    User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}});
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}});
 });
 
 module.exports = router;
