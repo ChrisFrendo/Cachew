@@ -12,7 +12,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-  ip: string = '10.60.10.66';
+  ip: string = '10.68.117.110';
 
   roles: Array<string>;
 
@@ -30,6 +30,14 @@ export class DashboardPage implements OnInit {
   openCustom() {
     this.menu.enable(true, 'custom');
     this.menu.open('custom');
+  }
+
+  subscribed(){
+    this.router.navigateByUrl('/dashboard');
+  }
+
+  new(){
+    this.router.navigateByUrl('/new');
   }
 
   ngOnInit() {
@@ -53,5 +61,13 @@ export class DashboardPage implements OnInit {
         console.log(error);
       })
     })
+  }
+
+  async presentToast(displayMessage) {
+    const toast = await this.toastController.create({
+      message: displayMessage,
+      duration: 2000
+    });
+    toast.present();
   }
 }
