@@ -13,7 +13,7 @@ export class SignUpPage {
   username: string;
   password: string;
   usertype = 'participant';
-  ip: string = '192.168.1.83';
+  ip: string = '10.68.117.110';
 
   generateUsername(){
     this.http.get('http://'+this.ip+':4000/api/usernamegen')
