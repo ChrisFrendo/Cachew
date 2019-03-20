@@ -15,6 +15,8 @@ export class DashboardPage implements OnInit {
   ip: string = '10.68.117.110';
 
   roles: Array<string>;
+  studyTitles: Array<any>;
+  studyId: Array<any>;
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
@@ -41,12 +43,20 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get('http://'+this.ip+':4000/api/references/users/jobroles').subscribe(data => {
-      this.roles = JSON.parse((<any>data)._body).array;
-    }, error => {
-      this.presentToast("Error when retrieving data. Please try again later");
-      console.log(error);
-    })
+    this.storage.get('token').then((val) => {
+        console.log('Your token is', val);
+      this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
+        this.studyTitles = JSON.parse((<any>data)._body).array;
+        this.studyId = JSON.parse((<any>data)._body).array;
+        for(var i=0; i<this.studyTitles.length; i++){
+          this.studyTitles[i] = this.studyTitles[i].title;
+          this.studyId[i] = this.studyId[i]._id;
+        }
+      }, error => {
+        this.presentToast("Error when retrieving data. Please try again later");
+        console.log(error);
+      })
+   })
   }
 
   delete(index: number){
@@ -54,8 +64,16 @@ export class DashboardPage implements OnInit {
     this.storage.get('token').then((val) => {
       console.log('Your token is', val);
 
-      this.http.delete('http://'+this.ip+':4000/api/references/users/jobroles?token=' + val + '&index='+index).subscribe(data => {
+      let postData = {
+        studyID: this.studyId[index]
+      }
+      console.log(postData);
+      this.http.put('http://'+this.ip+':4000/api/study/subscribed?token=' + val, postData).subscribe(data => {
         this.roles = JSON.parse((<any>data)._body).array;
+        for(var i=0; i<this.studyTitles.length; i++){
+          this.studyTitles[i] = this.studyTitles[i].title;
+          this.studyId[i] = this.studyId[i]._id;
+        }
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);

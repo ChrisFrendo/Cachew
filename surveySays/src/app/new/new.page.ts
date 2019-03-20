@@ -57,7 +57,7 @@ export class NewPage implements OnInit {
 
       this.storage.get('token').then((val) => {
           console.log('Your token is', val);
-        this.http.get('http://'+this.ip+':4000/api/study?token=' + val).subscribe(data => {
+        this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
           this.studyTitles = JSON.parse((<any>data)._body).array;
           this.studyId = JSON.parse((<any>data)._body).array;
           for(var i=0; i<this.studyTitles.length; i++){
@@ -82,11 +82,16 @@ export class NewPage implements OnInit {
         console.log('Your token is', val);
 
         let postData = {
-          subscriptions: this.studyId[index]
+          studyID: this.studyId[index]
         }
 
         this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(data => {
-          this.studies = JSON.parse((<any>data)._body).array;
+          this.studyTitles = JSON.parse((<any>data)._body).array;
+          this.studyId = JSON.parse((<any>data)._body).array;
+          for(var i=0; i<this.studyTitles.length; i++){
+            this.studyTitles[i] = this.studyTitles[i].title;
+            this.studyId[i] = this.studyId[i]._id;
+          }
         }, error => {
           this.presentToast("Error when retrieving data. Please try again later");
           console.log(error);
