@@ -12,7 +12,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-  ip: string = '10.68.117.110';
+  ip: string = '192.168.1.94';
 
   roles: Array<string>;
   studyTitles: Array<any>;
@@ -44,7 +44,7 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
     this.storage.get('token').then((val) => {
-        console.log('Your token is', val);
+        // console.log('Your token is', val);
       this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
         this.studyTitles = JSON.parse((<any>data)._body).array;
         this.studyId = JSON.parse((<any>data)._body).array;
@@ -62,14 +62,15 @@ export class DashboardPage implements OnInit {
   delete(index: number){
     console.log(index);
     this.storage.get('token').then((val) => {
-      console.log('Your token is', val);
+      // console.log('Your token is', val);
 
       let postData = {
         studyID: this.studyId[index]
       }
       console.log(postData);
       this.http.put('http://'+this.ip+':4000/api/study/subscribed?token=' + val, postData).subscribe(data => {
-        this.roles = JSON.parse((<any>data)._body).array;
+        this.studyTitles = JSON.parse((<any>data)._body).array;
+        this.studyId = JSON.parse((<any>data)._body).array;
         for(var i=0; i<this.studyTitles.length; i++){
           this.studyTitles[i] = this.studyTitles[i].title;
           this.studyId[i] = this.studyId[i]._id;

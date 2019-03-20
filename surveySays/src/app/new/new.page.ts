@@ -14,7 +14,7 @@ import { Storage } from '@ionic/storage';
 
 export class NewPage implements OnInit {
 
-    ip: string = '10.68.117.110';
+    ip: string = '192.168.1.94';
 
     roles: Array<string>;
     genreSelect: string;
@@ -57,7 +57,7 @@ export class NewPage implements OnInit {
 
       this.storage.get('token').then((val) => {
           console.log('Your token is', val);
-        this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
+        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val).subscribe(data => {
           this.studyTitles = JSON.parse((<any>data)._body).array;
           this.studyId = JSON.parse((<any>data)._body).array;
           for(var i=0; i<this.studyTitles.length; i++){
@@ -71,15 +71,10 @@ export class NewPage implements OnInit {
      })
    }
 
-   selectGenre(){
-     console.log(this.genreSelect);
-
-   }
-
     add(index: number){
-      console.log(index);
+      console.log(this.genreSelect);
       this.storage.get('token').then((val) => {
-        console.log('Your token is', val);
+        // console.log('Your token is', val);
 
         let postData = {
           studyID: this.studyId[index]
