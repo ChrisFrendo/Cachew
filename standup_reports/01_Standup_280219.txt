@@ -1,0 +1,19 @@
+Esther & Fran:
+0. Downloaded tools and started tutorials 
+1. Researching app development with ionic
+2. Trying to understand ionic
+
+Tristan & Kelsey:
+0. Learned HTML, started CSS
+1. Keep learning CSS and learn JavaScript. Start API learning and then start working on website
+2. Trying to learn javascript proving difficult and also combining it with the api
+
+Daniel:
+0. Went through rest api tutorial
+1. Started creating participant schema and testing
+2. having some trouble with get requests
+
+Chris:
+0. Created schemas for question and study and post requests
+1. Waiting for next iteration
+2. Found problems with validating post requests 

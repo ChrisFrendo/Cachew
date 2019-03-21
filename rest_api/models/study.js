@@ -11,7 +11,9 @@ const StudySchema = new Schema({
   title: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    minlength : 5,
+    maxlength : 50
   },
   userId: {
     type: Schema.ObjectId,
