@@ -6,8 +6,8 @@ const Study = require('../models/study');
 const Answer = require('../models/answers')
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
-
 var app = express();
+
 app.set('superSecret', 'someSecret');
 
 // reference endpoints
@@ -48,7 +48,9 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.genres}));
 });
-
+router.get('/references/study/targets', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Study.targets}));
+});
 
 // user DB ROUTES
 
@@ -91,6 +93,7 @@ function validateLogin(userTypeCheck, req, res, next){
         return false;
       }
     }).catch(function(err){
+
       return false;
     })
     .then(function(samePassword) {
@@ -175,6 +178,7 @@ router.use(function(req, res, next) {
     });
 
   }
+
 });
 
 // Get username
@@ -206,13 +210,13 @@ router.get('/study/subscribed', function(req, res, next){
 
 // get a list of studies which the user is not subscribed to from the db
 router.get('/study/notsubscribed', function(req, res, next){
-  Study.find({subscribers: {$ne: req.decoded.username}}, {title: 1}, function(err, studies){
+  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.body.title}}]}, {title: 1}, function(err, studies){
     if (err){
       res.status(400).send(err.message);
       next();
     }
     res.status(200).send({array: studies});
-  });
+});
 });
 
 

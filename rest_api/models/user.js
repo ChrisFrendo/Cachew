@@ -84,5 +84,5 @@ module.exports.userTypes = userTypes;
 module.exports.countries = countries;
 module.exports.jobRoles = jobRoles;
 module.exports.industries = industries;
-module.exports.timezones = timezone;
+module.exports.timezone = timezone;
 module.exports.salaries = salaries;
