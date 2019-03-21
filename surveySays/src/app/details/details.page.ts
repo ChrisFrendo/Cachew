@@ -12,7 +12,7 @@ import { async } from 'q';
 
 export class DetailsPage {
 
-  ip: string = '10.68.117.110';
+  ip: string = '10.60.10.66';
 
   alive = true;
   passwordCheck = false;

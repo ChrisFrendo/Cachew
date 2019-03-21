@@ -14,7 +14,7 @@ import { Storage } from '@ionic/storage';
 
 export class NewPage implements OnInit {
 
-    ip: string = '192.168.1.94';
+    ip: string = '10.60.10.66';
 
     roles: Array<string>;
     genreSelect: string;
@@ -92,6 +92,7 @@ export class NewPage implements OnInit {
           console.log(error);
         })
       })
+      window.location.reload(true) 
     }
 
     async presentToast(displayMessage) {

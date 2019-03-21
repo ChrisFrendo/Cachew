@@ -12,7 +12,7 @@ import { async } from 'q';
 })
 export class LogInPage {
 
-  ip: string = '10.68.117.110';
+  ip: string = '10.60.10.66';
 
   username: string;
   password: string;

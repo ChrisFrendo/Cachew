@@ -12,7 +12,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-  ip: string = '192.168.1.94';
+  ip: string = '10.60.10.66';
 
   roles: Array<string>;
   studyTitles: Array<any>;
@@ -80,6 +80,7 @@ export class DashboardPage implements OnInit {
         console.log(error);
       })
     })
+    // window.location.reload(true) 
   }
 
   async presentToast(displayMessage) {
