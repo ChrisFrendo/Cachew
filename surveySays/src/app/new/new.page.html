@@ -30,8 +30,8 @@
 <ion-content padding>
   <ion-list>
     <ion-item lines="none" class="bottom">
-      <ion-searchbar (ionChange)= "search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="Search New Studies" type="text" animated></ion-searchbar>
-      <ion-item lines="none">
+      <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="New Studies" type="text" animated></ion-searchbar>
+      <ion-item (ionChange)="search()" lines="none">
         <ion-icon class="selectIcon" color="tertiary" name="arrow-dropdown-circle"></ion-icon>
         <ion-select multiple="true" class="select" [(ngModel)]="genreSelect" >
           <ion-label>Genres</ion-label>

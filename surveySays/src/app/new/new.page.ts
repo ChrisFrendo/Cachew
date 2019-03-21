@@ -57,9 +57,11 @@ export class NewPage implements OnInit {
       })
 
       this.input="";
+      this.genreSelect="all";
+      console.log(this.genreSelect);
       this.storage.get('token').then((val) => {
           console.log('Your token is', val);
-        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input).subscribe(data => {
+        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
           this.studyTitles = JSON.parse((<any>data)._body).array;
           this.studyId = JSON.parse((<any>data)._body).array;
           for(var i=0; i<this.studyTitles.length; i++){
@@ -99,8 +101,11 @@ export class NewPage implements OnInit {
 
 search (){
   this.storage.get('token').then((val) => {
+    if(this.genreSelect == ""){
+      this.genreSelect="all";
+    }
 
-    this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val +"&title=" + this.input).subscribe(data => {
+    this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val +"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
       this.studyTitles = JSON.parse((<any>data)._body).array;
       this.studyId = JSON.parse((<any>data)._body).array;
       for(var i=0; i<this.studyTitles.length; i++){
@@ -112,8 +117,6 @@ search (){
       console.log(error);
     })
   })
-
-  console.log(this.genreSelect);
 }
 
 options(index: number){
