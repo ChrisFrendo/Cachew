@@ -113,7 +113,7 @@ $.ajax({
   async: false,
   success: function(data){
     questionTypes = JSON.parse(data).array;
-    console.log(questionTypes);
+    // console.log(questionTypes);
   },
   error: function(jqXHR, exception){
     console.log("Something went wrong");
@@ -189,7 +189,7 @@ function submitStudy(){
         contentType: 'application/json',
         data: questionJsonString,
         success: function(data){
-            console.log(data._id);
+            // console.log(data._id);
             questionIds[i] = data._id;
         },
         error: function(jqXHR, exception){
@@ -221,7 +221,24 @@ function submitStudy(){
   study.genres = studyGenres;
   study.targets = targets;
 
+  $.ajax({
+    contentType: 'application/json',
+    success: function(data){
+      study.userId = data;
+        // console.log("ID is: " + data);
+    },
+    error: function(jqXHR, exception){
+        console.log("Some error occoured");
+    },
+    type: 'GET',
+    url: "http://"+ip+":4000/api/users/userID?token="+token,
+    async: false
+  });
+
+
   var studyJsonString = JSON.stringify(study);
+
+  console.log(studyJsonString);
 
   var studyUrl = "http://"+ip+":4000/api/study?token="+token;
 

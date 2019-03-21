@@ -30,7 +30,7 @@ export class LogInPage {
         console.log(error);
         this.presentToast("Login Failed");
     })
-  
+
   }
 
   register(){

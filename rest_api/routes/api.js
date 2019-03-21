@@ -33,7 +33,6 @@ router.get('/references/users/salaries', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.salaries}));
 });
 
-
 router.get('/references/users/industry', function(req, res, next){
   res.status(200).send(JSON.stringify({array: User.industries}));
 });
@@ -49,7 +48,9 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.genres}));
 });
-
+router.get('/references/study/targets', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Study.targets}));
+});
 
 // user DB ROUTES
 
@@ -92,6 +93,7 @@ function validateLogin(userTypeCheck, req, res, next){
         return false;
       }
     }).catch(function(err){
+
       return false;
     })
     .then(function(samePassword) {
@@ -176,34 +178,13 @@ router.use(function(req, res, next) {
     });
 
   }
+
 });
 
 // Get username
 router.get('/users/username', function(req, res, next){
   var username = req.decoded.username;
   res.status(200).send(username);
-});
-
-// update a participants in the db
-router.put('/user/:id', function(req, res, next){
-  res.send({type: 'PUT'});
-});
-
-// delete a participants from the db
-router.delete('/user/:id', function(req, res, next){
-  User.findOneAndDelete({_id: req.params.id}).then(function(student){
-    res.send(student);
-  });
-});
-
-// Question DB ROUTES
-
-// get a list of questions from the db
-router.get('/question', function(req, res, next){
-  User.findOne({username: req.username}).then(function(user){
-    res.send({username: req.decoded.username});
-  })
-
 });
 
 //  add a new question to the db
@@ -214,25 +195,31 @@ router.post('/question', function(req, res, next){
   }).catch(next);
 });
 
-// update a question in the db
-router.put('/question/:id', function(req, res, next){
-  res.send({type: 'PUT'});
+// Study DB ROUTES
+
+// get a list of subscribed to studies from the db
+router.get('/study/subscribed', function(req, res, next){
+  Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
+    if (err){
+      res.status(400).send(err.message);
+      next();
+    }
+    res.status(200).send({array: studies});
+  });
 });
 
-// delete a question from the db
-router.delete('/question', function(req, res, next){
-  Question.findOneAndDelete({_id: req.body.id}).then(function(question){
-    res.status(200).send(question);
+// get a list of studies which the user is not subscribed to from the db
+router.get('/study/notsubscribed', function(req, res, next){
+  Study.find({subscribers: {$ne: req.decoded.username}}, {title: 1}, function(err, studies){
+    if (err){
+      res.status(400).send(err.message);
+      next();
+    }
+    res.status(200).send({array: studies});
   });
 });
 
 
-// Study DB ROUTES
-
-// get a list of studies from the db
-router.get('/study', function(req, res, next){
-  res.send({type: 'GET'});
-});
 
 //  add a new study to the db
 router.post('/study', function(req, res, next){
@@ -242,16 +229,37 @@ router.post('/study', function(req, res, next){
   }).catch(next);
 });
 
-// update a study in the db
-router.put('/study/:id', function(req, res, next){
-  res.send({type: 'PUT'});
+
+// update a subscriber to a study in the db
+router.put('/study', function(req, res, next){
+
+    User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
+      Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
+        Study.find({subscribers: {$ne: req.decoded.username}}, {title: 1}, function(err, studies){
+          if (err){
+            res.status(400).send(err.message);
+            next();
+          }
+          res.status(200).send({array: studies});
+        });
+      })
+    })
+
 });
 
-// delete a study from the db
-router.delete('/study/:id', function(req, res, next){
-  Study.findOneAndDelete({_id: req.params.id}).then(function(question){
-    res.send(question);
-  });
+// remove a subscriber from a study
+router.put('/study/subscribed', function(req, res, next){
+  User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function() {
+      Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
+        if (err){
+          res.status(400).send(err.message);
+          next();
+        }
+        res.status(200).send({array: studies});
+      });
+    })
+  })
 });
 
 module.exports = router;
