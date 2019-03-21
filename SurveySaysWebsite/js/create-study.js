@@ -52,11 +52,13 @@ function scaleOption(element)
   var min = document.createElement('input');
   min.setAttribute("placeholder", "Min value");
   min.setAttribute("name", "input1");
+  min.setAttribute("type", "number");
   min.setAttribute("class", "form-group form-control form-control-user");
 
   var max = document.createElement('input');
   max.setAttribute("placeholder", "Max Value");
   max.setAttribute("name", "input2");
+  max.setAttribute("type", "number");
   max.setAttribute("class", "form-group form-control form-control-user");
 
   paramaters.appendChild(min);
@@ -80,14 +82,8 @@ function multipleChoice(element)
   choice2.setAttribute("name", "input2");
   choice2.setAttribute("class", "form-group form-control form-control-user");
 
-  var choice3 = document.createElement('input');
-  choice3.setAttribute("placeholder", "Input Choice");
-  choice3.setAttribute("name", "input3");
-  choice3.setAttribute("class", "form-group form-control form-control-user");
-
   paramaters.appendChild(choice1);
   paramaters.appendChild(choice2);
-  paramaters.appendChild(choice3);
 }
 
 function booleanOption(element)
@@ -108,13 +104,6 @@ function booleanOption(element)
 
   paramaters.appendChild(truevalue);
   paramaters.appendChild(falsevalue);
-
-
-
-
-
-
-
 }
 
 
@@ -177,7 +166,7 @@ function submitStudy(){
 
   var studyTitle = document.getElementById('studyTitle').value;
   var studyGenres = $('#studyGenresSelect').val();
-  var studyTargets = document.getElementById('studyTargets').value;
+  // var studyTargets = document.getElementById('studyTargets').value;
   var questionIds = [];
 
   var questionTitles = document.getElementsByName('questionTitle');
@@ -186,18 +175,28 @@ function submitStudy(){
 
   var input1 = document.getElementsByName('input1');
   var input2 = document.getElementsByName('input2');
-  var input3 = document.getElementsByName('input3');
-
 
   var i;
+  var j = 0;
   for (i = 0; i < count; i++){
     var question = new Object();
     question.title = questionTitles[i].value;
     question.type = questionTypes[i].value;
     question.content = questionContents[i].value;
 
-    console.log(input1[i].value);
-    console.log(input2[i].value);
+    if (question.type != "Free Text"){
+      console.log(input1[j].value);
+      console.log(input2[j].value);
+
+      if (question.type == "Scale"){
+        question.scale = {min: input1[j].value, max: input2[j].value};
+      } else if (question.type == "Boolean"){
+        question.boolean = {trueValue: input1[j].value, falseValue: input2[j].value};
+      } else if (question.type == "Multiple Choice"){
+        question.multiple = [input1[j].value, input2[j].value];
+      }
+      j++;
+    }
 
     var questionJsonString = JSON.stringify(question);
 
@@ -226,26 +225,13 @@ function submitStudy(){
   var study = new Object();
   study.title = studyTitle;
   study.questions = questionIds;
-  var targets = studyTargets.split(";");
-
-  for (var i = 0; i < targets.length; i++) {
-    targets[i] = targets[i].trim();
-  }
-
-  targets.length = targets.length -1;
-
-  if (targets == ""){
-    targets[0] = "generic";
-  }
 
   study.genres = studyGenres;
-  study.targets = targets;
 
   $.ajax({
     contentType: 'application/json',
     success: function(data){
       study.userId = data;
-        // console.log("ID is: " + data);
     },
     error: function(jqXHR, exception){
         console.log("Some error occoured");
