@@ -11,6 +11,7 @@ const StudySchema = new Schema({
   title: {
     type: String,
     required: true,
+    unique: true
   },
   userId: {
     type: Schema.ObjectId,
@@ -31,6 +32,9 @@ const StudySchema = new Schema({
     value:{
       type:Schema.Types.Mixed
     }
+  }],
+  subscribers: [{
+    type: String
   }]
 });
 
