@@ -17,10 +17,11 @@ export class NewPage implements OnInit {
     ip: string = '10.60.10.66';
 
     roles: Array<string>;
-    genreSelect: string;
+    genreSelect: Array<string>;
     genres: string;
     studyTitles: Array<any>;
     studyId: Array<any>;
+    input: string;
 
     constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
@@ -55,9 +56,10 @@ export class NewPage implements OnInit {
         console.log(error);
       })
 
+      this.input="";
       this.storage.get('token').then((val) => {
           console.log('Your token is', val);
-        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val).subscribe(data => {
+        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input).subscribe(data => {
           this.studyTitles = JSON.parse((<any>data)._body).array;
           this.studyId = JSON.parse((<any>data)._body).array;
           for(var i=0; i<this.studyTitles.length; i++){
@@ -72,7 +74,7 @@ export class NewPage implements OnInit {
    }
 
     add(index: number){
-      console.log(this.genreSelect);
+      // console.log(this.genreSelect);
       this.storage.get('token').then((val) => {
         // console.log('Your token is', val);
 
@@ -92,8 +94,31 @@ export class NewPage implements OnInit {
           console.log(error);
         })
       })
-      window.location.reload(true) 
+      window.location.reload(true)
     }
+
+search (){
+  this.storage.get('token').then((val) => {
+
+    this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val +"&title=" + this.input).subscribe(data => {
+      this.studyTitles = JSON.parse((<any>data)._body).array;
+      this.studyId = JSON.parse((<any>data)._body).array;
+      for(var i=0; i<this.studyTitles.length; i++){
+        this.studyTitles[i] = this.studyTitles[i].title;
+        this.studyId[i] = this.studyId[i]._id;
+      }
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
+    })
+  })
+
+  console.log(this.genreSelect);
+}
+
+options(index: number){
+  // console.log(this.genreSelect);
+}
 
     async presentToast(displayMessage) {
       const toast = await this.toastController.create({
