@@ -49,7 +49,9 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.genres}));
 });
-
+router.get('/references/study/targets', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Study.targets}));
+});
 
 // user DB ROUTES
 
@@ -92,6 +94,7 @@ function validateLogin(userTypeCheck, req, res, next){
         return false;
       }
     }).catch(function(err){
+
       return false;
     })
     .then(function(samePassword) {
@@ -176,6 +179,7 @@ router.use(function(req, res, next) {
     });
 
   }
+
 });
 
 // Get username
