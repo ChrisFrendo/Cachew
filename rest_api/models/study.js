@@ -17,7 +17,7 @@ const StudySchema = new Schema({
   },
   userId: {
     type: Schema.ObjectId,
-    // required: true
+    required: true
   },
   genres: [{
     type: String,

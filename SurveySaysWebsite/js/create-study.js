@@ -110,7 +110,7 @@ function booleanOption(element)
 var questionTypes = [];
 var genres = [];
 
-var ip = '192.168.1.94';
+var ip = '10.60.10.66';
 
 var getQuestionTypesURL = "http://"+ip+":4000/api/references/questions/questiontypes";
 
@@ -166,7 +166,7 @@ function submitStudy(){
 
   var studyTitle = document.getElementById('studyTitle').value;
   var studyGenres = $('#studyGenresSelect').val();
-  // var studyTargets = document.getElementById('studyTargets').value;
+
   var questionIds = [];
 
   var questionTitles = document.getElementsByName('questionTitle');
@@ -218,7 +218,6 @@ function submitStudy(){
         contentType: 'application/json',
         data: questionJsonString,
         success: function(data){
-            // console.log(data._id);
             questionIds[i] = data._id;
         },
         error: function(jqXHR, exception){
@@ -235,6 +234,16 @@ function submitStudy(){
   var study = new Object();
   study.title = studyTitle;
   study.questions = questionIds;
+
+  var targetNames = document.getElementsByName('targetName');
+  var targetValues = document.getElementsByName('targetValue');
+  study.targets = [];
+
+  for (var i = 0; i < targetNames.length; i++) {
+    if (targetNames[i].value != "Select Target"){
+      study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
+    }
+  }
 
   study.genres = studyGenres;
 
