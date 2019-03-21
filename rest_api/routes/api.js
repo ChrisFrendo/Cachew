@@ -52,16 +52,6 @@ router.get('/references/study/targets', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.targets}));
 });
 
-// user DB ROUTES
-
-// get a list of participants from the db
-router.get('/user', function(req, res, next){
-  // Participant.findOne({username: req.query.username}).then(function(participants){
-  //   console.log(participants.password);
-  //   res.send(participants.password);
-  // }).catch(next);
-});
-
 router.get('/usernamegen', function(req, res, next){
   var generateName = require('sillyname');
   var sillyName = generateName();
@@ -185,6 +175,13 @@ router.use(function(req, res, next) {
 router.get('/users/username', function(req, res, next){
   var username = req.decoded.username;
   res.status(200).send(username);
+});
+
+// Get user id
+router.get('/users/userID', function(req, res, next){
+  User.findOne({username: req.decoded.username}, {_id: 1}).then(function(user) {
+    res.status(200).send(user._id);
+  })
 });
 
 //  add a new question to the db
