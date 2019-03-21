@@ -19,6 +19,7 @@
     "express-session": "^1.15.6",
     "jsonwebtoken": "^8.5.0",
     "mongoose": "^5.4.14",
+    "mongoose-searchable": "^1.0.0",
     "morgan": "^1.9.1",
     "sillyname": "^0.1.0"
   }
