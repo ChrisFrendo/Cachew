@@ -210,13 +210,24 @@ router.get('/study/subscribed', function(req, res, next){
 
 // get a list of studies which the user is not subscribed to from the db
 router.get('/study/notsubscribed', function(req, res, next){
-  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
+  console.log(req.query.genres);
+  if (req.query.genres == "all"){
+    Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
+      if (err){
+        res.status(400).send(err.message);
+        return;
+      }
+      res.status(200).send({array: studies});
+  });
+} else {
+  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$all: req.query.genres}}]}, {title: 1}, function(err, studies){
     if (err){
       res.status(400).send(err.message);
       return;
     }
     res.status(200).send({array: studies});
 });
+}
 });
 
 
