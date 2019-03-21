@@ -80,7 +80,6 @@ export class DashboardPage implements OnInit {
         console.log(error);
       })
     })
-    // window.location.reload(true) 
   }
 
   async presentToast(displayMessage) {
