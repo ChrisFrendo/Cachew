@@ -69,6 +69,25 @@ function multipleChoice(element)
   var paramaters = element.parentNode.nextSibling.nextSibling;
 
   paramaters.innerHTML = "";
+
+  var choice1 = document.createElement('input');
+  choice1.setAttribute("placeholder", "Input Choice");
+  choice1.setAttribute("name", "input1");
+  choice1.setAttribute("class", "form-group form-control form-control-user");
+
+  var choice2 = document.createElement('input');
+  choice2.setAttribute("placeholder", "Input Choice");
+  choice2.setAttribute("name", "input2");
+  choice2.setAttribute("class", "form-group form-control form-control-user");
+
+  var choice3 = document.createElement('input');
+  choice3.setAttribute("placeholder", "Input Choice");
+  choice3.setAttribute("name", "input3");
+  choice3.setAttribute("class", "form-group form-control form-control-user");
+
+  paramaters.appendChild(choice1);
+  paramaters.appendChild(choice2);
+  paramaters.appendChild(choice3);
 }
 
 function booleanOption(element)
@@ -167,6 +186,7 @@ function submitStudy(){
 
   var input1 = document.getElementsByName('input1');
   var input2 = document.getElementsByName('input2');
+  var input3 = document.getElementsByName('input3');
 
 
   var i;
