@@ -288,7 +288,7 @@ function submitStudy(){
 }
 
 function removeQuestion(e) {
-  e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+  e.parentNode.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode.parentNode);
   count--;
   window.alert("REMOVED QUESTION");
 }

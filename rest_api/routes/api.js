@@ -38,7 +38,7 @@ router.get('/references/users/industry', function(req, res, next){
 });
 
 router.get('/references/users/timezone', function(req, res, next){
-  res.status(200).send(JSON.stringify({array: User.timezones}));
+  res.status(200).send(JSON.stringify({array: User.timezone}));
 });
 
 router.get('/references/questions/questiontypes', function(req, res, next){
