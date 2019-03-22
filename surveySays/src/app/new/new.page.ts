@@ -101,7 +101,7 @@ export class NewPage implements OnInit {
 
 search (){
   this.storage.get('token').then((val) => {
-    if(this.genreSelect == ""){
+    if(!this.genreSelect[0]){
       this.genreSelect[0]="all";
     }
 
