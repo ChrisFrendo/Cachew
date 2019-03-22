@@ -3,7 +3,7 @@
     <ion-toolbar color="tertiary">
       <ion-row>
         <ion-title>Start Menu</ion-title>
-        <ion-menu-toggle menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
+        <ion-menu-toggle autoHide="false" menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
       </ion-row>
     </ion-toolbar>
   </ion-header>
@@ -37,6 +37,9 @@
           <ion-label>Genres</ion-label>
         <ion-select-option *ngFor="let genre of genres; let i = index">{{genre}}</ion-select-option>
         </ion-select>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-button (click)="refresh()" class="refresh" fill=clear color="tertiary"><ion-icon name="refresh"></ion-icon></ion-button>
         </ion-item>
     </ion-item>
     <ion-item-sliding *ngFor="let studyTitle of studyTitles; let i = index">
