@@ -4,7 +4,7 @@ var count= 0;
 $(document).ready(function() {
   $("#btnNewQuestion").click(function(e) {
     e.preventDefault();
-    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div>");
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-6 mb-3 mb-sm-0'><input name='questionDateTime' type='datetime-local' class='form-control form-control-user'/></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
 
     var questionTypeSelect = document.getElementsByName("questionType");
 
@@ -52,11 +52,13 @@ function scaleOption(element)
   var min = document.createElement('input');
   min.setAttribute("placeholder", "Min value");
   min.setAttribute("name", "input1");
+  min.setAttribute("type", "number");
   min.setAttribute("class", "form-group form-control form-control-user");
 
   var max = document.createElement('input');
   max.setAttribute("placeholder", "Max Value");
   max.setAttribute("name", "input2");
+  max.setAttribute("type", "number");
   max.setAttribute("class", "form-group form-control form-control-user");
 
   paramaters.appendChild(min);
@@ -69,6 +71,19 @@ function multipleChoice(element)
   var paramaters = element.parentNode.nextSibling.nextSibling;
 
   paramaters.innerHTML = "";
+
+  var choice1 = document.createElement('input');
+  choice1.setAttribute("placeholder", "Input Choice");
+  choice1.setAttribute("name", "input1");
+  choice1.setAttribute("class", "form-group form-control form-control-user");
+
+  var choice2 = document.createElement('input');
+  choice2.setAttribute("placeholder", "Input Choice");
+  choice2.setAttribute("name", "input2");
+  choice2.setAttribute("class", "form-group form-control form-control-user");
+
+  paramaters.appendChild(choice1);
+  paramaters.appendChild(choice2);
 }
 
 function booleanOption(element)
@@ -89,13 +104,6 @@ function booleanOption(element)
 
   paramaters.appendChild(truevalue);
   paramaters.appendChild(falsevalue);
-
-
-
-
-
-
-
 }
 
 
@@ -158,26 +166,47 @@ function submitStudy(){
 
   var studyTitle = document.getElementById('studyTitle').value;
   var studyGenres = $('#studyGenresSelect').val();
-  var studyTargets = document.getElementById('studyTargets').value;
+
   var questionIds = [];
 
   var questionTitles = document.getElementsByName('questionTitle');
   var questionTypes = document.getElementsByName('questionType');
   var questionContents = document.getElementsByName('questionContent');
+  var questionDateTime = document.getElementsByName('questionDateTime');
+
+
 
   var input1 = document.getElementsByName('input1');
   var input2 = document.getElementsByName('input2');
 
-
   var i;
+  var j = 0;
   for (i = 0; i < count; i++){
+
+
     var question = new Object();
     question.title = questionTitles[i].value;
     question.type = questionTypes[i].value;
     question.content = questionContents[i].value;
 
-    console.log(input1[i].value);
-    console.log(input2[i].value);
+    if (questionDateTime[i].value != ""){
+      question.time = questionDateTime[i].value;
+    }
+
+
+    if (question.type != "Free Text"){
+      console.log(input1[j].value);
+      console.log(input2[j].value);
+
+      if (question.type == "Scale"){
+        question.scale = {min: input1[j].value, max: input2[j].value};
+      } else if (question.type == "Boolean"){
+        question.boolean = {trueValue: input1[j].value, falseValue: input2[j].value};
+      } else if (question.type == "Multiple Choice"){
+        question.multiple = [input1[j].value, input2[j].value];
+      }
+      j++;
+    }
 
     var questionJsonString = JSON.stringify(question);
 
@@ -189,7 +218,6 @@ function submitStudy(){
         contentType: 'application/json',
         data: questionJsonString,
         success: function(data){
-            // console.log(data._id);
             questionIds[i] = data._id;
         },
         error: function(jqXHR, exception){
@@ -206,26 +234,23 @@ function submitStudy(){
   var study = new Object();
   study.title = studyTitle;
   study.questions = questionIds;
-  var targets = studyTargets.split(";");
 
-  for (var i = 0; i < targets.length; i++) {
-    targets[i] = targets[i].trim();
-  }
+  var targetNames = document.getElementsByName('targetName');
+  var targetValues = document.getElementsByName('targetValue');
+  study.targets = [];
 
-  targets.length = targets.length -1;
-
-  if (targets == ""){
-    targets[0] = "generic";
+  for (var i = 0; i < targetNames.length; i++) {
+    if (targetNames[i].value != "Select Target"){
+      study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
+    }
   }
 
   study.genres = studyGenres;
-  study.targets = targets;
 
   $.ajax({
     contentType: 'application/json',
     success: function(data){
       study.userId = data;
-        // console.log("ID is: " + data);
     },
     error: function(jqXHR, exception){
         console.log("Some error occoured");

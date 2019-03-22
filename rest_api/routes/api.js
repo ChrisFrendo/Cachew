@@ -52,16 +52,6 @@ router.get('/references/study/targets', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.targets}));
 });
 
-// user DB ROUTES
-
-// get a list of participants from the db
-router.get('/user', function(req, res, next){
-  // Participant.findOne({username: req.query.username}).then(function(participants){
-  //   console.log(participants.password);
-  //   res.send(participants.password);
-  // }).catch(next);
-});
-
 router.get('/usernamegen', function(req, res, next){
   var generateName = require('sillyname');
   var sillyName = generateName();
@@ -187,6 +177,13 @@ router.get('/users/username', function(req, res, next){
   res.status(200).send(username);
 });
 
+// Get user id
+router.get('/users/userID', function(req, res, next){
+  User.findOne({username: req.decoded.username}, {_id: 1}).then(function(user) {
+    res.status(200).send(user._id);
+  })
+});
+
 //  add a new question to the db
 router.post('/question', function(req, res, next){
   Question.create(req.body).then(function(question){
@@ -210,13 +207,24 @@ router.get('/study/subscribed', function(req, res, next){
 
 // get a list of studies which the user is not subscribed to from the db
 router.get('/study/notsubscribed', function(req, res, next){
-  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
+  console.log(req.query.genres);
+  if (req.query.genres == "all"){
+    Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
+      if (err){
+        res.status(400).send(err.message);
+        return;
+      }
+      res.status(200).send({array: studies});
+  });
+} else {
+  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$all: req.query.genres}}]}, {title: 1}, function(err, studies){
     if (err){
       res.status(400).send(err.message);
       next();
     }
     res.status(200).send({array: studies});
 });
+}
 });
 
 

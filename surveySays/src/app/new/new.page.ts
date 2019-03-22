@@ -17,7 +17,7 @@ export class NewPage implements OnInit {
     ip: string = '10.60.10.66';
 
     roles: Array<string>;
-    genreSelect: Array<string>;
+    genreSelect: string[] = [];
     genres: string;
     studyTitles: Array<any>;
     studyId: Array<any>;
@@ -57,9 +57,11 @@ export class NewPage implements OnInit {
       })
 
       this.input="";
+      this.genreSelect[0]="all";
+      console.log(this.genreSelect);
       this.storage.get('token').then((val) => {
           console.log('Your token is', val);
-        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input).subscribe(data => {
+        this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
           this.studyTitles = JSON.parse((<any>data)._body).array;
           this.studyId = JSON.parse((<any>data)._body).array;
           for(var i=0; i<this.studyTitles.length; i++){
@@ -99,8 +101,11 @@ export class NewPage implements OnInit {
 
 search (){
   this.storage.get('token').then((val) => {
+    if(this.genreSelect == ""){
+      this.genreSelect[0]="all";
+    }
 
-    this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val +"&title=" + this.input).subscribe(data => {
+    this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val +"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
       this.studyTitles = JSON.parse((<any>data)._body).array;
       this.studyId = JSON.parse((<any>data)._body).array;
       for(var i=0; i<this.studyTitles.length; i++){
@@ -112,8 +117,6 @@ search (){
       console.log(error);
     })
   })
-
-  console.log(this.genreSelect);
 }
 
 options(index: number){

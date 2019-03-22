@@ -27,7 +27,12 @@ const QuestionSchema = new Schema({
     }
   },
   boolean: {
-    type: Boolean
+    trueValue: {
+      type: String
+    },
+    falseValue: {
+      type: String
+    }
   },
   multiple: [{
     type: String

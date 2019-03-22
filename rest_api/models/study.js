@@ -5,7 +5,7 @@ const Question = require('../models/question');
 
 
 var genres = ["Front End", "Back End", "Full Stack", "Java", "C", "Web Development", "Android", "Ios"];
-var titles = ["Gender", "User Type", "Country", "Salaries", "Industry", "Timezone"];
+var targets = ["Gender", "User Type", "Country", "Salaries", "Industry", "Timezone"];
 // create study Schema & model
 const StudySchema = new Schema({
   title: {
@@ -17,7 +17,7 @@ const StudySchema = new Schema({
   },
   userId: {
     type: Schema.ObjectId,
-    // required: true
+    required: true
   },
   genres: [{
     type: String,
@@ -29,7 +29,7 @@ const StudySchema = new Schema({
   targets: [{
     name:{
       type:String,
-      enum:titles
+      enum:targets
     },
     value:{
       type:Schema.Types.Mixed
@@ -44,4 +44,4 @@ const Study = mongoose.model('study', StudySchema);
 
 module.exports = Study;
 module.exports.genres = genres;
-module.exports.titles = titles;
+module.exports.targets = targets;
