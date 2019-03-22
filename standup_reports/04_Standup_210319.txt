@@ -1,0 +1,33 @@
+Esther
+
+-create subscriptions pages and menu controller
+-Updating subscriptions pages to be able to search 
+-Problems with menu controller
+
+-Francesca
+
+-Created subscription pages wireframes
+-Wokring on subscriptions pages
+-Problems with ionic workspace
+
+-Tristan
+
+-Continued to work on create study page
+-Working on adding targets
+
+-Kelsey
+
+-Continued to work on create study page
+-Working on adding targets
+
+-Daniel
+
+-Adding targets field and handlers and added some validation to study title
+-Creating search by keyword on studies
+
+-Chris
+
+-Fixed Search study and view subscribed studies pages and worked on create-study page on website
+-Working on targets input on website and on search queries on api
+
+-
