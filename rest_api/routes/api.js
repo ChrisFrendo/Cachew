@@ -213,7 +213,7 @@ router.get('/study/notsubscribed', function(req, res, next){
   Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
     if (err){
       res.status(400).send(err.message);
-      return;
+      next();
     }
     res.status(200).send({array: studies});
 });
