@@ -72,18 +72,13 @@ function multipleChoice(element)
 
   paramaters.innerHTML = "";
 
-  var choice1 = document.createElement('input');
-  choice1.setAttribute("placeholder", "Input Choice");
-  choice1.setAttribute("name", "input1");
+  var choice1 = document.createElement('textarea');
+  choice1.setAttribute("placeholder", "Input the multiple choice options and press 'Enter' each time");
+  choice1.setAttribute("name", "choiceContent");
   choice1.setAttribute("class", "form-group form-control form-control-user");
-
-  var choice2 = document.createElement('input');
-  choice2.setAttribute("placeholder", "Input Choice");
-  choice2.setAttribute("name", "input2");
-  choice2.setAttribute("class", "form-group form-control form-control-user");
+  choice1.setAttribute("rows", "5");
 
   paramaters.appendChild(choice1);
-  paramaters.appendChild(choice2);
 }
 
 function booleanOption(element)
