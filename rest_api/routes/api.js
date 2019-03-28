@@ -246,7 +246,9 @@ router.get('/study/notsubscribed', function(req, res, next){
       res.status(200).send({array: studies});
   });
 } else {
-  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$all: req.query.genres}}]}, {title: 1}, function(err, studies){
+  var genres = req.query.genres.split(',');
+  console.log(genres.length);
+  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$in: genres}}]}, {title: 1}, function(err, studies){
     if (err){
       res.status(400).send(err.message);
       next();
