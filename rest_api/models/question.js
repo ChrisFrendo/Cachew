@@ -16,7 +16,7 @@ const QuestionSchema = new Schema({
   },
   time: {
     type: Date,
-    default: Date.now(),
+    default: null
   },
   scale: {
     min:{

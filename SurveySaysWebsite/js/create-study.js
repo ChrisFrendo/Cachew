@@ -4,7 +4,7 @@ var count= 0;
 $(document).ready(function() {
   $("#btnNewQuestion").click(function(e) {
     e.preventDefault();
-    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-6 mb-3 mb-sm-0'><input name='questionDateTime' type='datetime-local' class='form-control form-control-user'/></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-4 mb-3 mb-sm-0'><input name='questionDateTime' type='datetime-local' class='form-control form-control-user'/></div><select id='frequency' class='col-md-2 form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
 
     var questionTypeSelect = document.getElementsByName("questionType");
 
@@ -43,6 +43,7 @@ $(document).ready(function() {
 });
 });
 
+
 function scaleOption(element)
 {
   var paramaters = element.parentNode.nextSibling.nextSibling;
@@ -72,18 +73,13 @@ function multipleChoice(element)
 
   paramaters.innerHTML = "";
 
-  var choice1 = document.createElement('input');
-  choice1.setAttribute("placeholder", "Input Choice");
-  choice1.setAttribute("name", "input1");
+  var choice1 = document.createElement('textarea');
+  choice1.setAttribute("placeholder", "Input the multiple choice options and press 'Enter' each time");
+  choice1.setAttribute("name", "choiceContent");
   choice1.setAttribute("class", "form-group form-control form-control-user");
-
-  var choice2 = document.createElement('input');
-  choice2.setAttribute("placeholder", "Input Choice");
-  choice2.setAttribute("name", "input2");
-  choice2.setAttribute("class", "form-group form-control form-control-user");
+  choice1.setAttribute("rows", "5");
 
   paramaters.appendChild(choice1);
-  paramaters.appendChild(choice2);
 }
 
 function booleanOption(element)
