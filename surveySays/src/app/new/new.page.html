@@ -30,9 +30,6 @@
 <ion-content padding>
   <ion-list>
     <ion-item lines="none" class="bottom">
-      <ion-item lines="none">
-        <ion-button (click)="refresh()" class="refresh" fill=clear color="tertiary"><ion-icon name="refresh"></ion-icon></ion-button>
-      </ion-item>
       <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="Search" type="text" animated></ion-searchbar>
       <ion-item (ionChange)="search()" lines="none">
         <ion-icon class="selectIcon" color="tertiary" name="arrow-dropdown-circle"></ion-icon>

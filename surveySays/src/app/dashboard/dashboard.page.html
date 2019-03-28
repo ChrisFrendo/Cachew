@@ -32,9 +32,12 @@
   <ion-list>
     <ion-item-sliding *ngFor="let studyTitle of studyTitles; let i = index">
       <ion-item>
-          <ion-label>{{ studyTitle }}</ion-label>
-          <ion-icon color="tertiary" name="arrow-dropleft"></ion-icon>
-          <ion-badge color="secondary">{{notification[i]}}</ion-badge>
+        <ion-label>{{ studyTitle }}</ion-label>
+        <div *ngIf="indicatorCheck[i]">
+          <ion-icon name="time"></ion-icon>
+        </div>
+        <ion-icon color="tertiary" name="arrow-dropleft"></ion-icon>
+        <ion-badge color="secondary">{{notification[i]}}</ion-badge>
        </ion-item>
       <ion-item-options side="end">
         <ion-item-option color="tertiary" (click)="delete(i)">Unsubscribe</ion-item-option>

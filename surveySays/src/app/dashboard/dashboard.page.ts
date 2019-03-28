@@ -21,8 +21,28 @@ export class DashboardPage implements OnInit {
   roles: Array<string>;
   studyTitles: Array<any>;
   studyId: Array<any>;
+  indicatorCheck: Array<boolean>;
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
+
+  ionViewWillEnter(){
+    this.storage.get('token').then((val) => {
+    this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
+      this.studyTitles = JSON.parse((<any>data)._body).array;
+      this.studyId = JSON.parse((<any>data)._body).array;
+      this.notification = JSON.parse((<any>data)._body).notifications;
+      this.indicatorCheck = JSON.parse((<any>data)._body).flag;
+      for(var i=0; i<this.studyTitles.length; i++){
+        this.studyTitles[i] = this.studyTitles[i].title;
+        this.studyId[i] = this.studyId[i]._id;
+        this.noStudy = true;
+      }
+    }, error => {
+      this.presentToast("Error when retrieving data. Please try again later");
+      console.log(error);
+    })
+  })
+}
 
   openFirst() {
     this.menu.enable(true, 'first');
@@ -47,26 +67,12 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-      this.storage.get('token').then((val) => {
-        // console.log('Your token is', val);
-      this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
-        this.studyTitles = JSON.parse((<any>data)._body).array;
-        this.studyId = JSON.parse((<any>data)._body).array;
-        this.notification = JSON.parse((<any>data)._body).notifications;
-        for(var i=0; i<this.studyTitles.length; i++){
-          this.studyTitles[i] = this.studyTitles[i].title;
-          this.studyId[i] = this.studyId[i]._id;
-        }
-        this.noStudy = true;
-      }, error => {
-        this.presentToast("Error when retrieving data. Please try again later");
-        console.log(error);
-      })
-   })
+
   }
 
   delete(index: number){
     console.log(index);
+
     this.storage.get('token').then((val) => {
       // console.log('Your token is', val);
 
@@ -80,6 +86,9 @@ export class DashboardPage implements OnInit {
         for(var i=0; i<this.studyTitles.length; i++){
           this.studyTitles[i] = this.studyTitles[i].title;
           this.studyId[i] = this.studyId[i]._id;
+        }
+        if(this.studyTitles.length==0){
+          this.noStudy = false;
         }
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
