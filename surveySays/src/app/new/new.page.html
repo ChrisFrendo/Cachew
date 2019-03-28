@@ -3,7 +3,7 @@
     <ion-toolbar color="tertiary">
       <ion-row>
         <ion-title>Start Menu</ion-title>
-        <ion-menu-toggle menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
+        <ion-menu-toggle autoHide="false" menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
       </ion-row>
     </ion-toolbar>
   </ion-header>
@@ -30,7 +30,10 @@
 <ion-content padding>
   <ion-list>
     <ion-item lines="none" class="bottom">
-      <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="New Studies" type="text" animated></ion-searchbar>
+      <ion-item lines="none">
+        <ion-button (click)="refresh()" class="refresh" fill=clear color="tertiary"><ion-icon name="refresh"></ion-icon></ion-button>
+      </ion-item>
+      <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="Search" type="text" animated></ion-searchbar>
       <ion-item (ionChange)="search()" lines="none">
         <ion-icon class="selectIcon" color="tertiary" name="arrow-dropdown-circle"></ion-icon>
         <ion-select multiple="true" class="select" [(ngModel)]="genreSelect" >
