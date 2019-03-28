@@ -97,6 +97,10 @@ export class DashboardPage implements OnInit {
     })
   }
 
+  study(){
+    this.router.navigateByUrl('/study');
+  }
+
   async presentToast(displayMessage) {
     const toast = await this.toastController.create({
       message: displayMessage,

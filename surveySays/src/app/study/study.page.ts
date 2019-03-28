@@ -17,6 +17,14 @@ export class StudyPage implements OnInit {
   genreSelect: string[] = [];
   studyTitles: Array<any>;
   studyId: Array<any>;
+  text = false;
+  scale = false;
+  ask = false;
+  multi = true;
+  optionSelect: boolean[] = [];
+  options = ([
+    "one", "two", "three"
+  ]);
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
@@ -61,6 +69,15 @@ export class StudyPage implements OnInit {
     //     console.log(error);
     //   })
     // })
+  }
+
+  askFn(askCheck: boolean){
+      if(!askCheck){
+        console.log("false");
+      }
+      else{
+        console.log("true");
+      }
   }
 
   async presentToast(displayMessage) {

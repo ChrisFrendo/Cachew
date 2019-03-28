@@ -32,7 +32,7 @@
   <ion-list>
     <ion-item-sliding *ngFor="let studyTitle of studyTitles; let i = index">
       <ion-item>
-        <ion-label>{{ studyTitle }}</ion-label>
+        <ion-label (click)="study()">{{ studyTitle }}</ion-label>
         <div *ngIf="indicatorCheck[i]">
           <ion-icon name="time"></ion-icon>
         </div>
