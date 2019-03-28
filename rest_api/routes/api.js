@@ -186,28 +186,50 @@ router.get('/users/userID', function(req, res, next){
 
 //  add a new question to the db
 router.post('/question', function(req, res, next){
-  Question.create(req.body).then(function(question){
+if(req.body.type === Question.questionTypes[3]){
+  req.body.multiple = req.body.multiple.split('\n');
+}
+  Question.create(req.body, function(err, question){
+
+    if(err){
+    res.status(400).send(err.message);
+    next();
+  }
+  res.status(200).send(question);
+  });
+
     console.log("successfuly handled question post request");
-    res.status(200).send(question);
-  }).catch(next);
 });
-
 // Study DB ROUTES
-
 // get a list of subscribed to studies from the db
-router.get('/study/subscribed', function(req, res, next){
-  Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
+router.get('/study/subscribed', async function(req, res, next){
+  Study.find({subscribers: req.decoded.username}, {title: 1, questions: 1}, async function(err, studies){
     if (err){
       res.status(400).send(err.message);
       next();
     }
-    res.status(200).send({array: studies});
+    // console.log(studies);
+    var notifs = [];
+    for (var i = 0; i < studies.length; i++) {
+      notifs[i] = 0;
+      for (var j = 0; j < studies[i].questions.length; j++) {
+        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: null}]}).then( async function(question){
+            if (question != null){
+              notifs[i]++;
+            }
+        }));
+      }
+    }
+
+    res.status(200).send({array: studies, notifications: notifs});
   });
 });
 
+
+
 // get a list of studies which the user is not subscribed to from the db
 router.get('/study/notsubscribed', function(req, res, next){
-  console.log(req.query.genres);
+  // console.log(req.query.genres);
   if (req.query.genres == "all"){
     Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
       if (err){
@@ -220,14 +242,12 @@ router.get('/study/notsubscribed', function(req, res, next){
   Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$all: req.query.genres}}]}, {title: 1}, function(err, studies){
     if (err){
       res.status(400).send(err.message);
-      return;
+      next();
     }
     res.status(200).send({array: studies});
 });
 }
 });
-
-
 
 //  add a new study to the db
 router.post('/study', function(req, res, next){
