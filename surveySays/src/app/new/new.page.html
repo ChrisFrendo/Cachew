@@ -30,16 +30,16 @@
 <ion-content padding>
   <ion-list>
     <ion-item lines="none" class="bottom">
-      <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="New Studies" type="text" animated></ion-searchbar>
+      <ion-item lines="none">
+        <ion-button (click)="refresh()" class="refresh" fill=clear color="tertiary"><ion-icon name="refresh"></ion-icon></ion-button>
+      </ion-item>
+      <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="Search" type="text" animated></ion-searchbar>
       <ion-item (ionChange)="search()" lines="none">
         <ion-icon class="selectIcon" color="tertiary" name="arrow-dropdown-circle"></ion-icon>
         <ion-select multiple="true" class="select" [(ngModel)]="genreSelect" >
           <ion-label>Genres</ion-label>
         <ion-select-option *ngFor="let genre of genres; let i = index">{{genre}}</ion-select-option>
         </ion-select>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-button (click)="refresh()" class="refresh" fill=clear color="tertiary"><ion-icon name="refresh"></ion-icon></ion-button>
         </ion-item>
     </ion-item>
     <ion-item-sliding *ngFor="let studyTitle of studyTitles; let i = index">

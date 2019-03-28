@@ -14,6 +14,9 @@ import { Storage } from '@ionic/storage';
 export class DashboardPage implements OnInit {
   ip: string = '10.60.10.66';
 
+  //set to number of questions to answer
+  notification: Array<number>;
+
   roles: Array<string>;
   studyTitles: Array<any>;
   studyId: Array<any>;
@@ -48,6 +51,7 @@ export class DashboardPage implements OnInit {
       this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
         this.studyTitles = JSON.parse((<any>data)._body).array;
         this.studyId = JSON.parse((<any>data)._body).array;
+        this.notification = JSON.parse((<any>data)._body).notifications;
         for(var i=0; i<this.studyTitles.length; i++){
           this.studyTitles[i] = this.studyTitles[i].title;
           this.studyId[i] = this.studyId[i]._id;
@@ -57,6 +61,7 @@ export class DashboardPage implements OnInit {
         console.log(error);
       })
    })
+   console.log(this.notification);
   }
 
   delete(index: number){

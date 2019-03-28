@@ -12,7 +12,7 @@
         <ion-card-content>
           <ion-item>
             <ion-label>Gender</ion-label>
-            <ion-radio-group>
+            <ion-radio-group class="radio">
               <ion-grid>
                 <ion-row>
                   <ion-item lines="none">
@@ -34,7 +34,7 @@
           <ion-item>
             <ion-label>Date Of Birth</ion-label>
             <ion-icon  name="calendar"></ion-icon>
-            <ion-datetime [(ngModel)]="dob" display-format="DD/MM/YYYY" picker-format="DDDD MMMM YYYY" placeholder="Date"></ion-datetime>
+            <ion-datetime [(ngModel)]="dob" min="1940" max="2002" display-format="DD/MM/YYYY" picker-format="DDDD MMMM YYYY" placeholder="Date"></ion-datetime>
           </ion-item>
 
           <ion-item>
@@ -71,14 +71,13 @@
           </ion-item>
 
           <ion-item>
-            <ion-grid>
-              <ion-row align-items-end>
+            <!-- <ion-grid> -->
+              <!-- <ion-row align-items-end> -->
                 <ion-label class="top-align">Years of Experience</ion-label>
-                <ion-col offset="10.43">
-                  <ion-input  placeholder="- -"  type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
+                <!-- <ion-col offset="10.43"> -->
+                  <ion-item class="dash"><ion-input placeholder="- -"  type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input></ion-item>
+              <!-- </ion-row> -->
+            <!-- </ion-grid> -->
           </ion-item>
 
           <ion-item>

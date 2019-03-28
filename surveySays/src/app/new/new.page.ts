@@ -123,10 +123,6 @@ export class NewPage implements OnInit {
     })
   }
 
-  options(index: number){
-    // console.log(this.genreSelect);
-  }
-
   async presentToast(displayMessage) {
     const toast = await this.toastController.create({
       message: displayMessage,
