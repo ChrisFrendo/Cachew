@@ -1,9 +1,40 @@
+<ion-menu side="start" menuId="first">
+  <ion-header>
+    <ion-toolbar color="tertiary">
+      <ion-row>
+      <ion-title>Start Menu</ion-title>
+      <ion-menu-toggle autoHide="false" menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
+      </ion-row>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item><ion-button size="small" expand="full" class="button" center fill="clear" color="tertiary" (click)="subscribed()">Subscribed Studies</ion-button></ion-item>
+      <ion-item><ion-button size="small" expand="full" class="button" center fill="clear" color="tertiary" (click)="new()">New Studies</ion-button></ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<ion-router-outlet main></ion-router-outlet>
+
 <ion-header>
-  <ion-toolbar>
-    <ion-title>study</ion-title>
+  <ion-toolbar color="tertiary">
+    <ion-row>
+    <ion-menu-toggle menu="first"><ion-icon class="icon" name="menu"></ion-icon></ion-menu-toggle>
+    <ion-title>Study Title</ion-title>
+    <ion-badge color="medium">{{notification}}</ion-badge>
+
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding scroll="false">
+  <div class="center-elements">
+  <ion-card>
+    <ion-card-content>
+      <div class="list">
 
+      </div>
+    </ion-card-content>
+  </ion-card>
+  </div>
 </ion-content>
