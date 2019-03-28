@@ -21,8 +21,8 @@ export class StudyPage implements OnInit {
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
   openFirst() {
-    this.menu.enable(true, 'first');
-    this.menu.open('first');
+    this.menu.enable(true, 'start');
+    this.menu.open('start');
   }
 
   openEnd() {

@@ -46,8 +46,8 @@ export class NewPage implements OnInit {
   }
 
   openFirst() {
-    this.menu.enable(true, 'first');
-    this.menu.open('first');
+    this.menu.enable(true, 'start');
+    this.menu.open('start');
   }
 
   openEnd() {
