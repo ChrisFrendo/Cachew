@@ -17,6 +17,7 @@ export class DashboardPage implements OnInit {
   //set to number of questions to answer
   notification: Array<number>;
 
+  noStudy= false;
   roles: Array<string>;
   studyTitles: Array<any>;
   studyId: Array<any>;
@@ -46,7 +47,7 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-    this.storage.get('token').then((val) => {
+      this.storage.get('token').then((val) => {
         // console.log('Your token is', val);
       this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
         this.studyTitles = JSON.parse((<any>data)._body).array;
@@ -56,12 +57,12 @@ export class DashboardPage implements OnInit {
           this.studyTitles[i] = this.studyTitles[i].title;
           this.studyId[i] = this.studyId[i]._id;
         }
+        this.noStudy = true;
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);
       })
    })
-   console.log(this.notification);
   }
 
   delete(index: number){

@@ -28,6 +28,7 @@
 </ion-header>
 
 <ion-content padding>
+  <div *ngIf="noStudy">
   <ion-list>
     <ion-item-sliding *ngFor="let studyTitle of studyTitles; let i = index">
       <ion-item>
@@ -40,4 +41,8 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  </div>
+  <ion-item *ngIf="!noStudy" class="center" lines="none">
+    <ion-button size="large" fill="outline" color="tertiary" (click)="new()" style="margin:auto"><b>Click here to access NEW STUDIES</b></ion-button>
+  </ion-item>
 </ion-content>
