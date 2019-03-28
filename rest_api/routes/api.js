@@ -210,18 +210,25 @@ router.get('/study/subscribed', async function(req, res, next){
     }
     // console.log(studies);
     var notifs = [];
+    var flag = [];
     for (var i = 0; i < studies.length; i++) {
       notifs[i] = 0;
+      flag[i] = false;
       for (var j = 0; j < studies[i].questions.length; j++) {
         await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: null}]}).then( async function(question){
             if (question != null){
               notifs[i]++;
             }
         }));
+        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: {$ne: null}}]}).then( async function(question){
+            if (question != null){
+              flag[i] = true;
+            }
+        }));
       }
     }
 
-    res.status(200).send({array: studies, notifications: notifs});
+    res.status(200).send({array: studies, notifications: notifs, flag: flag});
   });
 });
 
