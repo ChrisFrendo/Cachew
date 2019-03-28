@@ -186,14 +186,21 @@ router.get('/users/userID', function(req, res, next){
 
 //  add a new question to the db
 router.post('/question', function(req, res, next){
-  Question.create(req.body).then(function(question){
+if(req.body.type === Question.questionTypes[3]){
+  req.body.multiple = req.body.multiple.split('\n');
+}
+  Question.create(req.body, function(err, question){
+
+    if(err){
+    res.status(400).send(err.message);
+    next();
+  }
+  res.status(200).send(question);
+  });
+
     console.log("successfuly handled question post request");
-    res.status(200).send(question);
-  }).catch(next);
 });
-
 // Study DB ROUTES
-
 // get a list of subscribed to studies from the db
 router.get('/study/subscribed', function(req, res, next){
   Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
