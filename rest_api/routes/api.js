@@ -269,68 +269,65 @@ async function validateTargets(res, req, studies){
       res.status(400).send(err.message);
       return;
     }
-    for (var i = 0; i < studies.length; i++) {
+    // testing 
+    // var array = [1, 2, 3, 5, 7, 9];
+    // var i = 0;
+    // while (i < array.length) {
+    //   if (array[i] % 2 != 0){
+    //     array.splice(i,1);
+    //     i = 0;
+    //   } else {
+    //     i++;
+    //   }
+    // }
+    // console.log(array);
+
+
+    var i = 0;
+    while (i < studies.length) {
+      var deleted = false;
       for (var j = 0; j < studies[i].targets.length; j++) {
-        console.log(i);
-        console.log(studies);
 
         if (studies[i].targets[j].name == Study.targets[0] && user.gender != studies[i].targets[j].value){ // validating Gender
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         } else if (studies[i].targets[j].name == Study.targets[1] && user.student != studies[i].targets[j].value){ //validating student
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         } else if (studies[i].targets[j].name == Study.targets[2] && user.country != studies[i].targets[j].value){ //validating country
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         } else if (studies[i].targets[j].name == Study.targets[3] && user.salary != studies[i].targets[j].value){ //validating salary
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         } else if (studies[i].targets[j].name == Study.targets[4] && user.industry != studies[i].targets[j].value){ //validating industry
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         } else if (studies[i].targets[j].name == Study.targets[5] && user.yearsExp != studies[i].targets[j].value){ //validating years of exp
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         } else if (studies[i].targets[j].name == Study.targets[6] && user.jobrole != studies[i].targets[j].value){ //validating jobrole
           studies.splice(i,1);
           i = 0;
+          deleted=true;
           break;
         }
       }
-    }
-    if (studies.length == 1){
-      for (var j = 0; j < studies[0].targets.length; j++) {
-        if (studies[0].targets[j].name == Study.targets[0] && user.gender != studies[0].targets[j].value){ // validating Gender
-          studies = [];
-          break;
-        } else if (studies[0].targets[j].name == Study.targets[1] && user.student != studies[0].targets[j].value){ //validating student
-          studies = [];
-          break;
-        } else if (studies[0].targets[j].name == Study.targets[2] && user.country != studies[0].targets[j].value){ //validating country
-          studies = [];
-          break;
-        } else if (studies[0].targets[j].name == Study.targets[3] && user.salary != studies[0].targets[j].value){ //validating salary
-          studies = [];
-          break;
-        } else if (studies[0].targets[j].name == Study.targets[4] && user.industry != studies[0].targets[j].value){ //validating industry
-          studies = [];
-          break;
-        } else if (studies[0].targets[j].name == Study.targets[5] && user.yearsExp != studies[0].targets[j].value){ //validating years of exp
-          studies = [];
-          break;
-        } else if (studies[0].targets[j].name == Study.targets[6] && user.jobrole != studies[0].targets[j].value){ //validating jobrole
-          studies = [];
-          break;
-        }
+      if (!deleted){
+        i++;
       }
-
     }
     return studies;
   }));
