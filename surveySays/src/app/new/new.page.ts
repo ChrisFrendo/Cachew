@@ -16,6 +16,8 @@ export class NewPage implements OnInit {
 
   ip: string = '10.60.10.66';
 
+  noStudy= false;
+
   roles: Array<string>;
   genreSelect: string[] = [];
   genres: string;
@@ -37,6 +39,7 @@ export class NewPage implements OnInit {
         for(var i=0; i<this.studyTitles.length; i++){
           this.studyTitles[i] = this.studyTitles[i].title;
           this.studyId[i] = this.studyId[i]._id;
+          this.noStudy = true;
         }
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
@@ -96,6 +99,9 @@ export class NewPage implements OnInit {
         for(var i=0; i<this.studyTitles.length; i++){
           this.studyTitles[i] = this.studyTitles[i].title;
           this.studyId[i] = this.studyId[i]._id;
+        }
+        if(this.studyTitles.length==0){
+          this.noStudy = false;
         }
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
