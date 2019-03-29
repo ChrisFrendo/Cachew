@@ -1,9 +1,9 @@
-<ion-menu side="start" menuId="first">
+<ion-menu side="start" menuId="side">
   <ion-header>
     <ion-toolbar color="tertiary">
       <ion-row>
       <ion-title>Start Menu</ion-title>
-      <ion-menu-toggle autoHide="false" menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
+      <ion-menu-toggle autoHide="false" menu="side"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
       </ion-row>
     </ion-toolbar>
   </ion-header>
@@ -14,25 +14,76 @@
     </ion-list>
   </ion-content>
 </ion-menu>
+
 <ion-router-outlet main></ion-router-outlet>
 
 <ion-header>
   <ion-toolbar color="tertiary">
     <ion-row>
-    <ion-menu-toggle menu="first"><ion-icon class="icon" name="menu"></ion-icon></ion-menu-toggle>
+      <ion-button class="menu-button" color="tertiary" (click)="openFirst()" menu="side"><ion-icon class="icon" name="menu"></ion-icon></ion-button>
     <ion-title>Study Title</ion-title>
-    <ion-badge color="medium">{{notification}}</ion-badge>
-
     </ion-row>
   </ion-toolbar>
 </ion-header>
+
+<!-- *ngFor="let question of questions" -->
 
 <ion-content padding scroll="false">
   <div class="center-elements">
   <ion-card>
     <ion-card-content>
-      <div class="list">
 
+      <div *ngIf="text">
+        <ion-item  lines="none">
+          <ion-label class="question" position="fixed">Question</ion-label>
+        </ion-item>
+        <ion-item lines="none" class="card">
+          <ion-textarea wrap="hard" rows="10" cols="20"></ion-textarea>
+        </ion-item>
+      </div>
+
+      <div *ngIf="scale">
+        <ion-item  lines="none">
+          <ion-label class="question" position="fixed">Question</ion-label>
+        </ion-item>
+        <ion-item lines="none" class="card">
+            <ion-range color="tertiary" pin="true" min="1000" max="2000" step="100" snaps="true"></ion-range>
+          </ion-item>
+      </div>
+
+      <div *ngIf="ask">
+        <ion-item  lines="none">
+          <ion-label class="question" position="fixed">Question</ion-label>
+        </ion-item>
+        <ion-radio-group class="radio">
+          <ion-grid>
+            <ion-row>
+              <ion-item lines="none">
+                <ion-item lines="none"><ion-label>False</ion-label></ion-item>
+                <ion-radio (ionSelect)="askFn(false)" center fill="outline" color="tertiary"></ion-radio>
+              </ion-item>
+
+
+              <ion-item lines="none">
+                <ion-item lines="none"><ion-label>True</ion-label></ion-item>
+                <ion-radio (ionSelect)="askFn(true)" center fill="outline" color="tertiary"></ion-radio>
+              </ion-item>
+            </ion-row>
+          </ion-grid>
+        </ion-radio-group>
+      </div>
+
+      <div *ngIf="multi">
+        <ion-item  lines="none">
+          <ion-label class="question" position="fixed">Question</ion-label>
+        </ion-item>
+
+        <ion-list>
+          <ion-item *ngFor="let option of options; let i = index">
+            <ion-label>{{option}}</ion-label>
+            <ion-checkbox slot="end" [(ngModel)]="optionSelect"></ion-checkbox>
+          </ion-item>
+        </ion-list>
       </div>
     </ion-card-content>
   </ion-card>

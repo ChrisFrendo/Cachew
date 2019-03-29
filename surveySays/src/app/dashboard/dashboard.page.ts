@@ -45,8 +45,8 @@ export class DashboardPage implements OnInit {
 }
 
   openFirst() {
-    this.menu.enable(true, 'first');
-    this.menu.open('first');
+    this.menu.enable(true, 'start');
+    this.menu.open('start');
   }
 
   openEnd() {
@@ -95,6 +95,10 @@ export class DashboardPage implements OnInit {
         console.log(error);
       })
     })
+  }
+
+  study(){
+    this.router.navigateByUrl('/study');
   }
 
   async presentToast(displayMessage) {

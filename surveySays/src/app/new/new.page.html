@@ -1,9 +1,9 @@
-<ion-menu side="start" menuId="first">
+<ion-menu side="start" menuId="side">
   <ion-header>
     <ion-toolbar color="tertiary">
       <ion-row>
         <ion-title>Start Menu</ion-title>
-        <ion-menu-toggle autoHide="false" menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
+        <ion-menu-toggle autoHide="false" menu="side"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
       </ion-row>
     </ion-toolbar>
   </ion-header>
@@ -21,7 +21,7 @@
 <ion-header>
   <ion-toolbar color="tertiary">
     <ion-row>
-      <ion-menu-toggle menu="first"><ion-icon class="icon" name="menu"></ion-icon></ion-menu-toggle>
+      <ion-button class="menu-button" color="tertiary" (click)="openFirst()" menu="side"><ion-icon class="icon" name="menu"></ion-icon></ion-button>
       <ion-title>New Studies</ion-title>
     </ion-row>
   </ion-toolbar>

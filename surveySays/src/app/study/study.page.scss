@@ -1,10 +1,7 @@
 .center-elements{
     width: 100%;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    margin-left: -50%;
-    margin-top: -15%;
+    margin: auto;
+    margin-top: 50px;
 }
 .my-custom-menu {
   --width: 500px;
@@ -22,4 +19,13 @@
 }
 .button{
   font-size: 13px;
+}
+.menu-button{
+    --box-shadow:none;
+ }
+.border{
+  --border-top: black;
+}
+.question{
+  font-size: 18px;
 }
