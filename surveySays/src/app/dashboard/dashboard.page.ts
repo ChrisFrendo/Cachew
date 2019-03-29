@@ -5,6 +5,9 @@ import { Http} from '@angular/http';
 import { ToastController } from '@ionic/angular';
 import { async } from 'q';
 import { Storage } from '@ionic/storage';
+import { Component } from '@stencil/core';
+
+const nav = document.querySelector('ion-nav');
 
 @Component({
   selector: 'app-dashboard',
@@ -76,6 +79,15 @@ export class DashboardPage implements OnInit {
   }
 }
 
+ doRefresh(refresher) {
+     console.log('Begin async operation', refresher);
+     this.ionViewWillEnter();
+     setTimeout(() => {
+       console.log('Async operation has ended');
+       refresher.target.complete();
+     }, 1000);
+   }
+
   openFirst() {
     this.menu.enable(true, 'start');
     this.menu.open('start');
@@ -106,7 +118,6 @@ export class DashboardPage implements OnInit {
     console.log(index);
 
     this.storage.get('token').then((val) => {
-      // console.log('Your token is', val);
 
       let postData = {
         studyID: this.studyId[index]
@@ -120,7 +131,6 @@ export class DashboardPage implements OnInit {
           this.studyId[i] = this.studyId[i]._id;
         }
         if(this.studyTitles.length==0){
-          window.location.reload();
           this.noStudy = false;
         }
       }, error => {
@@ -146,7 +156,6 @@ export class DashboardPage implements OnInit {
           this.studyTitleUns[i] = this.studyTitleUns[i].title;
           this.studyIdUn[i] = this.studyIdUn[i]._id;
         }
-         window.location.reload();
           this.noStudy = true;
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
