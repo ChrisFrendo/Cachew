@@ -80,6 +80,10 @@ export class StudyPage implements OnInit {
       }
   }
 
+  submit(){
+    this.router.navigateByUrl('/study');
+  }
+
   async presentToast(displayMessage) {
     const toast = await this.toastController.create({
       message: displayMessage,
