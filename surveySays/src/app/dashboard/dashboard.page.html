@@ -27,6 +27,7 @@
   </ion-toolbar>
 </ion-header>
 
+<ion-button class="clickHere" size="small" fill="outline" color="tertiary" (click)="new()" style="margin:auto"><b><p>Click here to access </p><p>NEW STUDIES</p></b></ion-button>
 <ion-content padding>
   <div *ngIf="noStudy">
   <ion-list>
@@ -45,7 +46,20 @@
     </ion-item-sliding>
   </ion-list>
   </div>
-  <ion-item *ngIf="!noStudy" class="center" lines="none">
-    <ion-button class="clickHere" size="large" fill="outline" color="tertiary" (click)="new()" style="margin:auto"><b><p>Click here to access </p><p>NEW STUDIES</p></b></ion-button>
-  </ion-item>
+  <ion-card *ngIf="!noStudy" class="center" lines="none">
+    <ion-card-content>
+    <ion-list>
+    <ion-label color="tertiary"><b>Suggested Studies</b></ion-label>
+      <ion-item-sliding *ngFor="let studyTitleUn of studyTitleUns; let i = index;">
+        <ion-item *ngIf="i<3">
+            <ion-label>{{ studyTitleUn }}</ion-label>
+            <ion-icon color="tertiary" name="arrow-dropleft"></ion-icon>
+         </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="tertiary" (click)="add(i)">Subscribe</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

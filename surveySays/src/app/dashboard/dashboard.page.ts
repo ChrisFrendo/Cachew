@@ -19,9 +19,18 @@ export class DashboardPage implements OnInit {
 
   noStudy= false;
   roles: Array<string>;
+
+  //for subscribed
   studyTitles: Array<any>;
   studyId: Array<any>;
   indicatorCheck: Array<boolean>;
+
+  //for unsubscribed
+  genreSelect: string;
+  genres: string;
+  input: string;
+  studyTitleUns: Array<any>;
+  studyIdUn: Array<any>;
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
@@ -42,6 +51,29 @@ export class DashboardPage implements OnInit {
       console.log(error);
     })
   })
+
+  if(!this.noStudy){
+    this.input="";
+    this.genreSelect="all";
+    console.log(this.genreSelect);
+    this.storage.get('token').then((val) => {
+      console.log('Your token is', val);
+      this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
+        this.studyTitleUns = JSON.parse((<any>data)._body).array;
+        this.studyIdUn = JSON.parse((<any>data)._body).array;
+        for(var i=0; i<this.studyTitleUns.length; i++){
+          this.studyTitleUns[i] = this.studyTitleUns[i].title;
+          this.studyIdUn[i] = this.studyIdUn[i]._id;
+        }
+        if(this.studyTitleUns.length==0){
+          this.noStudy = true;
+        }
+      }, error => {
+        this.presentToast("Error when retrieving data. Please try again later");
+        console.log(error);
+      })
+    })
+  }
 }
 
   openFirst() {
@@ -88,8 +120,34 @@ export class DashboardPage implements OnInit {
           this.studyId[i] = this.studyId[i]._id;
         }
         if(this.studyTitles.length==0){
+          window.location.reload();
           this.noStudy = false;
         }
+      }, error => {
+        this.presentToast("Error when retrieving data. Please try again later");
+        console.log(error);
+      })
+    })
+  }
+
+  add(index: number){
+    // console.log(this.genreSelect);
+    this.storage.get('token').then((val) => {
+      // console.log('Your token is', val);
+
+      let postData = {
+        studyID: this.studyIdUn[index]
+      }
+
+      this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(data => {
+        this.studyTitleUns = JSON.parse((<any>data)._body).array;
+        this.studyIdUn = JSON.parse((<any>data)._body).array;
+        for(var i=0; i<this.studyTitleUns.length; i++){
+          this.studyTitleUns[i] = this.studyTitleUns[i].title;
+          this.studyIdUn[i] = this.studyIdUn[i]._id;
+        }
+         window.location.reload();
+          this.noStudy = true;
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);
