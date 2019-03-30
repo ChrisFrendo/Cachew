@@ -244,7 +244,7 @@ router.get('/study/notsubscribed', async function(req, res, next){
         return;
       }
       studies = await (validateTargets(res, req, studies));
-      console.log(studies);
+      // console.log(studies);
       res.status(200).send({array: studies});
     });
   } else {
@@ -256,7 +256,7 @@ router.get('/study/notsubscribed', async function(req, res, next){
         next();
       }
       studies = await (validateTargets(res, req, studies));
-      console.log(studies);
+      // console.log(studies);
       res.status(200).send({array: studies});
 
     });
@@ -269,19 +269,6 @@ async function validateTargets(res, req, studies){
       res.status(400).send(err.message);
       return;
     }
-    // testing 
-    // var array = [1, 2, 3, 5, 7, 9];
-    // var i = 0;
-    // while (i < array.length) {
-    //   if (array[i] % 2 != 0){
-    //     array.splice(i,1);
-    //     i = 0;
-    //   } else {
-    //     i++;
-    //   }
-    // }
-    // console.log(array);
-
 
     var i = 0;
     while (i < studies.length) {
@@ -344,18 +331,11 @@ router.post('/study', function(req, res, next){
 
 
 // update a subscriber to a study in the db
-router.put('/study', async function(req, res, next){
+router.put('/study', function(req, res, next){
 
-  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then( async function(){
-    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(async function() {
-      Study.find({subscribers: {$ne: req.decoded.username}}, {title: 1, targets: 1}, async function(err, studies){
-        if (err){
-          res.status(400).send(err.message);
-          next();
-        }
-        studies = await(validateTargets(res, req, studies));
-        res.status(200).send({array: studies});
-      });
+  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
+        res.status(200);
     })
   })
 
@@ -365,13 +345,7 @@ router.put('/study', async function(req, res, next){
 router.put('/study/subscribed', function(req, res, next){
   User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(){
     Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function() {
-      Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
-        if (err){
-          res.status(400).send(err.message);
-          next();
-        }
-        res.status(200).send({array: studies});
-      });
+      res.status(200);
     })
   })
 });
