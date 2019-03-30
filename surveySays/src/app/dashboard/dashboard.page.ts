@@ -5,6 +5,9 @@ import { Http} from '@angular/http';
 import { ToastController } from '@ionic/angular';
 import { async } from 'q';
 import { Storage } from '@ionic/storage';
+// import { Component } from '@stencil/core';
+
+const nav = document.querySelector('ion-nav');
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +38,7 @@ export class DashboardPage implements OnInit {
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
   ionViewWillEnter(){
+    this.noStudy = false;
     this.storage.get('token').then((val) => {
     this.http.get('http://'+this.ip+':4000/api/study/subscribed?token=' + val).subscribe(data => {
       this.studyTitles = JSON.parse((<any>data)._body).array;
@@ -76,6 +80,15 @@ export class DashboardPage implements OnInit {
   }
 }
 
+ doRefresh(refresher) {
+     console.log('Begin async operation', refresher);
+     this.ionViewWillEnter();
+     setTimeout(() => {
+       console.log('Async operation has ended');
+       refresher.target.complete();
+     }, 1000);
+   }
+
   openFirst() {
     this.menu.enable(true, 'start');
     this.menu.open('start');
@@ -106,23 +119,13 @@ export class DashboardPage implements OnInit {
     console.log(index);
 
     this.storage.get('token').then((val) => {
-      // console.log('Your token is', val);
 
       let postData = {
         studyID: this.studyId[index]
       }
-      console.log(postData);
-      this.http.put('http://'+this.ip+':4000/api/study/subscribed?token=' + val, postData).subscribe(data => {
-        this.studyTitles = JSON.parse((<any>data)._body).array;
-        this.studyId = JSON.parse((<any>data)._body).array;
-        for(var i=0; i<this.studyTitles.length; i++){
-          this.studyTitles[i] = this.studyTitles[i].title;
-          this.studyId[i] = this.studyId[i]._id;
-        }
-        if(this.studyTitles.length==0){
-          window.location.reload();
-          this.noStudy = false;
-        }
+      // console.log(postData);
+      this.http.put('http://'+this.ip+':4000/api/study/subscribed?token=' + val, postData).subscribe(() => {
+        this.ionViewWillEnter();
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);
@@ -139,15 +142,8 @@ export class DashboardPage implements OnInit {
         studyID: this.studyIdUn[index]
       }
 
-      this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(data => {
-        this.studyTitleUns = JSON.parse((<any>data)._body).array;
-        this.studyIdUn = JSON.parse((<any>data)._body).array;
-        for(var i=0; i<this.studyTitleUns.length; i++){
-          this.studyTitleUns[i] = this.studyTitleUns[i].title;
-          this.studyIdUn[i] = this.studyIdUn[i]._id;
-        }
-         window.location.reload();
-          this.noStudy = true;
+      this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(() => {
+          this.ionViewWillEnter();
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);

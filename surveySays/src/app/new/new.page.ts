@@ -80,10 +80,6 @@ export class NewPage implements OnInit {
     })
   }
 
-  refresh(){
-    window.location.reload(true)
-  }
-
   add(index: number){
     // console.log(this.genreSelect);
     this.storage.get('token').then((val) => {
