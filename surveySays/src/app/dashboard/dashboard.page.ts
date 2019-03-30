@@ -80,14 +80,14 @@ export class DashboardPage implements OnInit {
   }
 }
 
- doRefresh(refresher) {
-     console.log('Begin async operation', refresher);
-     this.ionViewWillEnter();
-     setTimeout(() => {
-       console.log('Async operation has ended');
-       refresher.target.complete();
-     }, 1000);
-   }
+ // doRefresh(refresher) {
+ //     console.log('Begin async operation', refresher);
+ //     this.ionViewWillEnter();
+ //     setTimeout(() => {
+ //       console.log('Async operation has ended');
+ //       refresher.target.complete();
+ //     }, 1000);
+ //   }
 
   openFirst() {
     this.menu.enable(true, 'start');

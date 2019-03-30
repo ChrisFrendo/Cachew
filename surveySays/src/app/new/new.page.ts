@@ -90,15 +90,7 @@ export class NewPage implements OnInit {
       }
 
       this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(data => {
-        this.studyTitles = JSON.parse((<any>data)._body).array;
-        this.studyId = JSON.parse((<any>data)._body).array;
-        for(var i=0; i<this.studyTitles.length; i++){
-          this.studyTitles[i] = this.studyTitles[i].title;
-          this.studyId[i] = this.studyId[i]._id;
-        }
-        if(this.studyTitles.length==0){
-          this.noStudy = false;
-        }
+      this.ionViewWillEnter();
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);

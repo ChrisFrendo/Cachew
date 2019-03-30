@@ -28,17 +28,17 @@
 </ion-header>
 
 <ion-button class="clickHere" size="small" fill="outline" color="tertiary" (click)="new()" style="margin:auto"><b><p>Click here to access </p><p>NEW STUDIES</p></b></ion-button>
-<div class="spacer" style="width: 320px; height: 15px;"></div>
+<!-- <div class="spacer" style="width: 320px; height: 15px;"></div> -->
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="doRefresh($event)">
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
          pullingIcon="arrow-dropdown"
          pullingText="Pull to refresh"
          refreshingSpinner="circles"
          refreshingText="Refreshing...">
        </ion-refresher-content>
-  </ion-refresher>
+  </ion-refresher> -->
   <div *ngIf="noStudy">
   <ion-list>
     <ion-item-sliding *ngFor="let studyTitle of studyTitles; let i = index">
