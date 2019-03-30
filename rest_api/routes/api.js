@@ -335,7 +335,7 @@ router.put('/study', function(req, res, next){
 
   User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
     Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
-        res.status(200);
+        res.status(200).send();
     })
   })
 
@@ -345,7 +345,7 @@ router.put('/study', function(req, res, next){
 router.put('/study/subscribed', function(req, res, next){
   User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(){
     Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function() {
-      res.status(200);
+      res.status(200).send();
     })
   })
 });
