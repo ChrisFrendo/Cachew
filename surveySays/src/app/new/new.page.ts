@@ -41,6 +41,9 @@ export class NewPage implements OnInit {
           this.studyId[i] = this.studyId[i]._id;
           this.noStudy = true;
         }
+        if(this.studyTitles.length==0){
+          this.noStudy = false;
+        }
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);
