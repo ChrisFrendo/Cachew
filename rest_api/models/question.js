@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var questionTypes = ["Free Text", "Scale", "Boolean", "Multiple Choice"];
+var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 // create question Schema & model
 const QuestionSchema = new Schema({
@@ -17,6 +18,15 @@ const QuestionSchema = new Schema({
   time: {
     type: Date,
     default: null
+  },
+  schedule: {
+    day: [{
+      type: String,
+      enum: days
+    }],
+    time: [{
+      type: Date
+    }]
   },
   scale: {
     min:{
@@ -50,3 +60,4 @@ const Question = mongoose.model('question', QuestionSchema);
 
 module.exports = Question;
 module.exports.questionTypes = questionTypes;
+module.exports.days = days;

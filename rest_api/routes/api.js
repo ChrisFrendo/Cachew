@@ -48,8 +48,13 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.genres}));
 });
+
 router.get('/references/study/targets', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.targets}));
+});
+
+router.get('/references/question/days', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Question.days}));
 });
 
 router.get('/usernamegen', function(req, res, next){
