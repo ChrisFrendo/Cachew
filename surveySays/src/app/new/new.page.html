@@ -1,9 +1,9 @@
-<ion-menu side="start" menuId="first">
+<ion-menu side="start" menuId="side">
   <ion-header>
     <ion-toolbar color="tertiary">
       <ion-row>
         <ion-title>Start Menu</ion-title>
-        <ion-menu-toggle autoHide="false" menu="first"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
+        <ion-menu-toggle autoHide="false" menu="side"><ion-icon class="arrow" name="arrow-back"></ion-icon></ion-menu-toggle>
       </ion-row>
     </ion-toolbar>
   </ion-header>
@@ -21,18 +21,15 @@
 <ion-header>
   <ion-toolbar color="tertiary">
     <ion-row>
-      <ion-menu-toggle menu="first"><ion-icon class="icon" name="menu"></ion-icon></ion-menu-toggle>
+      <ion-button class="menu-button" color="tertiary" (click)="openFirst()" menu="side"><ion-icon class="icon" name="menu"></ion-icon></ion-button>
       <ion-title>New Studies</ion-title>
     </ion-row>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+  <ion-list *ngIf="noStudy">
     <ion-item lines="none" class="bottom">
-      <ion-item lines="none">
-        <ion-button (click)="refresh()" class="refresh" fill=clear color="tertiary"><ion-icon name="refresh"></ion-icon></ion-button>
-      </ion-item>
       <ion-searchbar (ionChange)="search()" [(ngModel)]="input" class="searchbar" autocomplete="on" placeholder="Search" type="text" animated></ion-searchbar>
       <ion-item (ionChange)="search()" lines="none">
         <ion-icon class="selectIcon" color="tertiary" name="arrow-dropdown-circle"></ion-icon>
@@ -52,4 +49,8 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+
+  <ion-item *ngIf="!noStudy" class="center" lines="none">
+    <ion-button disabled class="clickHere" size="large" fill="outline" color="tertiary" (click)="new()" style="margin:auto"><b><p>No studies available</p><p>at this moment</p></b></ion-button>
+  </ion-item>
 </ion-content>

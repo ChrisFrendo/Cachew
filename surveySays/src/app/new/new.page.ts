@@ -16,6 +16,8 @@ export class NewPage implements OnInit {
 
   ip: string = '10.60.10.66';
 
+  noStudy= false;
+
   roles: Array<string>;
   genreSelect: string[] = [];
   genres: string;
@@ -25,9 +27,33 @@ export class NewPage implements OnInit {
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
+  ionViewWillEnter(){
+    this.input="";
+    this.genreSelect[0]="all";
+    console.log(this.genreSelect);
+    this.storage.get('token').then((val) => {
+      console.log('Your token is', val);
+      this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
+        this.studyTitles = JSON.parse((<any>data)._body).array;
+        this.studyId = JSON.parse((<any>data)._body).array;
+        for(var i=0; i<this.studyTitles.length; i++){
+          this.studyTitles[i] = this.studyTitles[i].title;
+          this.studyId[i] = this.studyId[i]._id;
+          this.noStudy = true;
+        }
+        if(this.studyTitles.length==0){
+          this.noStudy = false;
+        }
+      }, error => {
+        this.presentToast("Error when retrieving data. Please try again later");
+        console.log(error);
+      })
+    })
+  }
+
   openFirst() {
-    this.menu.enable(true, 'first');
-    this.menu.open('first');
+    this.menu.enable(true, 'start');
+    this.menu.open('start');
   }
 
   openEnd() {
@@ -55,28 +81,6 @@ export class NewPage implements OnInit {
       this.presentToast("Error when retrieving data. Please try again later");
       console.log(error);
     })
-
-    this.input="";
-    this.genreSelect[0]="all";
-    console.log(this.genreSelect);
-    this.storage.get('token').then((val) => {
-      console.log('Your token is', val);
-      this.http.get('http://'+this.ip+':4000/api/study/notsubscribed?token=' + val+"&title=" + this.input+"&genres=" + this.genreSelect).subscribe(data => {
-        this.studyTitles = JSON.parse((<any>data)._body).array;
-        this.studyId = JSON.parse((<any>data)._body).array;
-        for(var i=0; i<this.studyTitles.length; i++){
-          this.studyTitles[i] = this.studyTitles[i].title;
-          this.studyId[i] = this.studyId[i]._id;
-        }
-      }, error => {
-        this.presentToast("Error when retrieving data. Please try again later");
-        console.log(error);
-      })
-    })
-  }
-
-  refresh(){
-    window.location.reload(true)
   }
 
   add(index: number){
@@ -89,18 +93,13 @@ export class NewPage implements OnInit {
       }
 
       this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(data => {
-        this.studyTitles = JSON.parse((<any>data)._body).array;
-        this.studyId = JSON.parse((<any>data)._body).array;
-        for(var i=0; i<this.studyTitles.length; i++){
-          this.studyTitles[i] = this.studyTitles[i].title;
-          this.studyId[i] = this.studyId[i]._id;
-        }
+      this.ionViewWillEnter();
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
         console.log(error);
       })
     })
-    window.location.reload(true)
+    // window.location.reload(true)
   }
 
   search (){
