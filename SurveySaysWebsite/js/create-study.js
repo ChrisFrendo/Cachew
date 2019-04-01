@@ -4,7 +4,7 @@ var count= 0;
 $(document).ready(function() {
   $("#btnNewQuestion").click(function(e) {
     e.preventDefault();
-    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><select id='frequency' class='col-md-2 form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select><div class='col-sm-4 mb-3 mb-sm-0'><input name='questionDateTime' type='datetime-local' class='form-control form-control-user'/></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-2 mb-3 mb-sm-0'><select id='frequency' class='form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select></div><div class='col-sm-4 mb-3 mb-sm-0' style='visibility:hidden;'><input name='questionDateTime' type='datetime-local' class='form-control form-control-user'/></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
 
     var questionTypeSelect = document.getElementsByName("questionType");
 
@@ -47,10 +47,11 @@ var frequencySelect = document.getElementsByName("frequencyOfSchedule");
      $(".field").hide();
      switch (option) {
        case "No Schedule":
-       console.log("No Schedule");
+       this.parentNode.nextSibling.style.visibility = "hidden";
          break;
        case "Just Once":
-       console.log("Just Once");
+       this.parentNode.nextSibling.style.visibility = "visible";
+       this.parentNode.nextSibling.firstChild.setAttribute("required", "true");
          break;
         case "Daily":
         console.log("Daily");
@@ -66,6 +67,8 @@ var frequencySelect = document.getElementsByName("frequencyOfSchedule");
 
 });
 });
+
+
 
 
 function scaleOption(element)
@@ -192,8 +195,6 @@ function submitStudy(){
   var questionTypes = document.getElementsByName('questionType');
   var questionContents = document.getElementsByName('questionContent');
   var questionDateTime = document.getElementsByName('questionDateTime');
-
-
 
   var input1 = document.getElementsByName('input1');
   var input2 = document.getElementsByName('input2');
