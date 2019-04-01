@@ -355,4 +355,11 @@ router.put('/study/subscribed', function(req, res, next){
   })
 });
 
+// remove a subscriber from a study
+router.delete('/question', function(req, res, next){
+    Question.findOneAndDelete({_id: req.body.id}).then(function() {
+      res.status(200).send();
+    })
+});
+
 module.exports = router;
