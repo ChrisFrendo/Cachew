@@ -57,6 +57,10 @@ router.get('/references/question/days', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Question.days}));
 });
 
+router.get('/references/question/times', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Question.ties}));
+});
+
 router.get('/usernamegen', function(req, res, next){
   var generateName = require('sillyname');
   var sillyName = generateName();
@@ -208,6 +212,7 @@ if(req.body.type === Question.questionTypes[3]){
   console.log("successfuly handled question post request");
 });
 
+// used to retrieve a list of unscheduled questions
 router.get('/question', async function(req, res, next){
     Study.findOne({_id: req.query.studyID}, async function(err, study){
 
@@ -234,14 +239,6 @@ router.get('/question', async function(req, res, next){
     }
 
     });
-  /*  Question.find({type : req.body.type}, function(err, question){
-      if (err){
-        res.status(400).send(err.message);
-        return;
-      }
-      res.status(200).send({array: question});
-    }); */
-
 });
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
