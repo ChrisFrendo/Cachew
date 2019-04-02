@@ -24,7 +24,7 @@ const StudySchema = new Schema({
     enum: genres
   }],
   questions: [{
-    type: Schema.ObjectId,
+    type: Schema.ObjectId
   }],
   targets: [{
     name:{

@@ -186,6 +186,7 @@ router.get('/users/userID', function(req, res, next){
 
 //  add a new question to the db
 router.post('/question', function(req, res, next){
+  console.log(req.body);
 if(req.body.type === Question.questionTypes[3]){
   req.body.multiple = req.body.multiple.split('\n');
 }
@@ -199,6 +200,35 @@ if(req.body.type === Question.questionTypes[3]){
   });
 
     console.log("successfuly handled question post request");
+});
+
+router.get('/question', async function(req, res, next){
+    Study.findOne({_id: req.query.studyID}, async function(err, study){
+
+      if(err){
+        res.status(400).send(err.message);
+        next();
+      }
+      var question =[];
+      for (var j = 0; j < study.questions.length; j++) {
+        await (Question.findOne({_id: study.questions[j]}).then( async function(questions){
+
+          question[j] = questions;
+
+        }));
+      }
+      console.log(question);
+      res.status(200).send({array : question});
+
+    });
+  /*  Question.find({type : req.body.type}, function(err, question){
+      if (err){
+        res.status(400).send(err.message);
+        return;
+      }
+      res.status(200).send({array: question});
+    }); */
+
 });
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
