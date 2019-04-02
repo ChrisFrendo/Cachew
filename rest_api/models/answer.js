@@ -8,9 +8,17 @@ const AnswerSchema = new Schema({
     type: String,
     required: true
   },
-  content: {
-    type: String,
-    required: true,
+  freetextAnswer: {
+    type: String
+  },
+  booleanAnswer: {
+    type: String
+  },
+  multAnswer:[{
+    type: String
+  }],
+  scaleAnswer: {
+    type: Number
   }
 });
 

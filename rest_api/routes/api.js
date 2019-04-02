@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/user.js');
 const Question = require('../models/question');
 const Study = require('../models/study');
-const Answer = require('../models/answers')
+const Answer = require('../models/answer');
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
 var app = express();
@@ -58,7 +58,7 @@ router.get('/references/question/days', function(req, res, next){
 });
 
 router.get('/references/question/times', function(req, res, next){
-  res.status(200).send(JSON.stringify({array: Question.ties}));
+  res.status(200).send(JSON.stringify({array: Question.times}));
 });
 
 router.get('/usernamegen', function(req, res, next){
@@ -221,20 +221,19 @@ router.get('/question', async function(req, res, next){
         next();
       }
       var question =[];
-      console.log(study);
+      // console.log("STUDY ID" + req.query.studyID);
 
       for (var j = 0; j < study.questions.length; j++) {
         await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(questions){
 
           question[j] = questions;
-
         }));
       }
       if (question == null){
         console.log("NULL");
         res.send(200).send(null);
       } else {
-      console.log(question);
+      console.log("SENDING" + question);
       res.status(200).send({array : question});
     }
 
@@ -396,5 +395,15 @@ router.delete('/question', function(req, res, next){
       res.status(200).send();
     })
 });
+
+router.put('/answer', function(req, res, next){
+  req.body.answer.user = req.decoded.username;
+  Answer.create(req.body.answer).then(function(answer){
+    Question.findOneAndUpdate({_id: req.body.id}, {$push: {answers: answer._id}}).then(function(){
+      res.status(200).send();
+    })
+  })
+});
+
 
 module.exports = router;
