@@ -48,8 +48,13 @@ router.get('/references/questions/questiontypes', function(req, res, next){
 router.get('/references/study/genres', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.genres}));
 });
+
 router.get('/references/study/targets', function(req, res, next){
   res.status(200).send(JSON.stringify({array: Study.targets}));
+});
+
+router.get('/references/question/days', function(req, res, next){
+  res.status(200).send(JSON.stringify({array: Question.days}));
 });
 
 router.get('/usernamegen', function(req, res, next){
@@ -76,66 +81,66 @@ function validateLogin(userTypeCheck, req, res, next){
   console.log(username);
 
   User.findOne({username: username})
-    .then(function(user) {
-      if (user.usertype === userTypeCheck){
-        return bcrypt.compare(password, user.password);
-      } else {
-        return false;
-      }
-    }).catch(function(err){
-
+  .then(function(user) {
+    if (user.usertype === userTypeCheck){
+      return bcrypt.compare(password, user.password);
+    } else {
       return false;
-    })
-    .then(function(samePassword) {
-      console.log(samePassword);
-        if(!samePassword) {
-            res.status(403).send("Username or password Incorrect");
-        } else {
+    }
+  }).catch(function(err){
 
-          const payload = {
-            username: username
-          };
-             var token = jwt.sign(payload, app.get('superSecret'), {
-             expiresIn: 86400
-         });
+    return false;
+  })
+  .then(function(samePassword) {
+    console.log(samePassword);
+    if(!samePassword) {
+      res.status(403).send("Username or password Incorrect");
+    } else {
 
-       }
-       console.log("tokenised successfuly");
-       res.status(200).send({token: token});
-    })
-    .catch(function(error){
-        console.log("Error authenticating user");
-        console.log(error);
-        next();
-    });
+      const payload = {
+        username: username
+      };
+      var token = jwt.sign(payload, app.get('superSecret'), {
+        expiresIn: 86400
+      });
+
+    }
+    console.log("tokenised successfuly");
+    res.status(200).send({token: token});
+  })
+  .catch(function(error){
+    console.log("Error authenticating user");
+    console.log(error);
+    next();
+  });
 }
 
 //  add a new participants to the db
 router.post('/register', function(req, res, next){
-console.log(req.body);
+  console.log(req.body);
 
   var password = req.body.password;
   var BCRYPT_SALT_ROUNDS = 12;
 
   bcrypt.hash(password, BCRYPT_SALT_ROUNDS)
-    .then(function(hashedPassword) {
-      req.body.password = hashedPassword;
-        return User.create(req.body).then(function(user){
-          console.log("successfuly handled user post request");
-          res.status(200).send(user);
-        }).catch(function(error){
-          console.log(error);
-          res.status(400).send(error.message);
-        });
-    })
-    .then(function() {
-        res.send();
-    })
-    .catch(function(error){
-        console.log("Error saving user: ");
-        console.log(error);
-        next();
+  .then(function(hashedPassword) {
+    req.body.password = hashedPassword;
+    return User.create(req.body).then(function(user){
+      console.log("successfuly handled user post request");
+      res.status(200).send(user);
+    }).catch(function(error){
+      console.log(error);
+      res.status(400).send(error.message);
     });
+  })
+  .then(function() {
+    res.send();
+  })
+  .catch(function(error){
+    console.log("Error saving user: ");
+    console.log(error);
+    next();
+  });
 });
 
 // route middleware to verify a token
@@ -163,8 +168,8 @@ router.use(function(req, res, next) {
     // if there is no token
     // return an error
     return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
+      success: false,
+      message: 'No token provided.'
     });
 
   }
@@ -186,6 +191,7 @@ router.get('/users/userID', function(req, res, next){
 
 //  add a new question to the db
 router.post('/question', function(req, res, next){
+
   console.log(req.body);
 if(req.body.type === Question.questionTypes[3]){
   req.body.multiple = req.body.multiple.split('\n');
@@ -193,13 +199,13 @@ if(req.body.type === Question.questionTypes[3]){
   Question.create(req.body, function(err, question){
 
     if(err){
-    res.status(400).send(err.message);
-    next();
-  }
-  res.status(200).send(question);
+      res.status(400).send(err.message);
+      next();
+    }
+    res.status(200).send(question);
   });
 
-    console.log("successfuly handled question post request");
+  console.log("successfuly handled question post request");
 });
 
 router.get('/question', async function(req, res, next){
@@ -240,44 +246,116 @@ router.get('/study/subscribed', async function(req, res, next){
     }
     // console.log(studies);
     var notifs = [];
+    var flag = [];
     for (var i = 0; i < studies.length; i++) {
       notifs[i] = 0;
+      flag[i] = false;
       for (var j = 0; j < studies[i].questions.length; j++) {
         await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: null}]}).then( async function(question){
-            if (question != null){
-              notifs[i]++;
-            }
+          if (question != null){
+            notifs[i]++;
+          }
+        }));
+        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: {$ne: null}}]}).then( async function(question){
+          if (question != null){
+            flag[i] = true;
+          }
         }));
       }
     }
 
-    res.status(200).send({array: studies, notifications: notifs});
+    res.status(200).send({array: studies, notifications: notifs, flag: flag});
   });
 });
 
 
 
 // get a list of studies which the user is not subscribed to from the db
-router.get('/study/notsubscribed', function(req, res, next){
+router.get('/study/notsubscribed', async function(req, res, next){
   // console.log(req.query.genres);
   if (req.query.genres == "all"){
-    Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1}, function(err, studies){
+    Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}]}, {title: 1, targets: 1}, async function(err, studies){
       if (err){
         res.status(400).send(err.message);
         return;
       }
+      studies = await (validateTargets(res, req, studies));
+      // console.log(studies);
       res.status(200).send({array: studies});
-  });
-} else {
-  Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$all: req.query.genres}}]}, {title: 1}, function(err, studies){
+    });
+  } else {
+    var genres = req.query.genres.split(',');
+    // console.log(genres.length);
+    Study.find({$and:[{subscribers: {$ne: req.decoded.username}}, {title: {$regex : req.query.title}}, {genres: {$all: genres}}]}, {title: 1, targets: 1}, async function(err, studies){
+      if (err){
+        res.status(400).send(err.message);
+        next();
+      }
+      studies = await (validateTargets(res, req, studies));
+      // console.log(studies);
+      res.status(200).send({array: studies});
+
+    });
+  }
+});
+
+async function validateTargets(res, req, studies){
+  await (User.findOne({username: req.decoded.username}, {student: 1, country: 1, gender: 1, salary: 1, industry: 1, jobrole: 1, yearsExp: 1}, async function(err, user){
     if (err){
       res.status(400).send(err.message);
-      next();
+      return;
     }
-    res.status(200).send({array: studies});
-});
+
+    var i = 0;
+    while (i < studies.length) {
+      var deleted = false;
+      for (var j = 0; j < studies[i].targets.length; j++) {
+
+        if (studies[i].targets[j].name == Study.targets[0] && user.gender != studies[i].targets[j].value){ // validating Gender
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        } else if (studies[i].targets[j].name == Study.targets[1] && user.student != studies[i].targets[j].value){ //validating student
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        } else if (studies[i].targets[j].name == Study.targets[2] && user.country != studies[i].targets[j].value){ //validating country
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        } else if (studies[i].targets[j].name == Study.targets[3] && user.salary != studies[i].targets[j].value){ //validating salary
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        } else if (studies[i].targets[j].name == Study.targets[4] && user.industry != studies[i].targets[j].value){ //validating industry
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        } else if (studies[i].targets[j].name == Study.targets[5] && user.yearsExp != studies[i].targets[j].value){ //validating years of exp
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        } else if (studies[i].targets[j].name == Study.targets[6] && user.jobrole != studies[i].targets[j].value){ //validating jobrole
+          studies.splice(i,1);
+          i = 0;
+          deleted=true;
+          break;
+        }
+      }
+      if (!deleted){
+        i++;
+      }
+    }
+    return studies;
+  }));
+  return studies;
 }
-});
 
 //  add a new study to the db
 router.post('/study', function(req, res, next){
@@ -291,17 +369,11 @@ router.post('/study', function(req, res, next){
 // update a subscriber to a study in the db
 router.put('/study', function(req, res, next){
 
-    User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
-      Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
-        Study.find({subscribers: {$ne: req.decoded.username}}, {title: 1}, function(err, studies){
-          if (err){
-            res.status(400).send(err.message);
-            next();
-          }
-          res.status(200).send({array: studies});
-        });
-      })
+  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
+        res.status(200).send();
     })
+  })
 
 });
 
@@ -309,15 +381,16 @@ router.put('/study', function(req, res, next){
 router.put('/study/subscribed', function(req, res, next){
   User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(){
     Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function() {
-      Study.find({subscribers: req.decoded.username}, {title: 1}, function(err, studies){
-        if (err){
-          res.status(400).send(err.message);
-          next();
-        }
-        res.status(200).send({array: studies});
-      });
+      res.status(200).send();
     })
   })
+});
+
+// remove a subscriber from a study
+router.delete('/question', function(req, res, next){
+    Question.findOneAndDelete({_id: req.body.id}).then(function() {
+      res.status(200).send();
+    })
 });
 
 module.exports = router;

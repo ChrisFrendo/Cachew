@@ -15,3 +15,18 @@
 .button{
   font-size: 13px;
 }
+.center-elements{
+    width: 100%;
+    position: absolute;
+    top: 45%;
+    margin:auto;
+}
+.menu-button{
+    --box-shadow:none;
+ }
+.clickHere{
+  height: auto;
+  width: auto;
+  padding-top: 30px;
+  font-size: 10px;
+}

@@ -4,7 +4,7 @@ var count= 0;
 $(document).ready(function() {
   $("#btnNewQuestion").click(function(e) {
     e.preventDefault();
-    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-6 mb-3 mb-sm-0'><input name='questionDateTime' type='datetime-local' class='form-control form-control-user'/></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-2 mb-3 mb-sm-0'><select id='frequency' class='form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select></div><div class='col-sm-4 mb-3 mb-sm-0'></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
 
     var questionTypeSelect = document.getElementsByName("questionType");
 
@@ -40,8 +40,35 @@ $(document).ready(function() {
      }
 });
 
+var frequencySelect = document.getElementsByName("frequencyOfSchedule");
+
+    $("select").on("change", function(){
+     var option = $(this).val();
+     $(".field").hide();
+     switch (option) {
+       case "No Schedule":
+       this.parentNode.nextSibling.innerHTML = "";
+         break;
+       case "Just Once":
+       this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
+         break;
+        case "Daily":
+        console.log("Daily");
+         break;
+       case "Weekly":
+       console.log("Weekly");
+        break;
+       case "Monthly":
+       console.log("Monthly");
+        break;
+     }
+    });
+
 });
 });
+
+
+
 
 function scaleOption(element)
 {
@@ -106,7 +133,6 @@ var questionTypes = [];
 var genres = [];
 
 var ip = '10.60.10.66';
-
 var getQuestionTypesURL = "http://"+ip+":4000/api/references/questions/questiontypes";
 
 $.ajax({
@@ -168,14 +194,15 @@ function submitStudy(){
   var questionTypes = document.getElementsByName('questionType');
   var questionContents = document.getElementsByName('questionContent');
   var questionDateTime = document.getElementsByName('questionDateTime');
-
-
+  var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
 
   var input1 = document.getElementsByName('input1');
   var input2 = document.getElementsByName('input2');
+  var choiceContent = document.getElementsByName('choiceContent');
 
   var i;
   var j = 0;
+  var k = 0;
   for (i = 0; i < count; i++){
 
 
@@ -184,22 +211,25 @@ function submitStudy(){
     question.type = questionTypes[i].value;
     question.content = questionContents[i].value;
 
-    if (questionDateTime[i].value != ""){
-      question.time = questionDateTime[i].value;
+
+    if (frequencyOfSchedule[i].value == "No Schedule"){
+      question.time = null;
+    } else if (frequencyOfSchedule[i].value == "Just Once"){
+      question.time = questionDateTime[k].value;
+      k++;
     }
 
 
     if (question.type != "Free Text"){
-      console.log(input1[j].value);
-      console.log(input2[j].value);
 
       if (question.type == "Scale"){
         question.scale = {min: input1[j].value, max: input2[j].value};
       } else if (question.type == "Boolean"){
         question.boolean = {trueValue: input1[j].value, falseValue: input2[j].value};
       } else if (question.type == "Multiple Choice"){
-        question.multiple = [input1[j].value, input2[j].value];
+        question.multiple = choiceContent[j].value;
       }
+      console.log(question.multiple);
       j++;
     }
 

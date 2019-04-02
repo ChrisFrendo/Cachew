@@ -5,7 +5,7 @@ const Question = require('../models/question');
 
 
 var genres = ["Front End", "Back End", "Full Stack", "Java", "C", "Web Development", "Android", "Ios"];
-var targets = ["Gender", "User Type", "Country", "Salaries", "Industry", "Timezone"];
+var targets = ["Gender", "Student", "Country", "Salaries", "Industry", "Years of Experience", "Job Role"];
 // create study Schema & model
 const StudySchema = new Schema({
   title: {
