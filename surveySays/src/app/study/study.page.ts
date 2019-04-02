@@ -12,21 +12,78 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./study.page.scss'],
 })
 export class StudyPage implements OnInit {
+
   ip: string = '10.60.10.66';
 
+  studyID: any;
+  questions: Array<any>;
   genreSelect: string[] = [];
-  studyTitles: Array<any>;
+  studyTitle: string;
   studyId: Array<any>;
-  text = false;
-  scale = false;
-  ask = false;
-  multi = true;
+  text : boolean;
+  scale: boolean;
+  ask: boolean;
+  multi: boolean;
   optionSelect: boolean[] = [];
   options = ([
     "one", "two", "three"
   ]);
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
+
+  ionViewWillEnter(){
+    this.storage.get('studyID').then((id) => {
+      this.studyId=id;
+    })
+    this.storage.get('studyTitle').then((title) => {
+      this.studyTitle=title;
+    })
+    this.storage.get('token').then((val) => {
+      console.log('Your token is', val);
+      this.http.get('http://'+this.ip+':4000/api/question?token=' + val + '&studyID=' + this.studyId).subscribe(data => {
+        this.questions = JSON.parse((<any>data)._body).array;
+        for (var i = 0; i < this.questions.length; i++){
+          if(this.questions[i] == null){
+            this.questions.splice(i,1);
+          }
+        }
+        console.log(this.questions);
+      }, error => {
+        this.presentToast("Error when retrieving data. Please try again later");
+        console.log(error);
+      })
+    })
+    this.setType("0");
+  }
+
+setType(index: number){
+  console.log(this.questions[0].type);
+
+  if(this.questions[index].type == "Free Text"){
+    this.text = true;
+    this.scale = false;
+    this.ask = false;
+    this.multi = false;
+  }
+  else if(this.questions[index].type == "Scale"){
+    this.text = false;
+    this.scale = true;
+    this.ask = false;
+    this.multi = false;
+  }
+  else if(this.questions[index].type == "Boolean"){
+    this.text = false;
+    this.scale = false;
+    this.ask = true;
+    this.multi = false;
+  }
+  else if(this.questions[index].type == "Multiple Choice"){
+    this.text = false;
+    this.scale = false;
+    this.ask = false;
+    this.multi = true;
+  }
+}
 
   openFirst() {
     this.menu.enable(true, 'start');

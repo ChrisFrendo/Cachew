@@ -141,8 +141,7 @@ export class DashboardPage implements OnInit {
       let postData = {
         studyID: this.studyIdUn[index]
       }
-
-      this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(() => {
+          this.http.put('http://'+this.ip+':4000/api/study?token=' + val, postData).subscribe(() => {
           this.ionViewWillEnter();
       }, error => {
         this.presentToast("Error when retrieving data. Please try again later");
@@ -151,7 +150,9 @@ export class DashboardPage implements OnInit {
     })
   }
 
-  study(){
+  study(index: number){
+    this.storage.set('studyTitle', this.studyTitles[index]);
+    this.storage.set('studyID', this.studyId[index]);
     this.router.navigateByUrl('/study');
   }
 
