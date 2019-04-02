@@ -21,19 +21,17 @@
   <ion-toolbar color="tertiary">
     <ion-row>
       <ion-button class="menu-button" color="tertiary" (click)="openFirst()" menu="side"><ion-icon class="icon" name="menu"></ion-icon></ion-button>
-    <ion-title>Study Title</ion-title>
+    <ion-title>{{studyTitle}}</ion-title>
     </ion-row>
   </ion-toolbar>
 </ion-header>
 
-<!-- *ngFor="let question of questions" -->
-
 <ion-content padding scroll="false">
-  <div class="center-elements">
+  <div class="center-elements" *ngFor="let question of questions; let i = index">
   <ion-card>
       <ion-card-title >
         <ion-item  lines="none">
-          <ion-label class="question" position="fixed">Question</ion-label>
+          <ion-label class="question" position="fixed">{{question.title}}</ion-label>
         </ion-item>
       </ion-card-title>
   </ion-card>
