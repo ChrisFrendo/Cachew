@@ -216,15 +216,22 @@ router.get('/question', async function(req, res, next){
         next();
       }
       var question =[];
+      console.log(study);
+
       for (var j = 0; j < study.questions.length; j++) {
-        await (Question.findOne({_id: study.questions[j]}).then( async function(questions){
+        await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(questions){
 
           question[j] = questions;
 
         }));
       }
+      if (question == null){
+        console.log("NULL");
+        res.send(200).send(null);
+      } else {
       console.log(question);
       res.status(200).send({array : question});
+    }
 
     });
   /*  Question.find({type : req.body.type}, function(err, question){
