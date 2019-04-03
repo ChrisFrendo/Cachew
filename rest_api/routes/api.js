@@ -197,9 +197,9 @@ router.get('/users/userID', function(req, res, next){
 router.post('/question', function(req, res, next){
 
   console.log(req.body);
-if(req.body.type === Question.questionTypes[3]){
-  req.body.multiple = req.body.multiple.split('\n');
-}
+  if(req.body.type === Question.questionTypes[3]){
+    req.body.multiple = req.body.multiple.split('\n');
+  }
   Question.create(req.body, function(err, question){
 
     if(err){
@@ -212,32 +212,52 @@ if(req.body.type === Question.questionTypes[3]){
   console.log("successfuly handled question post request");
 });
 
-// used to retrieve a list of unscheduled questions
+// used to retrieve a list of unscheduled questions which have not already been answered
 router.get('/question', async function(req, res, next){
-    Study.findOne({_id: req.query.studyID}, async function(err, study){
+  Study.findOne({_id: req.query.studyID}, async function(err, study){
+    User.findOne({username: req.decoded.username}, async function(err2, user){
+
+      // console.log(user);
 
       if(err){
         res.status(400).send(err.message);
         next();
+      } else if (err2){
+        res.status(400).send(err2.message);
+        next();
       }
-      var question =[];
+      var questions =[];
       // console.log("STUDY ID" + req.query.studyID);
 
       for (var j = 0; j < study.questions.length; j++) {
-        await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(questions){
-
-          question[j] = questions;
+        await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(question){
+          var answered = false;
+          if (question != null && question.answers != []){
+            for (var i = 0; i < question.answers.length; i++) {
+              await (Answer.findOne({_id: question.answers[i]}).then( async function(answer) {
+                if (answer.user == req.decoded.username){
+                  answered = true;
+                }
+              }));
+              if (answered){
+                break;
+              }
+            }
+          }
+          if (!answered){
+            questions[j] = question;
+          }
         }));
       }
-      if (question == null){
+      if (questions == null){
         console.log("NULL");
         res.send(200).send(null);
       } else {
-      console.log("SENDING" + question);
-      res.status(200).send({array : question});
-    }
-
+        console.log(questions);
+        res.status(200).send({array : questions});
+      }
     });
+  });
 });
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
@@ -374,7 +394,7 @@ router.put('/study', function(req, res, next){
 
   User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
     Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
-        res.status(200).send();
+      res.status(200).send();
     })
   })
 
@@ -389,11 +409,11 @@ router.put('/study/subscribed', function(req, res, next){
   })
 });
 
-// remove a subscriber from a study
+// delete a question from the db
 router.delete('/question', function(req, res, next){
-    Question.findOneAndDelete({_id: req.body.id}).then(function() {
-      res.status(200).send();
-    })
+  Question.findOneAndDelete({_id: req.body.id}).then(function() {
+    res.status(200).send();
+  })
 });
 
 router.put('/answer', function(req, res, next){
