@@ -13,7 +13,7 @@ $JsonFiles = Get-ChildItem -Path $SourceFilePath -name -Filter $FilenamePostfix 
 # Change to directory where we have NodeJs installed.  Otherwise, the 'newman' command will not be recognized. 
 # You can install NPM and Newman as a user and copy the ~Roaming\npm directory in the C:\ drive.
 #cd C:\Users\[username]\AppData\Roaming\npm\node_modules\newman\bin
-cd C:\npm\node_modules\newman\bin
+cd C:\Users\dsuml\AppData\Roaming\npm\node_modules\newman\bin
 
 # Loop through the json files and execute newman to run the Postman tests
 foreach ($File in $JsonFiles) {
