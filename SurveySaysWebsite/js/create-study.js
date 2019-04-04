@@ -85,10 +85,10 @@ $(document).ready(function() {
 
         break;
         case "Weekly":
-        console.log("Weekly");
+        console.log("Monthly");
         break;
         case "Monthly":
-        console.log("Monthly");
+        this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
         break;
       }
     });
