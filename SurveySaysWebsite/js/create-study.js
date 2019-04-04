@@ -1,4 +1,266 @@
 var count= 0;
+var targets=[];
+var getTargetsURL = "http://"+ip+":4000/api/references/study/targets";
+
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getTargetsURL,
+  async: false,
+  success: function(data){
+    targets = JSON.parse(data).array;
+    //console.log(targets);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+var radioOptions = document.getElementById('targetSelection');
+
+for (var i = 0; i < targets.length; i++) {
+  // Create checkbox.
+  var targetElement = document.createElement('input');
+  targetElement.type = "checkbox";
+  targetElement.setAttribute("name", "targetValue");
+  targetElement.setAttribute("class", "custom-control-input");
+  targetElement.setAttribute("value",targets[i]);
+  targetElement.setAttribute("id","defaultInline"+i);
+
+  var newDiv = document.createElement('div');
+  newDiv.setAttribute("class", "custom-control custom-checkbox custom-control-inline");
+  newDiv.setAttribute("id","option");
+
+  targetSelection.appendChild(newDiv);
+  newDiv.appendChild(targetElement);
+
+
+  // Create the label.
+  var targetLabel = document.createElement('label');
+  targetLabel.textContent = targets[i];
+  targetLabel.setAttribute("for","defaultInline"+i);
+  targetLabel.setAttribute("class","custom-control-label");
+
+  newDiv.appendChild(targetLabel);
+
+}
+
+
+$("input[type=checkbox]").on("change",function(){
+    var item = $(this).val();
+    console.log(item);
+    switch(item){
+      case "Country":
+      $("#label").append("<div class='country'><label>Country</label></div>");
+      $("#selectedTargets").append("<div class='country'><div class='form-group'><select id='countrySelection' class='form-control form-control-user' name='country'></select></div></div>");
+      countryOption();
+        break;
+      case "Gender":
+      $("#label").append("<div class='gender'><label>Gender</label><div>");
+      genderOption();
+      //$("#new").append("<div class='custom-control-input'><br><input type='radio' name='gender' id='option1' value='Male'><label for='option1'>Male<input type='radio' name='gender' id='option2' value='Female'><label for='option2'>Female<input type='radio' name='gender' id='option3' value='Other'><label for='option3'>Other</label></div>");
+        break;
+      case "Student":
+        break;
+      case "Salaries":
+      if($('#defaultInline3').prop('checked')) {
+        $("#label").append("<div class='salary'><label>Salary</label></div>");
+        $("#selectedTargets").append("<div class='salary'><input type='number' min='18000' max='100000' placeholder='Min Salary'> to <input type='number' min='18000' max='100000' placeholder='Max Salary'></div>");
+      }else{
+        $(".salary").hide();
+      }
+        break;
+      case "Industry":
+      $("#label").append("<div class='hide'><label>Industry</label></div>");
+      $("#selectedTargets").append("<div class='hide'><div class='form-group'><select id='industrySelection' class='form-control form-control-user' name='industry'></select></div></div>");
+      industryOption();
+          break;
+      case "Years of Experience":
+      if($('#defaultInline5').prop('checked')) {
+        $("#label").append("<div class='experience'><label>Experience</label></div>");
+        $("#selectedTargets").append("<div class='experience'><input type='number' min='0' max='15' placeholder='YearsOfExperience'></div>");
+      }else
+      {
+        $(".experience").hide();
+      }
+          break;
+      case "Job Role":
+      $("#label").append("<div class='role'><label>Job Role</label></div>");
+      $("#selectedTargets").append("<div class='form-group role'><select id='jobSelection' class='form-control form-control-user' name='jobRole'></select></div>");
+      jobRolesOption();
+          break;
+    }
+
+});
+
+var genders=[];
+var getGenderURL = "http://"+ip+":4000/api/references/users/genders";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getGenderURL,
+  async: false,
+  success: function(data){
+    genders = JSON.parse(data).array;
+    debugger;
+    console.log(genders);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function genderOption()
+{
+
+  var genderOptions = document.getElementById('selectedTargets');
+
+if($('#defaultInline0').prop('checked')) {
+  for (var i = 0; i < genders.length; i++) {
+    // Create the radio element.
+    var radioElement = document.createElement('input');
+    radioElement.type = "radio";
+    radioElement.setAttribute("name", "genderValue");
+    radioElement.setAttribute("class", "custom-control-input");
+    radioElement.setAttribute("value",genders[i]);
+    radioElement.setAttribute("id","radio"+i);
+
+
+    var radio = document.createElement('div');
+    radio.setAttribute("class", "custom-control custom-radio custom-control-inline gender");
+    radio.setAttribute("id","option2");
+
+    selectedTargets.appendChild(radio);
+    radio.appendChild(radioElement);
+
+
+    // Create the label.
+    var radioLabel = document.createElement('label');
+    radioLabel.textContent = genders[i];
+    radioLabel.setAttribute("for","radio"+i);
+    radioLabel.setAttribute("class","custom-control-label");
+
+    radio.appendChild(radioLabel);
+
+  }} else {
+      $('.gender').css('display','none');
+    }
+
+}
+
+var countries=[];
+var getCountryURL = "http://"+ip+":4000/api/references/users/countries";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getCountryURL,
+  async: false,
+  success: function(data){
+    countries = JSON.parse(data).array;
+    //console.log(countries);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function countryOption()
+{
+  var countryOptions = document.getElementsByName('country');
+
+  if($('#defaultInline2').prop('checked')) {
+  for (var i = 0; i < countries.length; i++) {
+      var list = document.createElement("option");
+      list.setAttribute("value", countries[i]);
+      list.text = countries[i];
+      if (i == 0){
+        list.setAttribute("selected", 'selected');
+      }
+      countryOptions[count].appendChild(list);
+
+    }
+  }else
+  {
+    $('.country').css('display','none');
+
+  }
+}
+
+
+var jobRoles=[];
+var getJobRoleURL = "http://"+ip+":4000/api/references/users/jobRoles";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getJobRoleURL,
+  async: false,
+  success: function(data){
+    jobRoles = JSON.parse(data).array;
+  //  console.log(jobRoles);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function jobRolesOption()
+{
+  var roleOptions = document.getElementsByName('jobRole');
+
+  if($('#defaultInline6').prop('checked')) {
+
+  for (var i = 0; i < jobRoles.length; i++) {
+      var jobList = document.createElement("option");
+      jobList.setAttribute("value", jobRoles[i]);
+      jobList.text = jobRoles[i];
+      if (i == 0){
+        jobList.setAttribute("selected", 'selected');
+      }
+      roleOptions[count].appendChild(jobList);
+
+    }
+  }else
+  {
+   $('.role').css('display','none');
+  }
+}
+
+var industries=[];
+var getIndustryURL = "http://"+ip+":4000/api/references/users/industry";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getIndustryURL,
+  async: false,
+  success: function(data){
+    industries = JSON.parse(data).array;
+    console.log(industries);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function industryOption()
+{
+  var industryOptions = document.getElementsByName('industry');
+
+  if($('#defaultInline4').prop('checked')) {
+  for (var i = 0; i < industries.length; i++) {
+      var listOption = document.createElement("option");
+      listOption.setAttribute("value", industries[i]);
+      listOption.text = industries[i];
+      if (i == 0){
+        listOption.setAttribute("selected", 'selected');
+      }
+      industryOptions[count].appendChild(listOption);
+    }
+  }else {
+      $('.hide').css('display','none');
+      $('.hide').css('display','none');
+    }
+}
+
 
 
 $(document).ready(function() {
