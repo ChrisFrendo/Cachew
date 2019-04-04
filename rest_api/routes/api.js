@@ -292,7 +292,10 @@ router.get('/study/subscribed', async function(req, res, next){
             for (var l = 0; l < question.answers.length; l++) {
               await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
                 console.log("ANSWER" + answer);
-                if (answer.user == req.decoded.username){
+                if (answer == null){
+                  answered = false;
+
+                } else if (answer.user == req.decoded.username){
                   answered = true;
                 }
               }));

@@ -24,16 +24,14 @@ const QuestionSchema = new Schema({
     type:String,
     enum:times
   }],
-  weekly: {
-    day: [{
+  weeklyDay: [{
       type: String,
       enum: days
-    }],
-    time: [[{
+  }],
+  weeklyTime: [{
       type: String,
       enum: times
-    }]]
-  },
+  }],
   scale: {
     min:{
       type: Number
