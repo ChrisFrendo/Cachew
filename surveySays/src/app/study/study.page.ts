@@ -49,12 +49,13 @@ export class StudyPage implements OnInit {
       console.log('Your token is', val);
       this.http.get('http://'+this.ip+':4000/api/question?token=' + val + '&studyID=' + this.studyId).subscribe(data => {
         this.questions = JSON.parse((<any>data)._body).array;
-        console.log(this.questions);
+        // console.log(this.questions);
         for (var i = 0; i < this.questions.length; i++){
           if(this.questions[i] == null){
-            this.questions = this.questions.splice(i,1);
+            this.questions.splice(i,1);
           }
         }
+        console.log(this.questions)
         this.setType(0);
         this.currentQ = this.questions[0].title;
         this.content = this.questions[0].content;
@@ -163,6 +164,7 @@ setType(index: number){
               "id": this.questions[0]._id
             };
           }
+          this.answerQ = "";
         console.log(postData);
         this.http.put('http://'+this.ip+':4000/api/answer?token=' + val, postData).subscribe(data => {
           if (this.questions.length == 1){
