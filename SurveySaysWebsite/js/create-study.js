@@ -313,6 +313,7 @@ function genderOption()
         }
       });
 
+<<<<<<< HEAD
       var frequencySelect = document.getElementsByName("frequencyOfSchedule");
 
       $("select").on("change", function(){
@@ -363,9 +364,91 @@ function genderOption()
           case "Monthly":
           console.log("Monthly");
           break;
+=======
+    var frequencySelect = document.getElementsByName("frequencyOfSchedule");
+
+    $("select").on("change", function(){
+      var option = $(this).val();
+      $(".field").hide();
+      switch (option) {
+        case "No Schedule":
+        this.parentNode.nextSibling.innerHTML = "";
+        break;
+        case "Just Once":
+        this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
+        break;
+        case "Daily":
+
+        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select>";
+
+
+        var timesUrl = "http://"+ip+":4000/api/references/question/times";
+        var times = [];
+
+        $.ajax({
+          contentType: 'application/json',
+          type: 'GET',
+          url: timesUrl,
+          async: false,
+          success: function(data){
+            times = JSON.parse(data).array;
+            // console.log(questionTypes);
+          },
+          error: function(jqXHR, exception){
+            console.log("Something went wrong");
+          }
+        });
+
+        for (var i = 0; i < times.length; i++) {
+          var option = document.createElement("option");
+          option.setAttribute("value", times[i]);
+          option.text = times[i];
+          this.parentNode.nextSibling.firstChild.appendChild(option);
+>>>>>>> 9d2331b48d8474f0a015c22d72956acbca630cb2
         }
       });
 
+<<<<<<< HEAD
+=======
+        break;
+        case "Weekly":
+
+        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' multiple=true class='form-control form-control-user' name='weeklySelection'></select></div></div>";
+
+
+        var timesUrl = "http://"+ip+":4000/api/references/question/times";
+        var times = [];
+
+        $.ajax({
+          contentType: 'application/json',
+          type: 'GET',
+          url: timesUrl,
+          async: false,
+          success: function(data){
+            times = JSON.parse(data).array;
+            // console.log(questionTypes);
+          },
+          error: function(jqXHR, exception){
+            console.log("Something went wrong");
+          }
+        });
+
+        console.log(times);
+
+        for (var i = 0; i < times.length; i++) {
+          var option = document.createElement("option");
+          option.setAttribute("value", times[i]);
+          option.text = times[i];
+          this.parentNode.nextSibling.firstChild.firstChild.nextSibling.firstChild.appendChild(option);
+        }
+
+
+        break;
+        case "Monthly":
+        this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
+        break;
+      }
+>>>>>>> 9d2331b48d8474f0a015c22d72956acbca630cb2
     });
   });
 
