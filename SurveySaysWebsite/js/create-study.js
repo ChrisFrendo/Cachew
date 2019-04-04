@@ -316,7 +316,37 @@ $(document).ready(function() {
         break;
         case "Daily":
 
-        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select></div><div class='form-group'></select>"
+        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select>";
+
+
+        var timesUrl = "http://"+ip+":4000/api/references/question/times";
+        var times = [];
+
+        $.ajax({
+          contentType: 'application/json',
+          type: 'GET',
+          url: timesUrl,
+          async: false,
+          success: function(data){
+            times = JSON.parse(data).array;
+            // console.log(questionTypes);
+          },
+          error: function(jqXHR, exception){
+            console.log("Something went wrong");
+          }
+        });
+
+        for (var i = 0; i < times.length; i++) {
+          var option = document.createElement("option");
+          option.setAttribute("value", times[i]);
+          option.text = times[i];
+          this.parentNode.nextSibling.firstChild.appendChild(option);
+        }
+
+        break;
+        case "Weekly":
+
+        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' multiple=true class='form-control form-control-user' name='weeklySelection'></select></div></div>";
 
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
@@ -342,12 +372,10 @@ $(document).ready(function() {
           var option = document.createElement("option");
           option.setAttribute("value", times[i]);
           option.text = times[i];
-          this.parentNode.nextSibling.firstChild.appendChild(option);
+          this.parentNode.nextSibling.firstChild.firstChild.nextSibling.firstChild.appendChild(option);
         }
 
-        break;
-        case "Weekly":
-        console.log("Monthly");
+
         break;
         case "Monthly":
         this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
