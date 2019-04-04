@@ -1,4 +1,5 @@
 var count= 0;
+var counter=0;
 var targets=[];
 var getTargetsURL = "http://"+ip+":4000/api/references/study/targets";
 
@@ -22,7 +23,7 @@ for (var i = 0; i < targets.length; i++) {
   // Create checkbox.
   var targetElement = document.createElement('input');
   targetElement.type = "checkbox";
-  targetElement.setAttribute("name", "targetValue");
+  targetElement.setAttribute("name", "targetName");
   targetElement.setAttribute("class", "custom-control-input");
   targetElement.setAttribute("value",targets[i]);
   targetElement.setAttribute("id","defaultInline"+i);
@@ -47,50 +48,44 @@ for (var i = 0; i < targets.length; i++) {
 
 
 $("input[type=checkbox]").on("change",function(){
-    var item = $(this).val();
-    console.log(item);
-    switch(item){
+  var item = $(this).val();
+  console.log(item);
+  switch(item){
       case "Country":
-      $("#label").append("<div class='country'><label>Country</label></div>");
-      $("#selectedTargets").append("<div class='country'><div class='form-group'><select id='countrySelection' class='form-control form-control-user' name='country'></select></div></div>");
       countryOption();
-        break;
+    break;
       case "Gender":
-      $("#label").append("<div class='gender'><label>Gender</label><div>");
+      $("#selectedTargets").append("<div class='gender'><label>Gender</label><div>");
       genderOption();
-      //$("#new").append("<div class='custom-control-input'><br><input type='radio' name='gender' id='option1' value='Male'><label for='option1'>Male<input type='radio' name='gender' id='option2' value='Female'><label for='option2'>Female<input type='radio' name='gender' id='option3' value='Other'><label for='option3'>Other</label></div>");
-        break;
+    break;
       case "Student":
-        break;
+    break;
       case "Salaries":
       if($('#defaultInline3').prop('checked')) {
-        $("#label").append("<div class='salary'><label>Salary</label></div>");
-        $("#selectedTargets").append("<div class='salary'><input type='number' min='18000' max='100000' placeholder='Min Salary'> to <input type='number' min='18000' max='100000' placeholder='Max Salary'></div>");
+        $("#selectedTargets").append("<div id='salaryTarget' class='form-group'><label>Salary</label><br><input type='number' min='18000' max='100000' placeholder='Min Salary'> to <input type='number' min='18000' max='100000' placeholder='Max Salary'></div>");
       }else{
-        $(".salary").hide();
+        var salaryDiv = document.getElementById('salaryTarget');
+        var selectedTargets = document.getElementById('selectedTargets');
+        selectedTargets.removeChild(salaryDiv);
       }
-        break;
-      case "Industry":
-      $("#label").append("<div class='hide'><label>Industry</label></div>");
-      $("#selectedTargets").append("<div class='hide'><div class='form-group'><select id='industrySelection' class='form-control form-control-user' name='industry'></select></div></div>");
+    break;
+    case "Industry":
       industryOption();
-          break;
-      case "Years of Experience":
+    break;
+    case "Years of Experience":
       if($('#defaultInline5').prop('checked')) {
-        $("#label").append("<div class='experience'><label>Experience</label></div>");
-        $("#selectedTargets").append("<div class='experience'><input type='number' min='0' max='15' placeholder='YearsOfExperience'></div>");
+        $("#selectedTargets").append("<div id='yearsOfExpTarget' class='form-group'><label>Years Of Experience</label><br><input type='number' min='0' max='15' placeholder='YearsOfExperience'></div>");
       }else
       {
-        $(".experience").hide();
+        var yearsOfExperienceDiv = document.getElementById('yearsOfExpTarget');
+        var selectedTargets = document.getElementById('selectedTargets');
+        selectedTargets.removeChild(yearsOfExperienceDiv);
       }
-          break;
-      case "Job Role":
-      $("#label").append("<div class='role'><label>Job Role</label></div>");
-      $("#selectedTargets").append("<div class='form-group role'><select id='jobSelection' class='form-control form-control-user' name='jobRole'></select></div>");
+    break;
+    case "Job Role":
       jobRolesOption();
-          break;
-    }
-
+    break;
+  }
 });
 
 var genders=[];
@@ -102,7 +97,7 @@ $.ajax({
   async: false,
   success: function(data){
     genders = JSON.parse(data).array;
-    debugger;
+    // debugger;
     console.log(genders);
   },
   error: function(jqXHR, exception){
@@ -115,36 +110,39 @@ function genderOption()
 
   var genderOptions = document.getElementById('selectedTargets');
 
-if($('#defaultInline0').prop('checked')) {
-  for (var i = 0; i < genders.length; i++) {
-    // Create the radio element.
-    var radioElement = document.createElement('input');
-    radioElement.type = "radio";
-    radioElement.setAttribute("name", "genderValue");
-    radioElement.setAttribute("class", "custom-control-input");
-    radioElement.setAttribute("value",genders[i]);
-    radioElement.setAttribute("id","radio"+i);
+  if($('#defaultInline0').prop('checked')) {
+
+    for (var i = 0; i < genders.length; i++) {
+      // Create the radio element.
+      var radioElement = document.createElement('input');
+      radioElement.type = "radio";
+      radioElement.setAttribute("name", "genderValue");
+      radioElement.setAttribute("class", "custom-control-input");
+      radioElement.setAttribute("value",genders[i]);
+      radioElement.setAttribute("id","radio"+i);
 
 
-    var radio = document.createElement('div');
-    radio.setAttribute("class", "custom-control custom-radio custom-control-inline gender");
-    radio.setAttribute("id","option2");
+      var radio = document.createElement('div');
+      radio.setAttribute("class", "custom-control custom-radio custom-control-inline gender");
+      radio.setAttribute("id","option2");
 
-    selectedTargets.appendChild(radio);
-    radio.appendChild(radioElement);
+      selectedTargets.appendChild(radio);
+      radio.appendChild(radioElement);
 
 
-    // Create the label.
-    var radioLabel = document.createElement('label');
-    radioLabel.textContent = genders[i];
-    radioLabel.setAttribute("for","radio"+i);
-    radioLabel.setAttribute("class","custom-control-label");
+      // Create the label.
+      var radioLabel = document.createElement('label');
+      radioLabel.textContent = genders[i];
+      radioLabel.setAttribute("for","radio"+i);
+      radioLabel.setAttribute("class","custom-control-label");
 
-    radio.appendChild(radioLabel);
+      radio.appendChild(radioLabel);
 
-  }} else {
-      $('.gender').css('display','none');
     }
+  } else {
+    $('.gender').css('display','none');
+
+  }
 
 }
 
@@ -166,23 +164,27 @@ $.ajax({
 
 function countryOption()
 {
-  var countryOptions = document.getElementsByName('country');
 
   if($('#defaultInline2').prop('checked')) {
-  for (var i = 0; i < countries.length; i++) {
-      var list = document.createElement("option");
-      list.setAttribute("value", countries[i]);
-      list.text = countries[i];
+    $("#selectedTargets").append("<div id='countryTarget' class='form-group'><label>Country</label><select id='countrySelection' class='form-control form-control-user'></select></div>");
+
+    var countrySelect = document.getElementById('countrySelection');
+
+    for (var i = 0; i < countries.length; i++) {
+      var option = document.createElement("option");
+      option.setAttribute("value", countries[i]);
+      option.text = countries[i];
       if (i == 0){
-        list.setAttribute("selected", 'selected');
+        option.setAttribute("selected", 'selected');
       }
-      countryOptions[count].appendChild(list);
+      countrySelect.appendChild(option);
 
     }
   }else
   {
-    $('.country').css('display','none');
-
+    var countryDiv = document.getElementById('countryTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(countryDiv);
   }
 }
 
@@ -196,7 +198,7 @@ $.ajax({
   async: false,
   success: function(data){
     jobRoles = JSON.parse(data).array;
-  //  console.log(jobRoles);
+    //  console.log(jobRoles);
   },
   error: function(jqXHR, exception){
     console.log("Something went wrong");
@@ -205,23 +207,28 @@ $.ajax({
 
 function jobRolesOption()
 {
-  var roleOptions = document.getElementsByName('jobRole');
 
   if($('#defaultInline6').prop('checked')) {
 
-  for (var i = 0; i < jobRoles.length; i++) {
+    $("#selectedTargets").append("<div id='jobRoleTarget' class='form-group'><label>Job Role</label><select id='jobSelection' class='form-control form-control-user'></select></div>");
+
+    var jobRoleSelect = document.getElementById('jobSelection');
+
+    for (var i = 0; i < jobRoles.length; i++) {
       var jobList = document.createElement("option");
       jobList.setAttribute("value", jobRoles[i]);
       jobList.text = jobRoles[i];
       if (i == 0){
         jobList.setAttribute("selected", 'selected');
       }
-      roleOptions[count].appendChild(jobList);
+      jobRoleSelect.appendChild(jobList);
 
     }
   }else
   {
-   $('.role').css('display','none');
+    var jobRoleDiv = document.getElementById('jobRoleTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(jobRoleDiv);
   }
 }
 
@@ -243,22 +250,26 @@ $.ajax({
 
 function industryOption()
 {
-  var industryOptions = document.getElementsByName('industry');
 
   if($('#defaultInline4').prop('checked')) {
-  for (var i = 0; i < industries.length; i++) {
+    $("#selectedTargets").append("<div id='industryTarget' class='form-group'><label>Industry</label><select id='industrySelection' class='form-control form-control-user' name='industry'></select></div>");
+
+    var industrySelect = document.getElementById('industrySelection');
+    for (var i = 0; i < industries.length; i++) {
       var listOption = document.createElement("option");
       listOption.setAttribute("value", industries[i]);
       listOption.text = industries[i];
       if (i == 0){
         listOption.setAttribute("selected", 'selected');
       }
-      industryOptions[count].appendChild(listOption);
+      industrySelect.appendChild(listOption);
     }
   }else {
-      $('.hide').css('display','none');
-      $('.hide').css('display','none');
-    }
+
+    var industryTargetDiv = document.getElementById('industryTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(industryTargetDiv);
+  }
 }
 
 
@@ -367,9 +378,15 @@ $(document).ready(function() {
 
         for (var i = 0; i < weeks.length; i++) {
           var option = document.createElement("option");
+<<<<<<< HEAD
           option.setAttribute("value", weeks[i]);
           option.text = weeks[i];
           this.parentNode.nextSibling.firstChild.firstChild.firstChild.appendChild(option);
+=======
+          option.setAttribute("value", times[i]);
+          option.text = times[i];
+          this.parentNode.nextSibling.firstChild.firstChild.appendChild(option);
+>>>>>>> c2ec9e8517ef4b1e6b26b90df42358050811bc6d
         }
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
@@ -404,295 +421,296 @@ $(document).ready(function() {
     });
 
   });
+
 });
 
 
 
 
-function scaleOption(element)
-{
-  var paramaters = element.parentNode.nextSibling.nextSibling;
+  function scaleOption(element)
+  {
+    var paramaters = element.parentNode.nextSibling.nextSibling;
 
-  paramaters.innerHTML = "";
+    paramaters.innerHTML = "";
 
-  var min = document.createElement('input');
-  min.setAttribute("placeholder", "Min value");
-  min.setAttribute("name", "input1");
-  min.setAttribute("type", "number");
-  min.setAttribute("class", "form-group form-control form-control-user");
+    var min = document.createElement('input');
+    min.setAttribute("placeholder", "Min value");
+    min.setAttribute("name", "input1");
+    min.setAttribute("type", "number");
+    min.setAttribute("class", "form-group form-control form-control-user");
 
-  var max = document.createElement('input');
-  max.setAttribute("placeholder", "Max Value");
-  max.setAttribute("name", "input2");
-  max.setAttribute("type", "number");
-  max.setAttribute("class", "form-group form-control form-control-user");
+    var max = document.createElement('input');
+    max.setAttribute("placeholder", "Max Value");
+    max.setAttribute("name", "input2");
+    max.setAttribute("type", "number");
+    max.setAttribute("class", "form-group form-control form-control-user");
 
-  paramaters.appendChild(min);
-  paramaters.appendChild(max);
+    paramaters.appendChild(min);
+    paramaters.appendChild(max);
 
-}
-
-function multipleChoice(element)
-{
-  var paramaters = element.parentNode.nextSibling.nextSibling;
-
-  paramaters.innerHTML = "";
-
-  var choice1 = document.createElement('textarea');
-  choice1.setAttribute("placeholder", "Input the multiple choice options and press 'Enter' each time");
-  choice1.setAttribute("name", "choiceContent");
-  choice1.setAttribute("class", "form-group form-control form-control-user");
-  choice1.setAttribute("rows", "5");
-
-  paramaters.appendChild(choice1);
-}
-
-function booleanOption(element)
-{
-  var paramaters = element.parentNode.nextSibling.nextSibling;
-
-  paramaters.innerHTML = "";
-
-  var truevalue = document.createElement('input');
-  truevalue.setAttribute("placeholder", "True Value");
-  truevalue.setAttribute("name", "input1");
-  truevalue.setAttribute("class", "form-group form-control form-control-user");
-
-  var falsevalue = document.createElement('input');
-  falsevalue.setAttribute("placeholder", "False Value");
-  falsevalue.setAttribute("name", "input2");
-  falsevalue.setAttribute("class", "form-group form-control form-control-user");
-
-  paramaters.appendChild(truevalue);
-  paramaters.appendChild(falsevalue);
-}
-
-
-var questionTypes = [];
-var genres = [];
-
-var ip = '10.60.10.66';
-var getQuestionTypesURL = "http://"+ip+":4000/api/references/questions/questiontypes";
-
-$.ajax({
-  contentType: 'application/json',
-  type: 'GET',
-  url: getQuestionTypesURL,
-  async: false,
-  success: function(data){
-    questionTypes = JSON.parse(data).array;
-    // console.log(questionTypes);
-  },
-  error: function(jqXHR, exception){
-    console.log("Something went wrong");
-  }
-});
-
-var getGenresURL = "http://"+ip+":4000/api/references/study/genres";
-var studyGenresSelect = document.getElementById("studyGenresSelect");
-
-$.ajax({
-  contentType: 'application/json',
-  type: 'GET',
-  url: getGenresURL,
-  async: false,
-  success: function(data){
-    genres = JSON.parse(data).array;
-    for (var i = 0; i < genres.length; i++) {
-      var option = document.createElement("option");
-      option.setAttribute("value", genres[i]);
-      option.text = genres[i];
-      if (i == 0){
-        option.setAttribute("selected", 'selected');
-      }
-      studyGenresSelect.appendChild(option);
-    }
-  },
-  error: function(jqXHR, exception){
-    console.log("Something went wrong");
-  }
-});
-
-
-var token = JSON.parse(localStorage.getItem("token"));
-
-
-function submitStudy(){
-
-  if (count == 0){
-    window.alert('You must enter at least 1 question');
-    return false;
   }
 
-  var studyTitle = document.getElementById('studyTitle').value;
-  var studyGenres = $('#studyGenresSelect').val();
+  function multipleChoice(element)
+  {
+    var paramaters = element.parentNode.nextSibling.nextSibling;
 
-  var questionIds = [];
+    paramaters.innerHTML = "";
 
-  var questionTitles = document.getElementsByName('questionTitle');
-  var questionTypes = document.getElementsByName('questionType');
-  var questionContents = document.getElementsByName('questionContent');
-  var questionDateTime = document.getElementsByName('questionDateTime');
-  var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
+    var choice1 = document.createElement('textarea');
+    choice1.setAttribute("placeholder", "Input the multiple choice options and press 'Enter' each time");
+    choice1.setAttribute("name", "choiceContent");
+    choice1.setAttribute("class", "form-group form-control form-control-user");
+    choice1.setAttribute("rows", "5");
 
-  var dailyTimesSelect = document.getElementsByName('dailySelection');
+    paramaters.appendChild(choice1);
+  }
 
-  var input1 = document.getElementsByName('input1');
-  var input2 = document.getElementsByName('input2');
-  var choiceContent = document.getElementsByName('choiceContent');
+  function booleanOption(element)
+  {
+    var paramaters = element.parentNode.nextSibling.nextSibling;
 
-  var i;
-  var j = 0;
-  var k = 0;
-  var l = 0;
-  var m = 0;
-  for (i = 0; i < count; i++){
+    paramaters.innerHTML = "";
+
+    var truevalue = document.createElement('input');
+    truevalue.setAttribute("placeholder", "True Value");
+    truevalue.setAttribute("name", "input1");
+    truevalue.setAttribute("class", "form-group form-control form-control-user");
+
+    var falsevalue = document.createElement('input');
+    falsevalue.setAttribute("placeholder", "False Value");
+    falsevalue.setAttribute("name", "input2");
+    falsevalue.setAttribute("class", "form-group form-control form-control-user");
+
+    paramaters.appendChild(truevalue);
+    paramaters.appendChild(falsevalue);
+  }
 
 
-    var question = new Object();
-    question.title = questionTitles[i].value;
-    question.type = questionTypes[i].value;
-    question.content = questionContents[i].value;
+  var questionTypes = [];
+  var genres = [];
 
+  var ip = '10.60.10.66';
+  var getQuestionTypesURL = "http://"+ip+":4000/api/references/questions/questiontypes";
 
-    if (frequencyOfSchedule[i].value == "No Schedule"){
-      question.time = null;
-    } else if (frequencyOfSchedule[i].value == "Just Once"){
-      question.time = questionDateTime[k].value;
-      k++;
-    } else if (frequencyOfSchedule[i].value == "Daily"){
-      // debugger;
-      question.daily = [];
-      var dailyTimes = dailyTimesSelect[m];
-      for (var z = 0; z < dailyTimes.selectedOptions.length; z++) {
-        question.daily[z] = (dailyTimes.selectedOptions[z].text);
+  $.ajax({
+    contentType: 'application/json',
+    type: 'GET',
+    url: getQuestionTypesURL,
+    async: false,
+    success: function(data){
+      questionTypes = JSON.parse(data).array;
+      // console.log(questionTypes);
+    },
+    error: function(jqXHR, exception){
+      console.log("Something went wrong");
+    }
+  });
+
+  var getGenresURL = "http://"+ip+":4000/api/references/study/genres";
+  var studyGenresSelect = document.getElementById("studyGenresSelect");
+
+  $.ajax({
+    contentType: 'application/json',
+    type: 'GET',
+    url: getGenresURL,
+    async: false,
+    success: function(data){
+      genres = JSON.parse(data).array;
+      for (var i = 0; i < genres.length; i++) {
+        var option = document.createElement("option");
+        option.setAttribute("value", genres[i]);
+        option.text = genres[i];
+        if (i == 0){
+          option.setAttribute("selected", 'selected');
+        }
+        studyGenresSelect.appendChild(option);
       }
-      console.log(question.daily);
-      m++;
+    },
+    error: function(jqXHR, exception){
+      console.log("Something went wrong");
+    }
+  });
+
+
+  var token = JSON.parse(localStorage.getItem("token"));
+
+
+  function submitStudy(){
+
+    if (count == 0){
+      window.alert('You must enter at least 1 question');
+      return false;
     }
 
+    var studyTitle = document.getElementById('studyTitle').value;
+    var studyGenres = $('#studyGenresSelect').val();
 
-    if (question.type != "Free Text"){
+    var questionIds = [];
 
-      if (question.type == "Scale"){
-        question.scale = {min: input1[j].value, max: input2[j].value};
-        j++;
-      } else if (question.type == "Boolean"){
-        question.boolean = {trueValue: input1[j].value, falseValue: input2[j].value};
-        j++;
-      } else if (question.type == "Multiple Choice"){
-        question.multiple = choiceContent[l].value;
-        l++;
+    var questionTitles = document.getElementsByName('questionTitle');
+    var questionTypes = document.getElementsByName('questionType');
+    var questionContents = document.getElementsByName('questionContent');
+    var questionDateTime = document.getElementsByName('questionDateTime');
+    var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
+
+    var dailyTimesSelect = document.getElementsByName('dailySelection');
+
+    var input1 = document.getElementsByName('input1');
+    var input2 = document.getElementsByName('input2');
+    var choiceContent = document.getElementsByName('choiceContent');
+
+    var i;
+    var j = 0;
+    var k = 0;
+    var l = 0;
+    var m = 0;
+    for (i = 0; i < count; i++){
+
+
+      var question = new Object();
+      question.title = questionTitles[i].value;
+      question.type = questionTypes[i].value;
+      question.content = questionContents[i].value;
+
+
+      if (frequencyOfSchedule[i].value == "No Schedule"){
+        question.time = null;
+      } else if (frequencyOfSchedule[i].value == "Just Once"){
+        question.time = questionDateTime[k].value;
+        k++;
+      } else if (frequencyOfSchedule[i].value == "Daily"){
+        // debugger;
+        question.daily = [];
+        var dailyTimes = dailyTimesSelect[m];
+        for (var z = 0; z < dailyTimes.selectedOptions.length; z++) {
+          question.daily[z] = (dailyTimes.selectedOptions[z].text);
+        }
+        console.log(question.daily);
+        m++;
       }
-      console.log(question.multiple);
 
+
+      if (question.type != "Free Text"){
+
+        if (question.type == "Scale"){
+          question.scale = {min: input1[j].value, max: input2[j].value};
+          j++;
+        } else if (question.type == "Boolean"){
+          question.boolean = {trueValue: input1[j].value, falseValue: input2[j].value};
+          j++;
+        } else if (question.type == "Multiple Choice"){
+          question.multiple = choiceContent[l].value;
+          l++;
+        }
+        console.log(question.multiple);
+
+      }
+
+      var questionJsonString = JSON.stringify(question);
+
+      // console.log(questionJsonString);
+
+      var url = "http://"+ip+":4000/api/question?token="+token;
+
+      $.ajax({
+        contentType: 'application/json',
+        data: questionJsonString,
+        success: function(data){
+          questionIds[i] = data._id;
+        },
+        error: function(jqXHR, exception){
+          console.log("Some error occoured");
+          return false;
+        },
+        type: 'POST',
+        url: url,
+        async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
+      });
+    } // end of for loop
+
+
+    var study = new Object();
+    study.title = studyTitle;
+    study.questions = questionIds;
+
+    var targetNames = document.getElementsByName('targetName');
+    var targetValues = document.getElementsByName('targetValue');
+    study.targets = [];
+
+    for (var i = 0; i < targetNames.length; i++) {
+      if (targetNames[i].value != "Select Target"){
+        study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
+      }
     }
 
-    var questionJsonString = JSON.stringify(question);
-
-    // console.log(questionJsonString);
-
-    var url = "http://"+ip+":4000/api/question?token="+token;
+    study.genres = studyGenres;
 
     $.ajax({
       contentType: 'application/json',
-      data: questionJsonString,
       success: function(data){
-        questionIds[i] = data._id;
+        study.userId = data;
       },
       error: function(jqXHR, exception){
         console.log("Some error occoured");
-        return false;
+      },
+      type: 'GET',
+      url: "http://"+ip+":4000/api/users/userID?token="+token,
+      async: false
+    });
+
+
+    var studyJsonString = JSON.stringify(study);
+
+    console.log(studyJsonString);
+
+    var studyUrl = "http://"+ip+":4000/api/study?token="+token;
+
+    $.ajax({
+      contentType: 'application/json',
+      data: studyJsonString,
+      success: function(data){
+        window.alert("Study created Successfully");
+        console.log(data);
+      },
+      error: function(jqXHR, exception){
+        console.log("Some error occoured");
+        for (var i = 0; i < questionIds.length; i++) {
+          deleteQuestion(questionIds[i]);
+        }
       },
       type: 'POST',
-      url: url,
+      url: studyUrl,
       async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
     });
-  } // end of for loop
 
+  }
 
-  var study = new Object();
-  study.title = studyTitle;
-  study.questions = questionIds;
+  function removeQuestion(e) {
+    e.parentNode.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode.parentNode);
+    count--;
+    window.alert("REMOVED QUESTION");
+  }
 
-  var targetNames = document.getElementsByName('targetName');
-  var targetValues = document.getElementsByName('targetValue');
-  study.targets = [];
+  function deleteQuestion(id){
 
-  for (var i = 0; i < targetNames.length; i++) {
-    if (targetNames[i].value != "Select Target"){
-      study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
+    var deleteQuestionUrl = "http://"+ip+":4000/api/question?token="+token;
+
+    let questionID = {
+      id: id
     }
+
+    var jsonString = JSON.stringify(questionID);
+    $.ajax({
+      contentType: 'application/json',
+      data: jsonString,
+      success: function(data){
+        console.log(data);
+      },
+      error: function(jqXHR, exception){
+        console.log("Some error occoured");
+      },
+      type: 'DELETE',
+      url: deleteQuestionUrl,
+      async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
+    });
   }
-
-  study.genres = studyGenres;
-
-  $.ajax({
-    contentType: 'application/json',
-    success: function(data){
-      study.userId = data;
-    },
-    error: function(jqXHR, exception){
-      console.log("Some error occoured");
-    },
-    type: 'GET',
-    url: "http://"+ip+":4000/api/users/userID?token="+token,
-    async: false
-  });
-
-
-  var studyJsonString = JSON.stringify(study);
-
-  console.log(studyJsonString);
-
-  var studyUrl = "http://"+ip+":4000/api/study?token="+token;
-
-  $.ajax({
-    contentType: 'application/json',
-    data: studyJsonString,
-    success: function(data){
-      window.alert("Study created Successfully");
-      console.log(data);
-    },
-    error: function(jqXHR, exception){
-      console.log("Some error occoured");
-      for (var i = 0; i < questionIds.length; i++) {
-        deleteQuestion(questionIds[i]);
-      }
-    },
-    type: 'POST',
-    url: studyUrl,
-    async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
-  });
-
-}
-
-function removeQuestion(e) {
-  e.parentNode.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode.parentNode);
-  count--;
-  window.alert("REMOVED QUESTION");
-}
-
-function deleteQuestion(id){
-
-  var deleteQuestionUrl = "http://"+ip+":4000/api/question?token="+token;
-
-  let questionID = {
-    id: id
-  }
-
-  var jsonString = JSON.stringify(questionID);
-  $.ajax({
-    contentType: 'application/json',
-    data: jsonString,
-    success: function(data){
-      console.log(data);
-    },
-    error: function(jqXHR, exception){
-      console.log("Some error occoured");
-    },
-    type: 'DELETE',
-    url: deleteQuestionUrl,
-    async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
-  });
-}
