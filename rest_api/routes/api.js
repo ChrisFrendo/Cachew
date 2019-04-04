@@ -232,21 +232,30 @@ router.get('/question', async function(req, res, next){
       for (var j = 0; j < study.questions.length; j++) {
         await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(question){
           var answered = false;
-          if (question != null && question.answers != []){
-            for (var i = 0; i < question.answers.length; i++) {
-              await (Answer.findOne({_id: question.answers[i]}).then( async function(answer) {
-                if (answer.user == req.decoded.username){
-                  answered = true;
+          console.log(question);
+          if (question != null){
+            if (question.answers != []){
+              for (var i = 0; i < question.answers.length; i++) {
+                await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+                  if(answer){
+                    answered = true;
+                  }
+                }));
+                if (answered){
+                  break;
                 }
-              }));
-              if (answered){
-                break;
               }
+              if (!answered){
+                questions[j] = question;
+              }  else {
+                questions[j] = null;
+              }
+            } else {
+              questions[j] = question;
             }
           }
-          if (!answered){
-            questions[j] = question;
-          }
+
+
         }));
       }
       if (questions == null){
@@ -274,10 +283,32 @@ router.get('/study/subscribed', async function(req, res, next){
       notifs[i] = 0;
       flag[i] = false;
       for (var j = 0; j < studies[i].questions.length; j++) {
+
+
         await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: null}]}).then( async function(question){
+          var answered = false;
           if (question != null){
+            if (question.answers != []){
+            for (var l = 0; l < question.answers.length; l++) {
+              await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
+                console.log("ANSWER" + answer);
+                if (answer.user == req.decoded.username){
+                  answered = true;
+                }
+              }));
+              if (answered){
+                break;
+              }
+            }
+            if (!answered){
+              notifs[i]++;
+            }
+          } else {
             notifs[i]++;
           }
+        }
+
+
         }));
         await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: {$ne: null}}]}).then( async function(question){
           if (question != null){

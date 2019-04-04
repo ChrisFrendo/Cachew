@@ -151,9 +151,14 @@ export class DashboardPage implements OnInit {
   }
 
   study(index: number){
-    this.storage.set('studyTitle', this.studyTitles[index]);
-    this.storage.set('studyID', this.studyId[index]);
-    this.router.navigateByUrl('/study');
+    if(this.notification[index] > 0){
+      this.storage.set('studyTitle', this.studyTitles[index]);
+      this.storage.set('studyID', this.studyId[index]);
+      this.router.navigateByUrl('/study');
+    }
+    else{
+      this.presentToast("No questions to answer at the moment.");
+    }
   }
 
   async presentToast(displayMessage) {
