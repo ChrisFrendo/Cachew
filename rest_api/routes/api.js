@@ -14,7 +14,7 @@ app.set('superSecret', 'someSecret');
 
 // all return array of strings
 router.get('/references/users/genders', function(req, res, next){
-  res.status(200).send(User.genders);
+  res.status(200).send(JSON.stringify({array: User.genders}));
 });
 
 router.get('/references/users/usertypes', function(req, res, next){
