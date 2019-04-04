@@ -348,6 +348,29 @@ $(document).ready(function() {
 
         this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' multiple=true class='form-control form-control-user' name='weeklySelection'></select></div></div>";
 
+        var weeksUrl = "http://"+ip+":4000/api/references/question/days";
+        var weeks = [];
+
+        $.ajax({
+          contentType: 'application/json',
+          type: 'GET',
+          url: weeksUrl,
+          async: false,
+          success: function(data){
+            weeks = JSON.parse(data).array;
+            // console.log(questionTypes);
+          },
+          error: function(jqXHR, exception){
+            console.log("Something went wrong");
+          }
+        });
+
+        for (var i = 0; i < weeks.length; i++) {
+          var option = document.createElement("option");
+          option.setAttribute("value", weeks[i]);
+          option.text = weeks[i];
+          this.parentNode.nextSibling.firstChild.firstChild.firstChild.appendChild(option);
+        }
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
         var times = [];
@@ -366,15 +389,12 @@ $(document).ready(function() {
           }
         });
 
-        console.log(times);
-
-        for (var i = 0; i < times.length; i++) {
+        for (var j = 0; j < times.length; j++) {
           var option = document.createElement("option");
-          option.setAttribute("value", times[i]);
-          option.text = times[i];
+          option.setAttribute("value", times[j]);
+          option.text = times[j];
           this.parentNode.nextSibling.firstChild.firstChild.nextSibling.firstChild.appendChild(option);
         }
-
 
         break;
         case "Monthly":
