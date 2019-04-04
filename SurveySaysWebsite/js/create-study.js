@@ -51,42 +51,41 @@ $("input[type=checkbox]").on("change",function(){
   var item = $(this).val();
   console.log(item);
   switch(item){
-    case "Country":
-    countryOption();
+      case "Country":
+      countryOption();
     break;
-    case "Gender":
-    $("#selectedTargets").append("<div class='gender'><label>Gender</label><div>");
-    genderOption();
+      case "Gender":
+      $("#selectedTargets").append("<div class='gender'><label>Gender</label><div>");
+      genderOption();
     break;
-    case "Student":
+      case "Student":
     break;
-    case "Salaries":
-    if($('#defaultInline3').prop('checked')) {
-      $("#selectedTargets").append("<div id='salaryTarget' class='form-group'><label>Salary</label><br><input type='number' min='18000' max='100000' placeholder='Min Salary'> to <input type='number' min='18000' max='100000' placeholder='Max Salary'></div>");
-    }else{
-      var salaryDiv = document.getElementById('salaryTarget');
-      var selectedTargets = document.getElementById('selectedTargets');
-      selectedTargets.removeChild(salaryDiv);
-    }
+      case "Salaries":
+      if($('#defaultInline3').prop('checked')) {
+        $("#selectedTargets").append("<div id='salaryTarget' class='form-group'><label>Salary</label><br><input type='number' min='18000' max='100000' placeholder='Min Salary'> to <input type='number' min='18000' max='100000' placeholder='Max Salary'></div>");
+      }else{
+        var salaryDiv = document.getElementById('salaryTarget');
+        var selectedTargets = document.getElementById('selectedTargets');
+        selectedTargets.removeChild(salaryDiv);
+      }
     break;
     case "Industry":
-    industryOption();
+      industryOption();
     break;
     case "Years of Experience":
-    if($('#defaultInline5').prop('checked')) {
-      $("#selectedTargets").append("<div id='yearsOfExpTarget' class='form-group'><label>Years Of Experience</label><br><input type='number' min='0' max='15' placeholder='YearsOfExperience'></div>");
-    }else
-    {
-      var yearsOfExperienceDiv = document.getElementById('yearsOfExpTarget');
-      var selectedTargets = document.getElementById('selectedTargets');
-      selectedTargets.removeChild(yearsOfExperienceDiv);
-    }
+      if($('#defaultInline5').prop('checked')) {
+        $("#selectedTargets").append("<div id='yearsOfExpTarget' class='form-group'><label>Years Of Experience</label><br><input type='number' min='0' max='15' placeholder='YearsOfExperience'></div>");
+      }else
+      {
+        var yearsOfExperienceDiv = document.getElementById('yearsOfExpTarget');
+        var selectedTargets = document.getElementById('selectedTargets');
+        selectedTargets.removeChild(yearsOfExperienceDiv);
+      }
     break;
     case "Job Role":
-    jobRolesOption();
+      jobRolesOption();
     break;
   }
-
 });
 
 var genders=[];
@@ -98,7 +97,7 @@ $.ajax({
   async: false,
   success: function(data){
     genders = JSON.parse(data).array;
-    debugger;
+    // debugger;
     console.log(genders);
   },
   error: function(jqXHR, exception){
@@ -139,231 +138,180 @@ function genderOption()
 
       radio.appendChild(radioLabel);
 
-    }} else {
-      $('.gender').css('display','none');
-
     }
+  } else {
+    $('.gender').css('display','none');
 
   }
 
-  var countries=[];
-  var getCountryURL = "http://"+ip+":4000/api/references/users/countries";
-  $.ajax({
-    contentType: 'application/json',
-    type: 'GET',
-    url: getCountryURL,
-    async: false,
-    success: function(data){
-      countries = JSON.parse(data).array;
-      //console.log(countries);
-    },
-    error: function(jqXHR, exception){
-      console.log("Something went wrong");
-    }
-  });
+}
 
-  function countryOption()
+var countries=[];
+var getCountryURL = "http://"+ip+":4000/api/references/users/countries";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getCountryURL,
+  async: false,
+  success: function(data){
+    countries = JSON.parse(data).array;
+    //console.log(countries);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function countryOption()
+{
+
+  if($('#defaultInline2').prop('checked')) {
+    $("#selectedTargets").append("<div id='countryTarget' class='form-group'><label>Country</label><select id='countrySelection' class='form-control form-control-user'></select></div>");
+
+    var countrySelect = document.getElementById('countrySelection');
+
+    for (var i = 0; i < countries.length; i++) {
+      var option = document.createElement("option");
+      option.setAttribute("value", countries[i]);
+      option.text = countries[i];
+      if (i == 0){
+        option.setAttribute("selected", 'selected');
+      }
+      countrySelect.appendChild(option);
+
+    }
+  }else
   {
-
-    if($('#defaultInline2').prop('checked')) {
-      $("#selectedTargets").append("<div id='countryTarget' class='form-group'><label>Country</label><select id='countrySelection' class='form-control form-control-user'></select></div>");
-
-      var countrySelect = document.getElementById('countrySelection');
-
-      for (var i = 0; i < countries.length; i++) {
-        var option = document.createElement("option");
-        option.setAttribute("value", countries[i]);
-        option.text = countries[i];
-        if (i == 0){
-          option.setAttribute("selected", 'selected');
-        }
-        countrySelect.appendChild(option);
-
-      }
-    }else
-    {
-      var countryDiv = document.getElementById('countryTarget');
-      var selectedTargets = document.getElementById('selectedTargets');
-      selectedTargets.removeChild(countryDiv);
-    }
+    var countryDiv = document.getElementById('countryTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(countryDiv);
   }
+}
 
 
-  var jobRoles=[];
-  var getJobRoleURL = "http://"+ip+":4000/api/references/users/jobRoles";
-  $.ajax({
-    contentType: 'application/json',
-    type: 'GET',
-    url: getJobRoleURL,
-    async: false,
-    success: function(data){
-      jobRoles = JSON.parse(data).array;
-      //  console.log(jobRoles);
-    },
-    error: function(jqXHR, exception){
-      console.log("Something went wrong");
+var jobRoles=[];
+var getJobRoleURL = "http://"+ip+":4000/api/references/users/jobRoles";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getJobRoleURL,
+  async: false,
+  success: function(data){
+    jobRoles = JSON.parse(data).array;
+    //  console.log(jobRoles);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function jobRolesOption()
+{
+
+  if($('#defaultInline6').prop('checked')) {
+
+    $("#selectedTargets").append("<div id='jobRoleTarget' class='form-group'><label>Job Role</label><select id='jobSelection' class='form-control form-control-user'></select></div>");
+
+    var jobRoleSelect = document.getElementById('jobSelection');
+
+    for (var i = 0; i < jobRoles.length; i++) {
+      var jobList = document.createElement("option");
+      jobList.setAttribute("value", jobRoles[i]);
+      jobList.text = jobRoles[i];
+      if (i == 0){
+        jobList.setAttribute("selected", 'selected');
+      }
+      jobRoleSelect.appendChild(jobList);
+
     }
-  });
-
-  function jobRolesOption()
+  }else
   {
-
-    if($('#defaultInline6').prop('checked')) {
-
-      $("#selectedTargets").append("<div id='jobRoleTarget' class='form-group'><label>Job Role</label><select id='jobSelection' class='form-control form-control-user'></select></div>");
-
-      var jobRoleSelect = document.getElementById('jobSelection');
-
-      for (var i = 0; i < jobRoles.length; i++) {
-        var jobList = document.createElement("option");
-        jobList.setAttribute("value", jobRoles[i]);
-        jobList.text = jobRoles[i];
-        if (i == 0){
-          jobList.setAttribute("selected", 'selected');
-        }
-        jobRoleSelect.appendChild(jobList);
-
-      }
-    }else
-    {
-      var jobRoleDiv = document.getElementById('jobRoleTarget');
-      var selectedTargets = document.getElementById('selectedTargets');
-      selectedTargets.removeChild(jobRoleDiv);
-    }
+    var jobRoleDiv = document.getElementById('jobRoleTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(jobRoleDiv);
   }
+}
 
-  var industries=[];
-  var getIndustryURL = "http://"+ip+":4000/api/references/users/industry";
-  $.ajax({
-    contentType: 'application/json',
-    type: 'GET',
-    url: getIndustryURL,
-    async: false,
-    success: function(data){
-      industries = JSON.parse(data).array;
-      console.log(industries);
-    },
-    error: function(jqXHR, exception){
-      console.log("Something went wrong");
-    }
-  });
-
-  function industryOption()
-  {
-
-    if($('#defaultInline4').prop('checked')) {
-      $("#selectedTargets").append("<div id='industryTarget' class='form-group'><label>Industry</label><select id='industrySelection' class='form-control form-control-user' name='industry'></select></div>");
-
-      var industrySelect = document.getElementById('industrySelection');
-      for (var i = 0; i < industries.length; i++) {
-        var listOption = document.createElement("option");
-        listOption.setAttribute("value", industries[i]);
-        listOption.text = industries[i];
-        if (i == 0){
-          listOption.setAttribute("selected", 'selected');
-        }
-        industrySelect.appendChild(listOption);
-      }
-    }else {
-
-      var industryTargetDiv = document.getElementById('industryTarget');
-      var selectedTargets = document.getElementById('selectedTargets');
-      selectedTargets.removeChild(industryTargetDiv);
-    }
+var industries=[];
+var getIndustryURL = "http://"+ip+":4000/api/references/users/industry";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getIndustryURL,
+  async: false,
+  success: function(data){
+    industries = JSON.parse(data).array;
+    console.log(industries);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
   }
+});
 
+function industryOption()
+{
 
+  if($('#defaultInline4').prop('checked')) {
+    $("#selectedTargets").append("<div id='industryTarget' class='form-group'><label>Industry</label><select id='industrySelection' class='form-control form-control-user' name='industry'></select></div>");
 
-  $(document).ready(function() {
-    $("#btnNewQuestion").click(function(e) {
-      e.preventDefault();
-      $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-2 mb-3 mb-sm-0'><select id='frequency' class='form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select></div><div class='col-sm-4 mb-3 mb-sm-0'></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
-
-      var questionTypeSelect = document.getElementsByName("questionType");
-
-      //Create and append the options
-      for (var i = 0; i < questionTypes.length; i++) {
-        var option = document.createElement("option");
-        option.setAttribute("value", questionTypes[i]);
-        option.text = questionTypes[i];
-        if (i == 0){
-          option.setAttribute("selected", 'selected');
-        }
-        questionTypeSelect[count].appendChild(option);
+    var industrySelect = document.getElementById('industrySelection');
+    for (var i = 0; i < industries.length; i++) {
+      var listOption = document.createElement("option");
+      listOption.setAttribute("value", industries[i]);
+      listOption.text = industries[i];
+      if (i == 0){
+        listOption.setAttribute("selected", 'selected');
       }
-      count++;
+      industrySelect.appendChild(listOption);
+    }
+  }else {
 
-      $("select").on("change", function(){
-        var option = $(this).val();
-        $(".field").hide();
-        switch (option) {
-          case "Multiple Choice":
-          multipleChoice(this);
-          break;
-          case "Scale":
-          scaleOption(this);
-          break;
-          case "Free Text":
-          var paramaters = this.parentNode.nextSibling.nextSibling;
-          paramaters.innerHTML = "";
-          break;
-          case "Boolean":
-          booleanOption(this);
-          break;
-        }
-      });
+    var industryTargetDiv = document.getElementById('industryTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(industryTargetDiv);
+  }
+}
 
 
-      var frequencySelect = document.getElementsByName("frequencyOfSchedule");
 
-      $("select").on("change", function(){
-        var option = $(this).val();
-        $(".field").hide();
-        switch (option) {
-          case "No Schedule":
-          this.parentNode.nextSibling.innerHTML = "";
-          break;
-          case "Just Once":
-          this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
-          break;
-          case "Daily":
+$(document).ready(function() {
+  $("#btnNewQuestion").click(function(e) {
+    e.preventDefault();
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-2 mb-3 mb-sm-0'><select id='frequency' class='form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select></div><div class='col-sm-4 mb-3 mb-sm-0'></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
 
-          this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select></div><div class='form-group'></select>"
+    var questionTypeSelect = document.getElementsByName("questionType");
 
+    //Create and append the options
+    for (var i = 0; i < questionTypes.length; i++) {
+      var option = document.createElement("option");
+      option.setAttribute("value", questionTypes[i]);
+      option.text = questionTypes[i];
+      if (i == 0){
+        option.setAttribute("selected", 'selected');
+      }
+      questionTypeSelect[count].appendChild(option);
+    }
+    count++;
 
-          var timesUrl = "http://"+ip+":4000/api/references/question/times";
-          var times = [];
-
-          $.ajax({
-            contentType: 'application/json',
-            type: 'GET',
-            url: timesUrl,
-            async: false,
-            success: function(data){
-              times = JSON.parse(data).array;
-              // console.log(questionTypes);
-            },
-            error: function(jqXHR, exception){
-              console.log("Something went wrong");
-            }
-          });
-
-          console.log(times);
-
-          for (var i = 0; i < times.length; i++) {
-            var option = document.createElement("option");
-            option.setAttribute("value", times[i]);
-            option.text = times[i];
-            this.parentNode.nextSibling.firstChild.appendChild(option);
-          }
-
-          break;
-          case "Weekly":
-          console.log("Weekly");
-          break;
-          case "Monthly":
-          console.log("Monthly");
-          break;
+    $("select").on("change", function(){
+      var option = $(this).val();
+      $(".field").hide();
+      switch (option) {
+        case "Multiple Choice":
+        multipleChoice(this);
+        break;
+        case "Scale":
+        scaleOption(this);
+        break;
+        case "Free Text":
+        var paramaters = this.parentNode.nextSibling.nextSibling;
+        paramaters.innerHTML = "";
+        break;
+        case "Boolean":
+        booleanOption(this);
+        break;
+      }
+    });
 
     var frequencySelect = document.getElementsByName("frequencyOfSchedule");
 
@@ -404,16 +352,36 @@ function genderOption()
           option.setAttribute("value", times[i]);
           option.text = times[i];
           this.parentNode.nextSibling.firstChild.appendChild(option);
-
         }
-      });
-
 
         break;
         case "Weekly":
 
         this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' multiple=true class='form-control form-control-user' name='weeklySelection'></select></div></div>";
 
+        var weeksUrl = "http://"+ip+":4000/api/references/question/days";
+        var weeks = [];
+
+        $.ajax({
+          contentType: 'application/json',
+          type: 'GET',
+          url: weeksUrl,
+          async: false,
+          success: function(data){
+            weeks = JSON.parse(data).array;
+            // console.log(questionTypes);
+          },
+          error: function(jqXHR, exception){
+            console.log("Something went wrong");
+          }
+        });
+
+        for (var i = 0; i < weeks.length; i++) {
+          var option = document.createElement("option");
+          option.setAttribute("value", times[i]);
+          option.text = times[i];
+          this.parentNode.nextSibling.firstChild.firstChild.appendChild(option);
+        }
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
         var times = [];
@@ -432,15 +400,12 @@ function genderOption()
           }
         });
 
-        console.log(times);
-
-        for (var i = 0; i < times.length; i++) {
+        for (var j = 0; j < times.length; j++) {
           var option = document.createElement("option");
-          option.setAttribute("value", times[i]);
-          option.text = times[i];
+          option.setAttribute("value", times[j]);
+          option.text = times[j];
           this.parentNode.nextSibling.firstChild.firstChild.nextSibling.firstChild.appendChild(option);
         }
-
 
         break;
         case "Monthly":
@@ -448,7 +413,10 @@ function genderOption()
         break;
       }
     });
+
   });
+
+});
 
 
 
