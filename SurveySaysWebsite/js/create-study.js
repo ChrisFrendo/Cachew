@@ -61,13 +61,13 @@ $("input[type=checkbox]").on("change",function(){
       case "Student":
     break;
       case "Salaries":
-      if($('#defaultInline3').prop('checked')) {
-        $("#selectedTargets").append("<div id='salaryTarget' class='form-group'><label>Salary</label><br><input type='number' min='18000' max='100000' placeholder='Min Salary'> to <input type='number' min='18000' max='100000' placeholder='Max Salary'></div>");
-      }else{
-        var salaryDiv = document.getElementById('salaryTarget');
-        var selectedTargets = document.getElementById('selectedTargets');
-        selectedTargets.removeChild(salaryDiv);
-      }
+        salaryOption();
+      //if($('#defaultInline3').prop('checked')) {
+    //  }else{
+      //   var salaryDiv = document.getElementById('salaryTarget');
+      //   var selectedTargets = document.getElementById('selectedTargets');
+      //   selectedTargets.removeChild(salaryDiv);
+    //  }
     break;
     case "Industry":
       industryOption();
@@ -269,6 +269,47 @@ function industryOption()
     var industryTargetDiv = document.getElementById('industryTarget');
     var selectedTargets = document.getElementById('selectedTargets');
     selectedTargets.removeChild(industryTargetDiv);
+  }
+}
+
+var salaries=[];
+var getSalaryURL = "http://"+ip+":4000/api/references/users/salaries";
+$.ajax({
+  contentType: 'application/json',
+  type: 'GET',
+  url: getSalaryURL,
+  async: false,
+  success: function(data){
+    salaries = JSON.parse(data).array;
+    console.log(salaries);
+  },
+  error: function(jqXHR, exception){
+    console.log("Something went wrong");
+  }
+});
+
+function salaryOption()
+{
+
+  if($('#defaultInline3').prop('checked')) {
+    $("#selectedTargets").append("<div id='salaryTarget' class='form-group'><label>Salary</label><select id='salarySelection' class='form-control form-control-user' name='industry'></select></div>");
+
+    var salarySelect = document.getElementById('salarySelection');
+    for (var i = 0; i < salaries.length; i++) {
+      var listOption = document.createElement("option");
+      listOption.setAttribute("value", salaries[i]);
+      listOption.text = salaries[i];
+      if (i == 0){
+        listOption.setAttribute("selected", 'selected');
+      }
+      salarySelect.appendChild(listOption);
+    }
+
+  }else {
+
+    var salaryTargetDiv = document.getElementById('salaryTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(salaryTargetDiv);
   }
 }
 
