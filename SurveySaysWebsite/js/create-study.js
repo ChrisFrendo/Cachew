@@ -585,17 +585,17 @@ $(document).ready(function() {
         console.log(question.daily);
         m++;
       } else if (frequencyOfSchedule[i].value == "Weekly"){
-        question.weekly;
-        question.weekly.days = [];
+        debugger;
+        question.weeklyDay = [];
         var weeklyDays = weeklyDaysSelect[n];
         for (var z = 0; z < weeklyDays.selectedOptions.length; z++) {
-          question.weekly.day[z] = weeklyDays.selectedOptions[z].text;
+          question.weeklyDay[z] = weeklyDays.selectedOptions[z].text;
         }
 
-        question.weekly.time = [];
+        question.weeklyTime = [];
         var weeklyTimes = weeklyTimesSelect[n];
         for (var z = 0; z < weeklyTimes.selectedOptions.length; z++) {
-          question.weekly.time[z] = weeklyTimes.selectedOptions[z].text;
+          question.weeklyTime[z] = weeklyTimes.selectedOptions[z].text;
         }
 
         n++;
@@ -650,11 +650,11 @@ $(document).ready(function() {
     var targetValues = document.getElementsByName('targetValue');
     study.targets = [];
 
-    for (var i = 0; i < targetNames.length; i++) {
-      if (targetNames[i].value != "Select Target"){
-        study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
-      }
-    }
+    // for (var i = 0; i < targetNames.length; i++) {
+    //   if (targetNames[i].value != "Select Target"){
+    //     study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
+    //   }
+    // }
 
     study.genres = studyGenres;
 
