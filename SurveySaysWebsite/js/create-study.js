@@ -313,7 +313,7 @@ function genderOption()
         }
       });
 
-<<<<<<< HEAD
+
       var frequencySelect = document.getElementsByName("frequencyOfSchedule");
 
       $("select").on("change", function(){
@@ -364,7 +364,7 @@ function genderOption()
           case "Monthly":
           console.log("Monthly");
           break;
-=======
+
     var frequencySelect = document.getElementsByName("frequencyOfSchedule");
 
     $("select").on("change", function(){
@@ -404,12 +404,11 @@ function genderOption()
           option.setAttribute("value", times[i]);
           option.text = times[i];
           this.parentNode.nextSibling.firstChild.appendChild(option);
->>>>>>> 9d2331b48d8474f0a015c22d72956acbca630cb2
+
         }
       });
 
-<<<<<<< HEAD
-=======
+
         break;
         case "Weekly":
 
@@ -448,7 +447,6 @@ function genderOption()
         this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
         break;
       }
->>>>>>> 9d2331b48d8474f0a015c22d72956acbca630cb2
     });
   });
 
