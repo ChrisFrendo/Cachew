@@ -55,26 +55,19 @@ $("input[type=checkbox]").on("change",function(){
       countryOption();
     break;
       case "Gender":
-      $("#selectedTargets").append("<div class='gender'><label>Gender</label><div>");
       genderOption();
     break;
       case "Student":
     break;
       case "Salaries":
         salaryOption();
-      //if($('#defaultInline3').prop('checked')) {
-    //  }else{
-      //   var salaryDiv = document.getElementById('salaryTarget');
-      //   var selectedTargets = document.getElementById('selectedTargets');
-      //   selectedTargets.removeChild(salaryDiv);
-    //  }
     break;
     case "Industry":
       industryOption();
     break;
     case "Years of Experience":
       if($('#defaultInline5').prop('checked')) {
-        $("#selectedTargets").append("<div id='yearsOfExpTarget' class='form-group'><label>Years Of Experience</label><br><input type='number' min='0' max='15' placeholder='YearsOfExperience'></div>");
+        $("#selectedTargets").append("<div id='yearsOfExpTarget' class='form-group'><label>Years Of Experience</label><br><input type='number'id='expSelection' min='0' max='40' placeholder='YearsOfExperience'></div>");
       }else
       {
         var yearsOfExperienceDiv = document.getElementById('yearsOfExpTarget');
@@ -108,40 +101,26 @@ $.ajax({
 function genderOption()
 {
 
-  var genderOptions = document.getElementById('selectedTargets');
 
   if($('#defaultInline0').prop('checked')) {
+    $("#selectedTargets").append("<div id='genderTarget' class='form-group'><label>Gender</label><select id='genderSelection' class='form-control form-control-user'></select><div>");
+
+    var genderSelect = document.getElementById('genderSelection');
 
     for (var i = 0; i < genders.length; i++) {
-      // Create the radio element.
-      var radioElement = document.createElement('input');
-      radioElement.type = "radio";
-      radioElement.setAttribute("name", "genderValue");
-      radioElement.setAttribute("class", "custom-control-input");
-      radioElement.setAttribute("value",genders[i]);
-      radioElement.setAttribute("id","radio"+i);
-
-
-      var radio = document.createElement('div');
-      radio.setAttribute("class", "custom-control custom-radio custom-control-inline gender");
-      radio.setAttribute("id","option2");
-
-      selectedTargets.appendChild(radio);
-      radio.appendChild(radioElement);
-
-
-      // Create the label.
-      var radioLabel = document.createElement('label');
-      radioLabel.textContent = genders[i];
-      radioLabel.setAttribute("for","radio"+i);
-      radioLabel.setAttribute("class","custom-control-label");
-
-      radio.appendChild(radioLabel);
+      var option = document.createElement("option");
+      option.setAttribute("value", genders[i]);
+      option.text = genders[i];
+      if (i == 0){
+        option.setAttribute("selected", 'selected');
+      }
+      genderSelect.appendChild(option);
 
     }
   } else {
-    $('.gender').css('display','none');
-
+    var genderDiv = document.getElementById('genderTarget');
+    var selectedTargets = document.getElementById('selectedTargets');
+    selectedTargets.removeChild(genderDiv);
   }
 
 }
@@ -626,7 +605,7 @@ $(document).ready(function() {
         console.log(question.daily);
         m++;
       } else if (frequencyOfSchedule[i].value == "Weekly"){
-        debugger;
+        // debugger;
         question.weeklyDay = [];
         var weeklyDays = weeklyDaysSelect[n];
         for (var z = 0; z < weeklyDays.selectedOptions.length; z++) {
@@ -687,15 +666,52 @@ $(document).ready(function() {
     study.title = studyTitle;
     study.questions = questionIds;
 
-    var targetNames = document.getElementsByName('targetName');
-    var targetValues = document.getElementsByName('targetValue');
+    var genderCheckbox = document.getElementById('defaultInline0');
+    var studentCheckbox = document.getElementById('defaultInline1');
+    var countryCheckbox = document.getElementById('defaultInline2');
+    var salaryCheckbox = document.getElementById('defaultInline3');
+    var industryCheckbox = document.getElementById('defaultInline4');
+    var expCheckbox = document.getElementById('defaultInline5');
+    var jobroleCheckbox = document.getElementById('defaultInline6');
+
+
     study.targets = [];
 
-    // for (var i = 0; i < targetNames.length; i++) {
-    //   if (targetNames[i].value != "Select Target"){
-    //     study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
-    //   }
-    // }
+    if (genderCheckbox.checked){
+      var targetName = genderCheckbox.nextSibling.textContent;
+      var targetValue = document.getElementById('genderSelection').value;
+      study.targets.push({name: targetName, value: targetValue});
+    }
+    if (studentCheckbox.checked){
+      var targetName = studentCheckbox.nextSibling.textContent;
+      study.targets.push({name: targetName, value: true});
+    }
+    if (countryCheckbox.checked){
+      var targetName = countryCheckbox.nextSibling.textContent;
+      var targetValue = document.getElementById('countrySelection').value;
+      study.targets.push({name: targetName, value: targetValue});
+    }
+    if (salaryCheckbox.checked){
+      var targetName = salaryCheckbox.nextSibling.textContent;
+      var targetValue = document.getElementById('salarySelection').value;
+      study.targets.push({name: targetName, value: targetValue});
+    }
+    if (industryCheckbox.checked){
+      var targetName = industryCheckbox.nextSibling.textContent;
+      var targetValue = document.getElementById('industrySelection').value;
+      study.targets.push({name: targetName, value: targetValue});
+    }
+    if (expCheckbox.checked){
+      var targetName = genderCheckbox.nextSibling.textContent;
+      var targetValue = document.getElementById('expSelection').value;
+      study.targets.push({name: targetName, value: targetValue});
+    }
+    if (jobroleCheckbox.checked){
+      var targetName = genderCheckbox.nextSibling.textContent;
+      var targetValue = document.getElementById('jobSelection').value;
+      study.targets.push({name: targetName, value: targetValue});
+    }
+
 
     study.genres = studyGenres;
 
