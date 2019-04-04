@@ -15,11 +15,14 @@ export class StudyPage implements OnInit {
 
   ip: string = '10.60.10.66';
 
-  content: String;
-  typeAns: String;
-  trueValue: String;
-  falseValue: String;
-  answerQ: String;
+  content: string;
+  typeAns: string;
+  answerQMulti: boolean[] = [];
+  max: number;
+  min: number;
+  trueValue: string;
+  falseValue: string;
+  answerQ: string;
   studyID: any;
   questions: Array<any>;
   currentQ: any;
@@ -47,13 +50,13 @@ export class StudyPage implements OnInit {
       console.log('Your token is', val);
       this.http.get('http://'+this.ip+':4000/api/question?token=' + val + '&studyID=' + this.studyId).subscribe(data => {
         this.questions = JSON.parse((<any>data)._body).array;
-        // console.log(this.questions);
+        console.log(this.questions);
         for (var i = 0; i < this.questions.length; i++){
           if(this.questions[i] == null){
-            this.questions.splice(i,1);
+            this.questions[0] = this.questions[i+1];
           }
         }
-        console.log(this.questions)
+        console.log(this.questions[0])
         this.setType(0);
         this.currentQ = this.questions[0].title;
         this.content = this.questions[0].content;
@@ -80,6 +83,9 @@ setType(index: number){
     this.scale = true;
     this.ask = false;
     this.multi = false;
+
+    this.max = this.questions[index].scale.max;
+    this.min = this.questions[index].scale.min;
   }
   else if(this.questions[index].type == "Boolean"){
     this.text = false;
@@ -97,6 +103,10 @@ setType(index: number){
     this.multi = true;
 
     this.options = this.questions[index].multiple;
+    this.answerQMulti[0] = true;
+    for (var i = 1; i < this.options.length; i++){
+      this.answerQMulti[i] = false;
+    }
   }
 }
 
@@ -137,6 +147,8 @@ setType(index: number){
   }
 
  submit(){
+     this.storage.get('notif').then((notif) => {
+
         this.storage.get('token').then((val) => {
         let postData = {}
 
@@ -148,7 +160,7 @@ setType(index: number){
           }
           else if(this.questions[0].type == "Scale"){
             postData = {
-              "answer": {"scaleAnswer": this.answerQ},
+              "answer": {"scaleAnswer": parseInt(this.answerQ)},
               "id": this.questions[0]._id
             };
           }
@@ -159,18 +171,30 @@ setType(index: number){
             };
           }
           else if(this.questions[0].type == "Multiple Choice"){
+            var count=0;
+            let answerCorrectMulti: string[] = [];
+            console.log(answerCorrectMulti);
+            for (var i = 0; i < this.options.length; i++){
+              if(this.answerQMulti[i] == true){
+                answerCorrectMulti[count] = this.options[i];
+                count++;
+              }
+            }
             postData = {
-              "answer": {"multAnswer": this.answerQ},
+              "answer": {"multAnswer": answerCorrectMulti},
               "id": this.questions[0]._id
             };
           }
           this.answerQ = "";
         console.log(postData);
         this.http.put('http://'+this.ip+':4000/api/answer?token=' + val, postData).subscribe(data => {
-          if (this.questions.length == 1){
+          console.log(notif);
+          if (notif == 1){
             this.router.navigateByUrl('/dashboard');
           }
           else{
+            notif--;
+            this.storage.set('notif', notif);
             this.ionViewWillEnter();
           }
         }, error => {
@@ -178,7 +202,7 @@ setType(index: number){
           console.log(error);
         })
       })
-
+    })
 }
 
   async presentToast(displayMessage) {

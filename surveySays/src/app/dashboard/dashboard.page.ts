@@ -152,6 +152,7 @@ export class DashboardPage implements OnInit {
 
   study(index: number){
     if(this.notification[index] > 0){
+      this.storage.set('notif', this.notification[index]);
       this.storage.set('studyTitle', this.studyTitles[index]);
       this.storage.set('studyID', this.studyId[index]);
       this.router.navigateByUrl('/study');

@@ -56,17 +56,17 @@
             <ion-checkbox [(ngModel)]="student" color="tertiary"></ion-checkbox>
           </ion-item>
 
-          <ion-item>
+          <ion-item >
             <ion-label>Industry</ion-label>
             <ion-select [(ngModel)]="industrySelect">
-              <ion-select-option *ngFor="let industry of industries">{{industry}}</ion-select-option>
+              <ion-select-option text-wrap *ngFor="let industry of industries">{{industry}}</ion-select-option>
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <ion-item class="space">
             <ion-label>Job Role</ion-label>
-            <ion-select  [(ngModel)]="jobRoleSelect">
-              <ion-select-option *ngFor="let role of roles">{{role}}</ion-select-option>
+            <ion-select [(ngModel)]="jobRoleSelect">
+              <ion-select-option  class="space" *ngFor="let role of roles">{{role}}</ion-select-option>
             </ion-select>
           </ion-item>
 
