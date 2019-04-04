@@ -419,9 +419,9 @@ $(document).ready(function() {
 
         for (var i = 0; i < weeks.length; i++) {
           var option = document.createElement("option");
-          option.setAttribute("value", times[i]);
-          option.text = times[i];
-          this.parentNode.nextSibling.firstChild.firstChild.appendChild(option);
+          option.setAttribute("value", weeks[i]);
+          option.text = weeks[i];
+          this.parentNode.nextSibling.firstChild.firstChild.firstChild.appendChild(option);
         }
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
@@ -589,6 +589,8 @@ $(document).ready(function() {
     var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
 
     var dailyTimesSelect = document.getElementsByName('dailySelection');
+    var weeklyDaysSelect = document.getElementsByName('dayInWeekSelection');
+    var weeklyTimesSelect = document.getElementsByName('weeklySelection');
 
     var input1 = document.getElementsByName('input1');
     var input2 = document.getElementsByName('input2');
@@ -599,6 +601,7 @@ $(document).ready(function() {
     var k = 0;
     var l = 0;
     var m = 0;
+    var n = 0;
     for (i = 0; i < count; i++){
 
 
@@ -622,6 +625,22 @@ $(document).ready(function() {
         }
         console.log(question.daily);
         m++;
+      } else if (frequencyOfSchedule[i].value == "Weekly"){
+        debugger;
+        question.weeklyDay = [];
+        var weeklyDays = weeklyDaysSelect[n];
+        for (var z = 0; z < weeklyDays.selectedOptions.length; z++) {
+          question.weeklyDay[z] = weeklyDays.selectedOptions[z].text;
+        }
+
+        question.weeklyTime = [];
+        var weeklyTimes = weeklyTimesSelect[n];
+        for (var z = 0; z < weeklyTimes.selectedOptions.length; z++) {
+          question.weeklyTime[z] = weeklyTimes.selectedOptions[z].text;
+        }
+
+        n++;
+
       }
 
 
@@ -672,11 +691,11 @@ $(document).ready(function() {
     var targetValues = document.getElementsByName('targetValue');
     study.targets = [];
 
-    for (var i = 0; i < targetNames.length; i++) {
-      if (targetNames[i].value != "Select Target"){
-        study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
-      }
-    }
+    // for (var i = 0; i < targetNames.length; i++) {
+    //   if (targetNames[i].value != "Select Target"){
+    //     study.targets[i] = {name: targetNames[i].value, value: targetValues[i].value};
+    //   }
+    // }
 
     study.genres = studyGenres;
 
