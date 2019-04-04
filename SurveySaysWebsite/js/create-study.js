@@ -203,6 +203,7 @@ function submitStudy(){
   var i;
   var j = 0;
   var k = 0;
+  var l = 0;
   for (i = 0; i < count; i++){
 
 
@@ -224,13 +225,16 @@ function submitStudy(){
 
       if (question.type == "Scale"){
         question.scale = {min: input1[j].value, max: input2[j].value};
+        j++;
       } else if (question.type == "Boolean"){
         question.boolean = {trueValue: input1[j].value, falseValue: input2[j].value};
+        j++;
       } else if (question.type == "Multiple Choice"){
-        question.multiple = choiceContent[j].value;
+        question.multiple = choiceContent[l].value;
+        l++;
       }
       console.log(question.multiple);
-      j++;
+
     }
 
     var questionJsonString = JSON.stringify(question);
