@@ -31,9 +31,7 @@ export class StudyPage implements OnInit {
   ask: boolean;
   multi: boolean;
   optionSelect: boolean[] = [];
-  options = ([
-    "one", "two", "three"
-  ]);
+  options: Array<any>;
 
   constructor(private menu: MenuController,private storage: Storage, private router: Router, private http: Http, private toastController: ToastController) { }
 
@@ -97,6 +95,8 @@ setType(index: number){
     this.scale = false;
     this.ask = false;
     this.multi = true;
+
+    this.options = this.questions[index].multiple;
   }
 }
 
