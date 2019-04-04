@@ -10,61 +10,90 @@ $(document).ready(function() {
 
     //Create and append the options
     for (var i = 0; i < questionTypes.length; i++) {
-        var option = document.createElement("option");
-        option.setAttribute("value", questionTypes[i]);
-        option.text = questionTypes[i];
-        if (i == 0){
-          option.setAttribute("selected", 'selected');
-        }
-        questionTypeSelect[count].appendChild(option);
+      var option = document.createElement("option");
+      option.setAttribute("value", questionTypes[i]);
+      option.text = questionTypes[i];
+      if (i == 0){
+        option.setAttribute("selected", 'selected');
+      }
+      questionTypeSelect[count].appendChild(option);
     }
     count++;
 
     $("select").on("change", function(){
-     var option = $(this).val();
-     $(".field").hide();
-     switch (option) {
-       case "Multiple Choice":
-         multipleChoice(this);
-         break;
-       case "Scale":
-         scaleOption(this);
-         break;
+      var option = $(this).val();
+      $(".field").hide();
+      switch (option) {
+        case "Multiple Choice":
+        multipleChoice(this);
+        break;
+        case "Scale":
+        scaleOption(this);
+        break;
         case "Free Text":
         var paramaters = this.parentNode.nextSibling.nextSibling;
         paramaters.innerHTML = "";
-         break;
-       case "Boolean":
+        break;
+        case "Boolean":
         booleanOption(this);
         break;
-     }
-});
-
-var frequencySelect = document.getElementsByName("frequencyOfSchedule");
-
-    $("select").on("change", function(){
-     var option = $(this).val();
-     $(".field").hide();
-     switch (option) {
-       case "No Schedule":
-       this.parentNode.nextSibling.innerHTML = "";
-         break;
-       case "Just Once":
-       this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
-         break;
-        case "Daily":
-        console.log("Daily");
-         break;
-       case "Weekly":
-       console.log("Weekly");
-        break;
-       case "Monthly":
-       console.log("Monthly");
-        break;
-     }
+      }
     });
 
-});
+    var frequencySelect = document.getElementsByName("frequencyOfSchedule");
+
+    $("select").on("change", function(){
+      var option = $(this).val();
+      $(".field").hide();
+      switch (option) {
+        case "No Schedule":
+        this.parentNode.nextSibling.innerHTML = "";
+        break;
+        case "Just Once":
+        this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
+        break;
+        case "Daily":
+
+        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select></div><div class='form-group'></select>"
+
+
+        var timesUrl = "http://"+ip+":4000/api/references/question/times";
+        var times = [];
+
+        $.ajax({
+          contentType: 'application/json',
+          type: 'GET',
+          url: timesUrl,
+          async: false,
+          success: function(data){
+            times = JSON.parse(data).array;
+            // console.log(questionTypes);
+          },
+          error: function(jqXHR, exception){
+            console.log("Something went wrong");
+          }
+        });
+
+        console.log(times);
+
+        for (var i = 0; i < times.length; i++) {
+          var option = document.createElement("option");
+          option.setAttribute("value", times[i]);
+          option.text = times[i];
+          this.parentNode.nextSibling.firstChild.appendChild(option);
+        }
+
+        break;
+        case "Weekly":
+        console.log("Weekly");
+        break;
+        case "Monthly":
+        console.log("Monthly");
+        break;
+      }
+    });
+
+  });
 });
 
 
@@ -160,13 +189,13 @@ $.ajax({
   success: function(data){
     genres = JSON.parse(data).array;
     for (var i = 0; i < genres.length; i++) {
-        var option = document.createElement("option");
-        option.setAttribute("value", genres[i]);
-        option.text = genres[i];
-        if (i == 0){
-          option.setAttribute("selected", 'selected');
-        }
-        studyGenresSelect.appendChild(option);
+      var option = document.createElement("option");
+      option.setAttribute("value", genres[i]);
+      option.text = genres[i];
+      if (i == 0){
+        option.setAttribute("selected", 'selected');
+      }
+      studyGenresSelect.appendChild(option);
     }
   },
   error: function(jqXHR, exception){
@@ -196,6 +225,8 @@ function submitStudy(){
   var questionDateTime = document.getElementsByName('questionDateTime');
   var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
 
+  var dailyTimesSelect = document.getElementsByName('dailySelection');
+
   var input1 = document.getElementsByName('input1');
   var input2 = document.getElementsByName('input2');
   var choiceContent = document.getElementsByName('choiceContent');
@@ -204,6 +235,7 @@ function submitStudy(){
   var j = 0;
   var k = 0;
   var l = 0;
+  var m = 0;
   for (i = 0; i < count; i++){
 
 
@@ -218,6 +250,15 @@ function submitStudy(){
     } else if (frequencyOfSchedule[i].value == "Just Once"){
       question.time = questionDateTime[k].value;
       k++;
+    } else if (frequencyOfSchedule[i].value == "Daily"){
+      // debugger;
+      question.daily = [];
+      var dailyTimes = dailyTimesSelect[m];
+      for (var z = 0; z < dailyTimes.selectedOptions.length; z++) {
+        question.daily[z] = (dailyTimes.selectedOptions[z].text);
+      }
+      console.log(question.daily);
+      m++;
     }
 
 
@@ -239,24 +280,24 @@ function submitStudy(){
 
     var questionJsonString = JSON.stringify(question);
 
-      // console.log(questionJsonString);
+    // console.log(questionJsonString);
 
-      var url = "http://"+ip+":4000/api/question?token="+token;
+    var url = "http://"+ip+":4000/api/question?token="+token;
 
-      $.ajax({
-        contentType: 'application/json',
-        data: questionJsonString,
-        success: function(data){
-            questionIds[i] = data._id;
-        },
-        error: function(jqXHR, exception){
-            console.log("Some error occoured");
-            return false;
-        },
-        type: 'POST',
-        url: url,
-        async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
-      });
+    $.ajax({
+      contentType: 'application/json',
+      data: questionJsonString,
+      success: function(data){
+        questionIds[i] = data._id;
+      },
+      error: function(jqXHR, exception){
+        console.log("Some error occoured");
+        return false;
+      },
+      type: 'POST',
+      url: url,
+      async: false // perhaps try find a better fix for this since this will slow down the browser with many questions
+    });
   } // end of for loop
 
 
@@ -282,7 +323,7 @@ function submitStudy(){
       study.userId = data;
     },
     error: function(jqXHR, exception){
-        console.log("Some error occoured");
+      console.log("Some error occoured");
     },
     type: 'GET',
     url: "http://"+ip+":4000/api/users/userID?token="+token,
@@ -300,14 +341,14 @@ function submitStudy(){
     contentType: 'application/json',
     data: studyJsonString,
     success: function(data){
-        window.alert("Study created Successfully");
-        console.log(data);
+      window.alert("Study created Successfully");
+      console.log(data);
     },
     error: function(jqXHR, exception){
-        console.log("Some error occoured");
-        for (var i = 0; i < questionIds.length; i++) {
-          deleteQuestion(questionIds[i]);
-        }
+      console.log("Some error occoured");
+      for (var i = 0; i < questionIds.length; i++) {
+        deleteQuestion(questionIds[i]);
+      }
     },
     type: 'POST',
     url: studyUrl,
@@ -335,10 +376,10 @@ function deleteQuestion(id){
     contentType: 'application/json',
     data: jsonString,
     success: function(data){
-        console.log(data);
+      console.log(data);
     },
     error: function(jqXHR, exception){
-        console.log("Some error occoured");
+      console.log("Some error occoured");
     },
     type: 'DELETE',
     url: deleteQuestionUrl,
