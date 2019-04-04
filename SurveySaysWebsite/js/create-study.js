@@ -548,6 +548,8 @@ $(document).ready(function() {
     var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
 
     var dailyTimesSelect = document.getElementsByName('dailySelection');
+    var weeklyDaysSelect = document.getElementsByName('dayInWeekSelection');
+    var weeklyTimesSelect = document.getElementsByName('weeklySelection');
 
     var input1 = document.getElementsByName('input1');
     var input2 = document.getElementsByName('input2');
@@ -558,6 +560,7 @@ $(document).ready(function() {
     var k = 0;
     var l = 0;
     var m = 0;
+    var n = 0;
     for (i = 0; i < count; i++){
 
 
@@ -581,6 +584,22 @@ $(document).ready(function() {
         }
         console.log(question.daily);
         m++;
+      } else if (frequencyOfSchedule[i].value == "Weekly"){
+        question.weekly;
+        question.weekly.days = [];
+        var weeklyDays = weeklyDaysSelect[n];
+        for (var z = 0; z < weeklyDays.selectedOptions.length; z++) {
+          question.weekly.day[z] = weeklyDays.selectedOptions[z].text;
+        }
+
+        question.weekly.time = [];
+        var weeklyTimes = weeklyTimesSelect[n];
+        for (var z = 0; z < weeklyTimes.selectedOptions.length; z++) {
+          question.weekly.time[z] = weeklyTimes.selectedOptions[z].text;
+        }
+
+        n++;
+
       }
 
 
