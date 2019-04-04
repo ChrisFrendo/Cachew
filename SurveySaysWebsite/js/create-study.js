@@ -378,15 +378,9 @@ $(document).ready(function() {
 
         for (var i = 0; i < weeks.length; i++) {
           var option = document.createElement("option");
-<<<<<<< HEAD
           option.setAttribute("value", weeks[i]);
           option.text = weeks[i];
           this.parentNode.nextSibling.firstChild.firstChild.firstChild.appendChild(option);
-=======
-          option.setAttribute("value", times[i]);
-          option.text = times[i];
-          this.parentNode.nextSibling.firstChild.firstChild.appendChild(option);
->>>>>>> c2ec9e8517ef4b1e6b26b90df42358050811bc6d
         }
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
