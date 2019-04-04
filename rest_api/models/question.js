@@ -20,15 +20,19 @@ const QuestionSchema = new Schema({
     type: Date,
     default: null
   },
-  schedule: {
+  daily: [{
+    type:String,
+    enum:times
+  }],
+  weekly: {
     day: [{
       type: String,
       enum: days
     }],
-    time: [{
+    time: [[{
       type: String,
       enum: times
-    }]
+    }]]
   },
   scale: {
     min:{
