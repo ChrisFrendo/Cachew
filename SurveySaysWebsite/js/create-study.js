@@ -377,7 +377,7 @@ $(document).ready(function() {
         break;
         case "Weekly":
 
-        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' multiple=true class='form-control form-control-user' name='weeklySelection'></select></div></div>";
+        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' class='form-control form-control-user' name='weeklySelection'></select></div></div>";
 
         var weeksUrl = "http://"+ip+":4000/api/references/question/days";
         var weeks = [];
