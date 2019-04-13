@@ -230,10 +230,45 @@ router.get('/question', async function(req, res, next){
       // console.log("STUDY ID" + req.query.studyID);
 
       for (var j = 0; j < study.questions.length; j++) {
-        await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(question){
+        await (Question.findOne({_id: study.questions[j]}).then( async function(question){
           var answered = false;
           console.log(question);
           if (question != null){
+
+            var now = new Date();
+            now = Date.parse(now);
+
+            if (question.time != null){
+              flag[i] = true;
+
+              var questionDate = Date.parse(question.time);
+              console.log("Question time: " +(questionDate));
+
+              var difference = Math.abs((now - questionDate));
+
+              if (difference <= 600000){
+                if (question.answers != []){
+                  for (var i = 0; i < question.answers.length; i++) {
+                    await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+                      if(answer){
+                        answered = true;
+                      }
+                    }));
+                    if (answered){
+                      break;
+                    }
+                  }
+                  if (!answered){
+                    questions[j] = question;
+                  }  else {
+                    questions[j] = null;
+                  }
+                } else {
+                  questions[j] = question;
+                }
+              }
+            }
+          } else {
             if (question.answers != []){
               for (var i = 0; i < question.answers.length; i++) {
                 await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
@@ -254,19 +289,19 @@ router.get('/question', async function(req, res, next){
               questions[j] = question;
             }
           }
+        
+      }));
+    }
 
-
-        }));
-      }
-      if (questions == null){
-        console.log("NULL");
-        res.send(200).send(null);
-      } else {
-        console.log(questions);
-        res.status(200).send({array : questions});
-      }
-    });
+    if (questions == null){
+      console.log("NULL");
+      res.send(200).send(null);
+    } else {
+      console.log(questions);
+      res.status(200).send({array : questions});
+    }
   });
+});
 });
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
@@ -285,37 +320,28 @@ router.get('/study/subscribed', async function(req, res, next){
       for (var j = 0; j < studies[i].questions.length; j++) {
 
 
-        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: null}]}).then( async function(question){
+        await (Question.findOne({_id: studies[i].questions[j]}).then( async function(question){
           var answered = false;
-          if (question != null){
-            if (question.answers != []){
-            for (var l = 0; l < question.answers.length; l++) {
-              await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
-                console.log("ANSWER" + answer);
-                if (answer == null){
-                  answered = false;
 
-                } else if (answer.user == req.decoded.username){
-                  answered = true;
-                }
-              }));
-              if (answered){
-                break;
+          if (question != null){
+
+            var now = new Date();
+            now = Date.parse(now);
+
+            if (question.time != null){
+              flag[i] = true;
+
+              var questionDate = Date.parse(question.time);
+              console.log("Question time: " +(questionDate));
+
+              var difference = Math.abs((now - questionDate));
+
+              if (difference <= 600000){
+                checkForAnsweredQuestions(question, notifs, answered, req, i);
               }
+            } else {
+              checkForAnsweredQuestions(question, notifs, answered, req, i);
             }
-            if (!answered){
-              notifs[i]++;
-            }
-          } else {
-            notifs[i]++;
-          }
-        }
-
-
-        }));
-        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: {$ne: null}}]}).then( async function(question){
-          if (question != null){
-            flag[i] = true;
           }
         }));
       }
@@ -325,6 +351,29 @@ router.get('/study/subscribed', async function(req, res, next){
   });
 });
 
+function checkForAnsweredQuestions(question, notifs, answered, req, i){
+  if (question.answers != []){
+    for (var l = 0; l < question.answers.length; l++) {
+      await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
+        console.log("ANSWER" + answer);
+        if (answer == null){
+          answered = false;
+
+        } else if (answer.user == req.decoded.username){
+          answered = true;
+        }
+      }));
+      if (answered){
+        break;
+      }
+    }
+    if (!answered){
+      notifs[i]++;
+    }
+  } else {
+    notifs[i]++;
+  }
+}
 
 
 // get a list of studies which the user is not subscribed to from the db
@@ -450,6 +499,7 @@ router.delete('/question', function(req, res, next){
   })
 });
 
+// add an answer to a question
 router.put('/answer', function(req, res, next){
   req.body.answer.user = req.decoded.username;
   Answer.create(req.body.answer).then(function(answer){
