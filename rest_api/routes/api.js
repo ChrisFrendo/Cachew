@@ -200,19 +200,36 @@ router.post('/question', function(req, res, next){
   if(req.body.type === Question.questionTypes[3]){
     req.body.multiple = req.body.multiple.split('\n');
   }
-  Question.create(req.body, function(err, question){
-
-    if(err){
-      res.status(400).send(err.message);
-      next();
+  User.findOne({username: req.decoded.username}, function(err, user){
+    var gmtUser;
+    if (user.timezones.includes("+")){
+      gmtUser = parseInt(user.timezones.split("+").pop());
+    } else {
+      gmtUser = parseInt("-"+user.timezones.split("-").pop());
     }
-    res.status(200).send(question);
+    gmtUser = 2-gmtUser;
+
+    if (req.body.time != null){
+      var test = new Date(req.body.time);
+      console.log(test);
+      test.setHours(test.getHours()+gmtUser);
+      req.body.time = test;
+    }
+
+    Question.create(req.body, function(err, question){
+
+      if(err){
+        res.status(400).send(err.message);
+        next();
+      }
+      res.status(200).send(question);
+    });
   });
 
   console.log("successfuly handled question post request");
 });
 
-// used to retrieve a list of unscheduled questions which have not already been answered
+// used to retrieve a list of available questions which have not already been answered
 router.get('/question', async function(req, res, next){
   Study.findOne({_id: req.query.studyID}, async function(err, study){
     User.findOne({username: req.decoded.username}, async function(err2, user){
@@ -235,18 +252,31 @@ router.get('/question', async function(req, res, next){
           console.log(question);
           if (question != null){
 
-            var now = new Date();
-            now = Date.parse(now);
+            currentUserTime = new Date();
+
+            var gmtUser;
+            if (user.timezones.includes("+")){
+              gmtUser = parseInt(user.timezones.split("+").pop());
+            } else {
+              gmtUser = parseInt("-"+user.timezones.split("-").pop());
+            }
+            gmtUser = 2-gmtUser;
+
+            currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
+
+            console.log("USERTIME: " + currentUserTime);
+            console.log("QUESTION TOME: " + question.time);
+
+            currentUserTime = Date.parse(currentUserTime);
 
             if (question.time != null){
-              flag[i] = true;
 
               var questionDate = Date.parse(question.time);
               console.log("Question time: " +(questionDate));
 
-              var difference = Math.abs((now - questionDate));
+              var difference = Math.abs((currentUserTime - questionDate));
 
-              if (difference <= 600000){
+              if (difference <= 300000){
                 if (question.answers != []){
                   for (var i = 0; i < question.answers.length; i++) {
                     await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
@@ -289,19 +319,19 @@ router.get('/question', async function(req, res, next){
               questions[j] = question;
             }
           }
-        
-      }));
-    }
 
-    if (questions == null){
-      console.log("NULL");
-      res.send(200).send(null);
-    } else {
-      console.log(questions);
-      res.status(200).send({array : questions});
-    }
+        }));
+      }
+
+      if (questions == null){
+        console.log("NULL");
+        res.send(200).send(null);
+      } else {
+        console.log(questions);
+        res.status(200).send({array : questions});
+      }
+    });
   });
-});
 });
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
@@ -324,24 +354,42 @@ router.get('/study/subscribed', async function(req, res, next){
           var answered = false;
 
           if (question != null){
+            await User.findOne({username: req.decoded.username}).then( async function(user){
+              currentUserTime = new Date();
 
-            var now = new Date();
-            now = Date.parse(now);
+              var gmtUser;
+              if (user.timezones.includes("+")){
+                gmtUser = parseInt(user.timezones.split("+").pop());
+              } else {
+                gmtUser = parseInt("-"+user.timezones.split("-").pop());
+              }
+              gmtUser = 2-gmtUser;
 
-            if (question.time != null){
-              flag[i] = true;
+              currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
 
-              var questionDate = Date.parse(question.time);
-              console.log("Question time: " +(questionDate));
+              console.log("USERTIME: " + currentUserTime);
+              console.log("QUESTION TOME: " + question.time);
 
-              var difference = Math.abs((now - questionDate));
+              currentUserTime = Date.parse(currentUserTime);
 
-              if (difference <= 600000){
+              if (question.time != null){
+
+                var questionDate = Date.parse(question.time);
+                console.log("Question time: " +(questionDate));
+
+                var difference = Math.abs((currentUserTime - questionDate));
+                console.log(difference);
+
+                if (difference <= 300000){
+                  checkForAnsweredQuestions(question, notifs, answered, req, i);
+                } else if (questionDate > currentUserTime){
+                  flag[i] = true;
+                }
+              } else {
                 checkForAnsweredQuestions(question, notifs, answered, req, i);
               }
-            } else {
-              checkForAnsweredQuestions(question, notifs, answered, req, i);
-            }
+            })
+
           }
         }));
       }
@@ -351,7 +399,7 @@ router.get('/study/subscribed', async function(req, res, next){
   });
 });
 
-function checkForAnsweredQuestions(question, notifs, answered, req, i){
+async function checkForAnsweredQuestions(question, notifs, answered, req, i){
   if (question.answers != []){
     for (var l = 0; l < question.answers.length; l++) {
       await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
