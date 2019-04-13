@@ -36,12 +36,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"username\" : \"daniel3\",\n\"password\" : \"12345\",\n\"usertype\" : \"participant\",\n\"timezones\" : \"GMT\"\n}"
+					"raw": "{\n\"username\" : \"daniel222221\",\n\"password\" : \"12345\",\n\"usertype\" : \"participant\",\n\"timezones\" : \"GMT\"\n}"
 				},
 				"url": {
-					"raw": "localhost:4000/api/register",
+					"raw": "http://10.60.10.66:4000/api/register",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -84,12 +88,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"username\" : \"danielresearch3\",\n\"password\" : \"12345\",\n\"usertype\" : \"researcher\",\n\"timezones\" : \"GMT\"\n}"
+					"raw": "{\n\"username\" : \"danielresearch2221\",\n\"password\" : \"12345\",\n\"usertype\" : \"researcher\",\n\"timezones\" : \"GMT\"\n}"
 				},
 				"url": {
-					"raw": "localhost:4000/api/register",
+					"raw": "http://10.60.10.66:4000/api/register",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -111,6 +119,9 @@
 						"exec": [
 							"pm.test(\"response is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    pm.globals.set(\"token1\", pm.response.json().token);\r",
+							"\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -125,9 +136,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/login/participant?username=BREXIT&password=12345",
+					"raw": "http://10.60.10.66:4000/api/login/participant?username=BREXIT&password=12345",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -163,6 +178,8 @@
 							"    pm.response.to.have.status(200); \r",
 							"    pm.response.to.not.have.status(400);\r",
 							"    pm.response.to.not.have.status(422);\r",
+							"    \r",
+							"    pm.globals.set(\"token2\", pm.response.json().token);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -177,9 +194,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/login/researcher?username=daniel&password=12345",
+					"raw": "http://10.60.10.66:4000/api/login/researcher?username=daniel&password=12345",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -236,9 +257,13 @@
 					"raw": "{\n\t\"title\" : \"question 1\",\n\t\"type\" : \"Free Text\",\n\t\"content\" : \"How are you?\"\n}"
 				},
 				"url": {
-					"raw": "localhost:4000/api/question?token={{token2}}",
+					"raw": "http://10.60.10.66:4000/api/question?token={{token2}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -294,9 +319,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/study/subscribed?token={{token1}}",
+					"raw": "http://10.60.10.66:4000/api/study/subscribed?token={{token1}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -342,9 +371,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/study/notsubscribed?token={{token1}}&title=BREXIT&genres=all",
+					"raw": "http://10.60.10.66:4000/api/study/notsubscribed?token={{token1}}&title=BREXIT&genres=all",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -405,9 +438,13 @@
 					"raw": "{\n\t\"title\" : \"Study Test\",\n\t\"userId\" : \"5c9ca7e6e65b9463c0a18042\"\n}"
 				},
 				"url": {
-					"raw": "localhost:4000/api/study?token={{token2}}",
+					"raw": "http://10.60.10.66:4000/api/study?token={{token2}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -451,9 +488,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/usernamegen",
+					"raw": "http://10.60.10.66:4000/api/usernamegen",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -491,9 +532,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/users/username?token={{token1}}",
+					"raw": "http://10.60.10.66:4000/api/users/username?token={{token1}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -539,9 +584,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/users/userID?token={{token1}}",
+					"raw": "http://10.60.10.66:4000/api/users/userID?token={{token1}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -587,9 +636,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4000/api/question?token={{token1}}&studyID={{studyid}}",
+					"raw": "http://10.60.10.66:4000/api/question?token={{token1}}&studyID={{studyid}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
@@ -645,9 +698,13 @@
 					"raw": "{\n\t\"_id\" : \"5ca5ccdfaefea25c8c5f912d\"\n}"
 				},
 				"url": {
-					"raw": "localhost:4000/api/question?token={{token2}}",
+					"raw": "http://10.60.10.66:4000/api/question?token={{token2}}",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"60",
+						"10",
+						"66"
 					],
 					"port": "4000",
 					"path": [
