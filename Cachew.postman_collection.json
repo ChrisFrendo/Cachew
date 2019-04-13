@@ -36,7 +36,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"username\" : \"daniel222221\",\n\"password\" : \"12345\",\n\"usertype\" : \"participant\",\n\"timezones\" : \"GMT\"\n}"
+					"raw": "{\n\"username\" : \"daniel3\",\n\"password\" : \"12345\",\n\"usertype\" : \"participant\",\n\"timezones\" : \"GMT\"\n}"
 				},
 				"url": {
 					"raw": "localhost:4000/api/register",
@@ -84,7 +84,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"username\" : \"danielresearch2221\",\n\"password\" : \"12345\",\n\"usertype\" : \"researcher\",\n\"timezones\" : \"GMT\"\n}"
+					"raw": "{\n\"username\" : \"danielresearch3\",\n\"password\" : \"12345\",\n\"usertype\" : \"researcher\",\n\"timezones\" : \"GMT\"\n}"
 				},
 				"url": {
 					"raw": "localhost:4000/api/register",
