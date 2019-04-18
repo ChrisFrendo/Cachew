@@ -253,10 +253,12 @@ router.get('/question', async function(req, res, next){
       for (var j = 0; j < study.questions.length; j++) {
         await (Question.findOne({_id: study.questions[j]}).then( async function(question){
           var answered = false;
-          console.log(question);
           if (question != null){
 
+            if (question.time != null){
+
             currentUserTime = new Date();
+
 
             var gmtUser;
             if (user.timezones.includes("+")){
@@ -273,7 +275,6 @@ router.get('/question', async function(req, res, next){
 
             currentUserTime = Date.parse(currentUserTime);
 
-            if (question.time != null){
 
               var questionDate = Date.parse(question.time);
               console.log("Question time: " +(questionDate));
@@ -301,27 +302,11 @@ router.get('/question', async function(req, res, next){
                   questions[j] = question;
                 }
               }
+            } else {
+              checkForQuestionAnswer(question, req, answered, questions, j);
             }
           } else {
-            if (question.answers != []){
-              for (var i = 0; i < question.answers.length; i++) {
-                await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
-                  if(answer){
-                    answered = true;
-                  }
-                }));
-                if (answered){
-                  break;
-                }
-              }
-              if (!answered){
-                questions[j] = question;
-              }  else {
-                questions[j] = null;
-              }
-            } else {
-              questions[j] = question;
-            }
+            checkForQuestionAnswer(question, req, answered, questions, j);
           }
 
         }));
@@ -337,6 +322,28 @@ router.get('/question', async function(req, res, next){
     });
   });
 });
+
+async function checkForQuestionAnswer(question, req, answered, questions, j){
+  if (question.answers != []){
+    for (var i = 0; i < question.answers.length; i++) {
+      await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+        if(answer){
+          answered = true;
+        }
+      }));
+      if (answered){
+        break;
+      }
+    }
+    if (!answered){
+      questions[j] = question;
+    }  else {
+      questions[j] = null;
+    }
+  } else {
+    questions[j] = question;
+  }
+}
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
 router.get('/study/subscribed', async function(req, res, next){
