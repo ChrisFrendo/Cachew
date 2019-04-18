@@ -7,6 +7,10 @@ const Answer = require('../models/answer');
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
 var app = express();
+const {PubSub} = require('@google-cloud/pubsub');
+require('dotenv').config();
+
+const pubsub = new PubSub('testprojectchris');
 
 app.set('superSecret', 'someSecret');
 
@@ -512,19 +516,27 @@ async function validateTargets(res, req, studies){
 }
 
 //  add a new study to the db
-router.post('/study', function(req, res, next){
-  Study.create(req.body).then(function(study){
+router.post('/study', async function(req, res, next){
+  Study.create(req.body).then( async function(study){
     console.log("successfuly handled study post request");
+
+    var topicName = "study_" + study._id;
+
+    pubsub.createTopic(topicName).catch(err => {
+      console.error("ERROR: ", err);
+    });
+
     res.status(200).send(study);
   }).catch(next);
 });
 
-
 // update a subscriber to a study in the db
-router.put('/study', function(req, res, next){
-
-  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
-    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
+router.put('/study', async function(req, res, next){
+  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(async function(user){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(async function(study) {
+      var topicName = "study_" + study._id;
+      var subscriptionName = user.username;
+      await pubsub.topic(topicName).createSubscription(subscriptionName);
       res.status(200).send();
     })
   })
