@@ -532,11 +532,11 @@ router.post('/study', async function(req, res, next){
 
 // update a subscriber to a study in the db
 router.put('/study', async function(req, res, next){
-  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(async function(user){
-    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(async function(study) {
+  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(user){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function(study) {
       var topicName = "study_" + study._id;
-      var subscriptionName = user.username;
-      await pubsub.topic(topicName).createSubscription(subscriptionName);
+      var subscriptionName = user.username + "_" + study._id;
+      pubsub.topic(topicName).createSubscription(subscriptionName);
       res.status(200).send();
     })
   })
@@ -545,8 +545,10 @@ router.put('/study', async function(req, res, next){
 
 // remove a subscriber from a study
 router.put('/study/subscribed', function(req, res, next){
-  User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(){
-    Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function() {
+  User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(user){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function(study) {
+      var subscriptionName = user.username + "_" + study._id;
+      pubsub.subscription(subscriptionName).delete();
       res.status(200).send();
     })
   })
