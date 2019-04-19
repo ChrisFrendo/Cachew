@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "b3d6fac7-06c8-4c75-8809-6eb624e4da82",
+		"name": "Testing Reference Endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Genders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ad8d573d-2741-4921-ae06-78e23b43e660",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/references/users/genders",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"references",
+						"users",
+						"genders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserTypes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6ce8cb30-aa8c-4fd7-bbcb-aa3246fa3b33",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/references/users/usertypes",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"references",
+						"users",
+						"usertypes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "274acc6d-720d-4488-898d-3d6235ad824f",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/references/users/countries",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"references",
+						"users",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JobRoles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3319682-5102-4307-a14e-7eef645af056",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/references/users/jobroles",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"references",
+						"users",
+						"jobroles"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

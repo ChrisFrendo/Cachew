@@ -25,8 +25,18 @@
  }
 .question{
   font-size: 18px;
+  font-weight: 550;
+  width: auto;
 }
 
 .center{
 margin: auto;
+}
+.card{
+--ion-item-background: #F3E9F3;
+}
+.content{
+  height: auto;
+  width: auto;
+  padding-left: 10px;
 }

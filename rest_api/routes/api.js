@@ -3,10 +3,14 @@ const router = express.Router();
 const User = require('../models/user.js');
 const Question = require('../models/question');
 const Study = require('../models/study');
-const Answer = require('../models/answers')
+const Answer = require('../models/answer');
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
 var app = express();
+const {PubSub} = require('@google-cloud/pubsub');
+require('dotenv').config();
+
+const pubsub = new PubSub('testprojectchris');
 
 app.set('superSecret', 'someSecret');
 
@@ -14,7 +18,7 @@ app.set('superSecret', 'someSecret');
 
 // all return array of strings
 router.get('/references/users/genders', function(req, res, next){
-  res.status(200).send(User.genders);
+  res.status(200).send(JSON.stringify({array: User.genders}));
 });
 
 router.get('/references/users/usertypes', function(req, res, next){
@@ -58,7 +62,7 @@ router.get('/references/question/days', function(req, res, next){
 });
 
 router.get('/references/question/times', function(req, res, next){
-  res.status(200).send(JSON.stringify({array: Question.ties}));
+  res.status(200).send(JSON.stringify({array: Question.times}));
 });
 
 router.get('/usernamegen', function(req, res, next){
@@ -198,49 +202,149 @@ router.get('/users/userID', function(req, res, next){
 router.post('/question', function(req, res, next){
 
   console.log(req.body);
-if(req.body.type === Question.questionTypes[3]){
-  req.body.multiple = req.body.multiple.split('\n');
-}
-  Question.create(req.body, function(err, question){
-
-    if(err){
-      res.status(400).send(err.message);
-      next();
+  if(req.body.type === Question.questionTypes[3]){
+    req.body.multiple = req.body.multiple.split('\n');
+  }
+  User.findOne({username: req.decoded.username}, function(err, user){
+    var gmtUser;
+    if (user.timezones.includes("+")){
+      gmtUser = parseInt(user.timezones.split("+").pop());
+    } else {
+      gmtUser = parseInt("-"+user.timezones.split("-").pop());
     }
-    res.status(200).send(question);
-  });
+    gmtUser = 2-gmtUser;
 
-  console.log("successfuly handled question post request");
-});
+    if (req.body.time != null){
+      var test = new Date(req.body.time);
+      console.log(test);
+      test.setHours(test.getHours()+gmtUser);
+      req.body.time = test;
+    }
 
-// used to retrieve a list of unscheduled questions
-router.get('/question', async function(req, res, next){
-    Study.findOne({_id: req.query.studyID}, async function(err, study){
+    Question.create(req.body, function(err, question){
 
       if(err){
         res.status(400).send(err.message);
         next();
       }
-      var question = [];
-      console.log(study);
+      res.status(200).send(question);
+    });
+  });
+
+  console.log("successfuly handled question post request");
+});
+
+// used to retrieve a list of available questions which have not already been answered
+router.get('/question', async function(req, res, next){
+  Study.findOne({_id: req.query.studyID}, async function(err, study){
+    User.findOne({username: req.decoded.username}, async function(err2, user){
+
+      // console.log(user);
+
+      if(err){
+        res.status(400).send(err.message);
+        next();
+      } else if (err2){
+        res.status(400).send(err2.message);
+        next();
+      }
+      var questions =[];
+      // console.log("STUDY ID" + req.query.studyID);
 
       for (var j = 0; j < study.questions.length; j++) {
-        await (Question.findOne({$and: [{_id: study.questions[j]}, {time: null}]}).then( async function(questions){
+        await (Question.findOne({_id: study.questions[j]}).then( async function(question){
+          var answered = false;
+          if (question != null){
 
-          question[j] = questions;
+            if (question.time != null){
+
+            currentUserTime = new Date();
+
+
+            var gmtUser;
+            if (user.timezones.includes("+")){
+              gmtUser = parseInt(user.timezones.split("+").pop());
+            } else {
+              gmtUser = parseInt("-"+user.timezones.split("-").pop());
+            }
+            gmtUser = 2-gmtUser;
+
+            currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
+
+            console.log("USERTIME: " + currentUserTime);
+            console.log("QUESTION TOME: " + question.time);
+
+            currentUserTime = Date.parse(currentUserTime);
+
+
+              var questionDate = Date.parse(question.time);
+              console.log("Question time: " +(questionDate));
+
+              var difference = Math.abs((currentUserTime - questionDate));
+
+              if (difference <= 300000){
+                if (question.answers != []){
+                  for (var i = 0; i < question.answers.length; i++) {
+                    await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+                      if(answer){
+                        answered = true;
+                      }
+                    }));
+                    if (answered){
+                      break;
+                    }
+                  }
+                  if (!answered){
+                    questions[j] = question;
+                  }  else {
+                    questions[j] = null;
+                  }
+                } else {
+                  questions[j] = question;
+                }
+              }
+            } else {
+              checkForQuestionAnswer(question, req, answered, questions, j);
+            }
+          } else {
+            checkForQuestionAnswer(question, req, answered, questions, j);
+          }
 
         }));
       }
-      if (question == null){
+
+      if (questions == null){
         console.log("NULL");
         res.send(200).send(null);
       } else {
-      console.log(question);
-      res.status(200).send({array : question});
-    }
-
+        console.log(questions);
+        res.status(200).send({array : questions});
+      }
     });
+  });
 });
+
+async function checkForQuestionAnswer(question, req, answered, questions, j){
+  if (question.answers != []){
+    for (var i = 0; i < question.answers.length; i++) {
+      await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+        if(answer){
+          answered = true;
+        }
+      }));
+      if (answered){
+        break;
+      }
+    }
+    if (!answered){
+      questions[j] = question;
+    }  else {
+      questions[j] = null;
+    }
+  } else {
+    questions[j] = question;
+  }
+}
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
 router.get('/study/subscribed', async function(req, res, next){
@@ -256,14 +360,48 @@ router.get('/study/subscribed', async function(req, res, next){
       notifs[i] = 0;
       flag[i] = false;
       for (var j = 0; j < studies[i].questions.length; j++) {
-        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: null}]}).then( async function(question){
+
+
+        await (Question.findOne({_id: studies[i].questions[j]}).then( async function(question){
+          var answered = false;
+
           if (question != null){
-            notifs[i]++;
-          }
-        }));
-        await (Question.findOne({$and: [{_id: studies[i].questions[j]}, {time: {$ne: null}}]}).then( async function(question){
-          if (question != null){
-            flag[i] = true;
+            await User.findOne({username: req.decoded.username}).then( async function(user){
+              currentUserTime = new Date();
+
+              var gmtUser;
+              if (user.timezones.includes("+")){
+                gmtUser = parseInt(user.timezones.split("+").pop());
+              } else {
+                gmtUser = parseInt("-"+user.timezones.split("-").pop());
+              }
+              gmtUser = 2-gmtUser;
+
+              currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
+
+              console.log("USERTIME: " + currentUserTime);
+              console.log("QUESTION TOME: " + question.time);
+
+              currentUserTime = Date.parse(currentUserTime);
+
+              if (question.time != null){
+
+                var questionDate = Date.parse(question.time);
+                console.log("Question time: " +(questionDate));
+
+                var difference = Math.abs((currentUserTime - questionDate));
+                console.log(difference);
+
+                if (difference <= 300000){
+                  checkForAnsweredQuestions(question, notifs, answered, req, i);
+                } else if (questionDate > currentUserTime){
+                  flag[i] = true;
+                }
+              } else {
+                checkForAnsweredQuestions(question, notifs, answered, req, i);
+              }
+            })
+
           }
         }));
       }
@@ -273,6 +411,29 @@ router.get('/study/subscribed', async function(req, res, next){
   });
 });
 
+async function checkForAnsweredQuestions(question, notifs, answered, req, i){
+  if (question.answers != []){
+    for (var l = 0; l < question.answers.length; l++) {
+      await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
+        console.log("ANSWER" + answer);
+        if (answer == null){
+          answered = false;
+
+        } else if (answer.user == req.decoded.username){
+          answered = true;
+        }
+      }));
+      if (answered){
+        break;
+      }
+    }
+    if (!answered){
+      notifs[i]++;
+    }
+  } else {
+    notifs[i]++;
+  }
+}
 
 
 // get a list of studies which the user is not subscribed to from the db
@@ -363,20 +524,28 @@ async function validateTargets(res, req, studies){
 }
 
 //  add a new study to the db
-router.post('/study', function(req, res, next){
-  Study.create(req.body).then(function(study){
+router.post('/study', async function(req, res, next){
+  Study.create(req.body).then( async function(study){
     console.log("successfuly handled study post request");
+
+    var topicName = "study_" + study._id;
+
+    pubsub.createTopic(topicName).catch(err => {
+      console.error("ERROR: ", err);
+    });
+
     res.status(200).send(study);
   }).catch(next);
 });
 
-
 // update a subscriber to a study in the db
-router.put('/study', function(req, res, next){
-
-  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(){
-    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function() {
-        res.status(200).send();
+router.put('/study', async function(req, res, next){
+  User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(user){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function(study) {
+      var topicName = "study_" + study._id;
+      var subscriptionName = user.username + "_" + study._id;
+      pubsub.topic(topicName).createSubscription(subscriptionName);
+      res.status(200).send();
     })
   })
 
@@ -384,18 +553,30 @@ router.put('/study', function(req, res, next){
 
 // remove a subscriber from a study
 router.put('/study/subscribed', function(req, res, next){
-  User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(){
-    Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function() {
+  User.findOneAndUpdate({username: req.decoded.username}, {$pull: {subscriptions: req.body.studyID}}).then(function(user){
+    Study.findOneAndUpdate({_id: req.body.studyID}, {$pull: {subscribers: req.decoded.username}}).then(function(study) {
+      var subscriptionName = user.username + "_" + study._id;
+      pubsub.subscription(subscriptionName).delete();
       res.status(200).send();
     })
   })
 });
 
-// remove a subscriber from a study
+// delete a question from the db
 router.delete('/question', function(req, res, next){
-    Question.findOneAndDelete({_id: req.body.id}).then(function() {
-      res.status(200).send("Question successfully deleted.");
+  Question.findOneAndDelete({_id: req.body.id}).then(function() {
+    res.status(200).send();
+  })
+});
+
+// add an answer to a question
+router.put('/answer', function(req, res, next){
+  req.body.answer.user = req.decoded.username;
+  Answer.create(req.body.answer).then(function(answer){
+    Question.findOneAndUpdate({_id: req.body.id}, {$push: {answers: answer._id}}).then(function(){
+      res.status(200).send();
     })
+  })
 });
 
 module.exports = router;

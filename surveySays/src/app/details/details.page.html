@@ -56,28 +56,23 @@
             <ion-checkbox [(ngModel)]="student" color="tertiary"></ion-checkbox>
           </ion-item>
 
-          <ion-item>
+          <ion-item >
             <ion-label>Industry</ion-label>
             <ion-select [(ngModel)]="industrySelect">
-              <ion-select-option *ngFor="let industry of industries">{{industry}}</ion-select-option>
+              <ion-select-option text-wrap *ngFor="let industry of industries">{{industry}}</ion-select-option>
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <ion-item class="space">
             <ion-label>Job Role</ion-label>
-            <ion-select  [(ngModel)]="jobRoleSelect">
-              <ion-select-option *ngFor="let role of roles">{{role}}</ion-select-option>
+            <ion-select [(ngModel)]="jobRoleSelect">
+              <ion-select-option  class="space" *ngFor="let role of roles">{{role}}</ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item>
-            <!-- <ion-grid> -->
-              <!-- <ion-row align-items-end> -->
                 <ion-label class="top-align">Years of Experience</ion-label>
-                <!-- <ion-col offset="10.43"> -->
-                  <ion-item class="dash"><ion-input placeholder="- -"  type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input></ion-item>
-              <!-- </ion-row> -->
-            <!-- </ion-grid> -->
+                <ion-item class="dash"><ion-input placeholder="- -"  type="tel" maxlength=2 name="xp" required [(ngModel)]="xp"></ion-input></ion-item>
           </ion-item>
 
           <ion-item>

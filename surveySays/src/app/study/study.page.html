@@ -21,21 +21,24 @@
   <ion-toolbar color="tertiary">
     <ion-row>
       <ion-button class="menu-button" color="tertiary" (click)="openFirst()" menu="side"><ion-icon class="icon" name="menu"></ion-icon></ion-button>
-    <ion-title>Study Title</ion-title>
+    <ion-title>{{studyTitle}}</ion-title>
     </ion-row>
   </ion-toolbar>
 </ion-header>
-
-<!-- *ngFor="let question of questions" -->
 
 <ion-content padding scroll="false">
   <div class="center-elements">
   <ion-card>
       <ion-card-title >
         <ion-item  lines="none">
-          <ion-label class="question" position="fixed">Question</ion-label>
+          <ion-label class="question">{{currentQ}}</ion-label>
         </ion-item>
       </ion-card-title>
+      <ion-card-subtitle>
+        <ion-item  lines="none">
+          <ion-icon color="tertiary" name="arrow-forward"></ion-icon><ion-label class="content">{{content}}</ion-label>
+        </ion-item>
+      </ion-card-subtitle>
   </ion-card>
 
   <ion-card>
@@ -43,13 +46,13 @@
 
       <div *ngIf="text">
         <ion-item lines="none" class="card">
-          <ion-textarea wrap="hard" rows="10" cols="20"></ion-textarea>
+          <ion-textarea  placeholder="Type here..." wrap="hard" rows="10" cols="20" [(ngModel)]="answerQ"></ion-textarea>
         </ion-item>
       </div>
 
       <div *ngIf="scale">
         <ion-item lines="none" class="card">
-            <ion-range color="tertiary" pin="true" min="1000" max="2000" step="100" snaps="true"></ion-range>
+            <ion-range color="tertiary" pin="true" min={{min}} max={{max}} snaps="true" [(ngModel)]="answerQ"></ion-range>
           </ion-item>
       </div>
 
@@ -58,14 +61,13 @@
           <ion-grid>
             <ion-row>
               <ion-item lines="none">
-                <ion-item lines="none"><ion-label>False</ion-label></ion-item>
-                <ion-radio (ionSelect)="askFn(false)" center fill="outline" color="tertiary"></ion-radio>
+                <ion-item lines="none"><ion-label>{{trueValue}}</ion-label></ion-item>
+                <ion-radio (ionSelect)="askFn(true)" center fill="outline" color="tertiary"></ion-radio>
               </ion-item>
 
-
               <ion-item lines="none">
-                <ion-item lines="none"><ion-label>True</ion-label></ion-item>
-                <ion-radio (ionSelect)="askFn(true)" center fill="outline" color="tertiary"></ion-radio>
+                <ion-item lines="none"><ion-label>{{falseValue}}</ion-label></ion-item>
+                <ion-radio (ionSelect)="askFn(false)" center fill="outline" color="tertiary"></ion-radio>
               </ion-item>
             </ion-row>
           </ion-grid>
@@ -74,9 +76,9 @@
 
       <div *ngIf="multi">
         <ion-list>
-          <ion-item *ngFor="let option of options;  let i = index">
+          <ion-item *ngFor="let option of options;  let j = index">
             <ion-label>{{option}}</ion-label>
-            <ion-checkbox color="tertiary" slot="end" [(ngModel)]="optionSelect[i]"></ion-checkbox>
+            <ion-checkbox color="tertiary" slot="end" [(ngModel)]="answerQMulti[j]"></ion-checkbox>
           </ion-item>
         </ion-list>
       </div>
@@ -90,3 +92,9 @@
   </ion-item>
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button (click)="subscribed()" size="small" expand="full" color="tertiary">Return to Dashboard</ion-button>
+  </ion-toolbar>
+</ion-footer>
