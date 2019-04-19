@@ -7,12 +7,65 @@ const Answer = require('../models/answer');
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
 var app = express();
+const cron = require('node-cron');
 const {PubSub} = require('@google-cloud/pubsub');
 require('dotenv').config();
+var admin = require('firebase-admin');
+
+var request = require('request');
+
+var serviceAccount = require("../key-firebase.json");
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault()
+});
 
 const pubsub = new PubSub('testprojectchris');
 
 app.set('superSecret', 'someSecret');
+
+// cron job
+cron.schedule("* * * * *", async function() {
+  Study.find().then(async function(studies){
+    for (var i = 0; i < studies.length; i++) {
+      for (var j = 0; j < studies[i].questions.length; j++) {
+        var condition = "'study_5cb845d7b1c8f31bf470a924' in topics";
+        var title = "Study '" + studies[i].title + "' has a new question to answer";
+        var question = await (Question.findOne({_id: studies[i].questions[j]}))
+
+        if (question.time != null){
+
+          var currentUserTime = new Date();
+          currentUserTime = Date.parse(currentUserTime);
+
+          var questionDate = Date.parse(question.time);
+
+          var difference = Math.abs((currentUserTime - questionDate));
+
+          if (difference <= 30000){
+            var message = {
+              notification: {
+                title: title,
+                body: question.title + " is available to answer"
+              },
+              condition: condition
+            };
+
+            admin.messaging().send(message)
+            .then((response) => {
+              // Response is a message ID string.
+              console.log('Successfully sent message:', response);
+            })
+            .catch((error) => {
+              console.log('Error sending message:', error);
+            });
+          }
+        }
+      }
+    }
+  });
+});
+
 
 // reference endpoints
 
@@ -257,23 +310,23 @@ router.get('/question', async function(req, res, next){
 
             if (question.time != null){
 
-            currentUserTime = new Date();
+              currentUserTime = new Date();
 
 
-            var gmtUser;
-            if (user.timezones.includes("+")){
-              gmtUser = parseInt(user.timezones.split("+").pop());
-            } else {
-              gmtUser = parseInt("-"+user.timezones.split("-").pop());
-            }
-            gmtUser = 2-gmtUser;
+              var gmtUser;
+              if (user.timezones.includes("+")){
+                gmtUser = parseInt(user.timezones.split("+").pop());
+              } else {
+                gmtUser = parseInt("-"+user.timezones.split("-").pop());
+              }
+              gmtUser = 2-gmtUser;
 
-            currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
+              currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
 
-            console.log("USERTIME: " + currentUserTime);
-            console.log("QUESTION TOME: " + question.time);
+              console.log("USERTIME: " + currentUserTime);
+              console.log("QUESTION TOME: " + question.time);
 
-            currentUserTime = Date.parse(currentUserTime);
+              currentUserTime = Date.parse(currentUserTime);
 
 
               var questionDate = Date.parse(question.time);
@@ -537,13 +590,27 @@ router.post('/study', async function(req, res, next){
   }).catch(next);
 });
 
+
+router.put('/fcm', async function(req, res, next){
+  User.findOneAndUpdate({username: req.decoded.username}, {fcmToken: req.body.fcmToken}).then(function(user){
+    console.log(user);
+    res.status(200).send();
+  });
+});
+
 // update a subscriber to a study in the db
 router.put('/study', async function(req, res, next){
   User.findOneAndUpdate({username: req.decoded.username}, {$push: {subscriptions: req.body.studyID}}).then(function(user){
     Study.findOneAndUpdate({_id: req.body.studyID}, {$push: {subscribers: req.decoded.username}}).then(function(study) {
       var topicName = "study_" + study._id;
-      var subscriptionName = user.username + "_" + study._id;
-      pubsub.topic(topicName).createSubscription(subscriptionName);
+      var fcmToken = user.fcmToken;
+      admin.messaging().subscribeToTopic(fcmToken, topicName).then(function(response){
+        console.log('Successfully subscribed to topic:', response);
+      }).catch(function(error){
+        console.log('Error subscribing to topic: ', error);
+      });
+      // var subscriptionName = user.username + "_" + study._id;
+      // pubsub.topic(topicName).createSubscription(subscriptionName);
       res.status(200).send();
     })
   })
