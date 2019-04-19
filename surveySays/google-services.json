@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "513952150615",
+    "firebase_url": "https://testprojectchris.firebaseio.com",
+    "project_id": "testprojectchris",
+    "storage_bucket": "testprojectchris.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513952150615:android:8ab97f7b890f6461",
+        "android_client_info": {
+          "package_name": "com.cachew.surveySays"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513952150615-15eroa9iblqvkmc6136qhacqsb91v69m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBidkf0KbFDl74B2WDEpJUsZRHVsqNW-dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513952150615-15eroa9iblqvkmc6136qhacqsb91v69m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
