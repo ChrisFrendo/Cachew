@@ -645,5 +645,25 @@ router.put('/answer', function(req, res, next){
   })
 });
 
+router.get('/report', function(req, res, next){
+
+    User.findOne({username : req.decoded.username}, {_id : 1}, function(err, user){
+
+    if(err){
+      res.status(400).send(err.message);
+      next();
+    }
+
+    Study.find({userId : user._id}, {title : 1, questions : 1}, function(err2, studies){
+      console.log({array:studies});
+      res.status(200).send({array:studies});
+      if(err){
+        res.status(400).send(err2.message);
+        next();
+      }
+      })
+    })
+
+});
 
 module.exports = router;
