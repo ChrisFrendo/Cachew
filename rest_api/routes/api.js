@@ -159,7 +159,8 @@ router.use(function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, app.get('superSecret'), function(err, decoded) {
       if (err){
-        res.send({ success: false, message: 'Failed to authenticate token.' });
+
+        res.status(400).send({ success: false, message: 'Failed to authenticate token.' });
       } else {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
@@ -220,7 +221,7 @@ router.get('/question', async function(req, res, next){
         res.status(400).send(err.message);
         next();
       }
-      var question =[];
+      var question = [];
       console.log(study);
 
       for (var j = 0; j < study.questions.length; j++) {
@@ -393,7 +394,7 @@ router.put('/study/subscribed', function(req, res, next){
 // remove a subscriber from a study
 router.delete('/question', function(req, res, next){
     Question.findOneAndDelete({_id: req.body.id}).then(function() {
-      res.status(200).send();
+      res.status(200).send("Question successfully deleted.");
     })
 });
 

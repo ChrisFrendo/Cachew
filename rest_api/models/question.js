@@ -23,11 +23,13 @@ const QuestionSchema = new Schema({
   schedule: {
     day: [{
       type: String,
-      enum: days
+      enum: days,
+      default:null
     }],
     time: [{
       type: String,
-      enum: times
+      enum: times,
+      default:null
     }]
   },
   scale: {
