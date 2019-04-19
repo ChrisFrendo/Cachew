@@ -141,8 +141,49 @@
           <!-- Content Row -->
           <div class="row">
 
-            <!-- To insert REPORTS CONTENT HERE-->
+            <div class="col-md-6">
+                       <select class="form-control form-control-user" type="text" id="selectStudy">
+                         <option value="Select Study">Select Study</option>
+                         <option value="Study 1">Study 1</option>
+                         <option value="Study 2">Study 2</option>
+                         <option value="Study 3">Study 3</option>
+                       </select><br>
+                     </div>
 
+
+            <div class="col-xl-8 col-lg-7">
+
+              <!-- Bar Chart-->
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-bar">
+                    <canvas id="BarChart"></canvas>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Donut Chart -->
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                </div>
+                <!-- Card Body-->
+                <div class="card-body">
+                  <div class="chart-pie pt-4">
+                    <canvas id="PieChart"></canvas>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+            </div>
           </div>
 
 
@@ -199,11 +240,15 @@
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 
   <script type="text/javascript" src="js/loadusername.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/reports.js"></script>
 
 </body>
 

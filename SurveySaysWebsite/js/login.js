@@ -3,7 +3,7 @@ function login(){
   var username = document.getElementById('loginUsername').value;
   var password = document.getElementById('loginPassword').value;
 
-  var ip = '10.60.10.66';
+ var ip = '10.60.10.66';
 
   var url = "http://"+ip+":4000/api/login/researcher?username=" + username + "&password=" + password;
 

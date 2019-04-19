@@ -4,6 +4,7 @@ import {Http} from '@angular/http';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { async } from 'q';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 @Component({
   selector: 'app-log-in',
@@ -17,15 +18,31 @@ export class LogInPage {
   username: string;
   password: string;
 
-  constructor(private router: Router, private http: Http, private toastController: ToastController, private storage: Storage) {}
+  constructor(private router: Router, private http: Http,
+     private toastController: ToastController, private storage: Storage,
+       public fcm: FCM) {}
 
   login(){
     var url = "http://"+this.ip+":4000/api/login/participant?username=" + this.username + "&password=" + this.password;
 
     this.http.get(url).subscribe(data => {
-        this.storage.set('token', JSON.parse((<any>data)._body).token);
+      var authToken = JSON.parse((<any>data)._body).token
+        this.storage.set('token', authToken);
         this.presentToast("Login Successful");
-        this.router.navigateByUrl('/dashboard');
+        var fcmUrl = "http://"+this.ip+":4000/api/fcm?token=" + authToken;
+
+        this.fcm.getToken().then(token => {
+          // this.presentToast(token);
+          this.storage.set('fcm', token);
+
+          let payload = {
+            fcmToken: token
+          }
+
+          this.http.put(fcmUrl, payload).subscribe(()=>{
+              this.router.navigateByUrl('/dashboard');
+          })
+        });
     }, error => {
         console.log(error);
         this.presentToast("Login Failed");
