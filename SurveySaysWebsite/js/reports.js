@@ -2,7 +2,8 @@
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
 
-// use of the number format function from https://gist.github.com/airstrike/1571660
+
+//use of the number format function from the
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
   // *     return: '1 234,56'
@@ -16,18 +17,17 @@ function number_format(number, decimals, dec_point, thousands_sep) {
       var k = Math.pow(10, prec);
       return '' + Math.round(n * k) / k;
     };
-  // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-  s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-  if (s[0].length > 3) {
-    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-  }
-  if ((s[1] || '').length < prec) {
-    s[1] = s[1] || '';
-    s[1] += new Array(prec - s[1].length + 1).join('0');
-  }
+    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+      s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+      s[1] = s[1] || '';
+      s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
   return s.join(dec);
 }
-
 
 // Bar Chart
 var ctx = document.getElementById("BarChart");
@@ -51,7 +51,7 @@ var myBarChart = new Chart(ctx, {
   options: {
     title: {
            display: true,
-           text: 'Question 1: Multiple Choice Answer Report'
+           text: 'Question 2: Multiple Choice Answer Report'
        },
     maintainAspectRatio: false,
     layout: {
@@ -146,7 +146,7 @@ var myPieChart = new Chart(ctx, {
   options: {
     title: {
            display: true,
-           text: 'Question 2: Boolean Answers Report'
+           text: 'Question 3: Boolean Answers Report'
        },
     maintainAspectRatio: false,
     tooltips: {
@@ -165,3 +165,63 @@ var myPieChart = new Chart(ctx, {
     cutoutPercentage: 80,
   },
 });
+
+//setting the data for all charts created in Sample Charts Card using the same data of the bar chart
+let userData =  [4000, 5000, 3500, 7841];
+var data = {
+
+        labels: ["Option A", "Option B", "Option C", "Option D"],
+        datasets: [
+          {
+            label: "Users",
+            fill: false,
+            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+            borderColor: "#4e73df",
+            hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+            hoverBorderColor: "rgba(234, 236, 244, 1)",
+            data: userData,
+          }],
+  };
+
+// creating default chart of type 'radar'
+var ctx = document.getElementById('SampleAnswerReport').getContext('2d');
+var sampleChart = new Chart(ctx, {
+    type: 'radar',
+    data: data
+});
+
+//on-click function for icons to change chart type
+function newChartType() {
+
+      sampleChart.destroy();
+
+       var chartType = $("input:radio[name='chart']:checked").val();
+       console.log(chartType);
+       sampleChart = new Chart(ctx, {
+         type: chartType,
+         data: data,
+         gridLines: {
+           display: false,
+           drawBorder: false
+         },
+         options: {
+           title: {
+                  display: true,
+                  text: 'Question 1: Answer Report'
+              },
+              scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+            xAxes: [{
+                // Change here
+              barPercentage: 0.4
+            }]
+        }
+
+       },
+     })
+
+};
