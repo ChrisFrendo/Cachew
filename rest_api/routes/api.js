@@ -29,17 +29,18 @@ cron.schedule("* * * * *", async function() {
   Study.find().then(async function(studies){
     for (var i = 0; i < studies.length; i++) {
       for (var j = 0; j < studies[i].questions.length; j++) {
-        var condition = "'study_5cb845d7b1c8f31bf470a924' in topics";
+        var condition = "'study_"+ studies[i].id+"' in topics";
         var title = "Study '" + studies[i].title + "' has a new question to answer";
         var question = await (Question.findOne({_id: studies[i].questions[j]}))
 
-        if (question.time != null){
+        var currentUserTime = new Date();
+        var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+        // console.log(time);
 
-          var currentUserTime = new Date();
+        if (question.time != null){
           currentUserTime = Date.parse(currentUserTime);
 
           var questionDate = Date.parse(question.time);
-
           var difference = Math.abs((currentUserTime - questionDate));
 
           if (difference <= 30000){
@@ -59,6 +60,27 @@ cron.schedule("* * * * *", async function() {
             .catch((error) => {
               console.log('Error sending message:', error);
             });
+          }
+        } else {
+          for (var k = 0; k < question.daily.length; k++) {
+            if (time === question.daily[k]) {
+              var message = {
+                notification: {
+                  title: title,
+                  body: question.title + " is available to answer"
+                },
+                condition: condition
+              };
+
+              admin.messaging().send(message)
+              .then((response) => {
+                // Response is a message ID string.
+                console.log('Successfully sent message:', response);
+              })
+              .catch((error) => {
+                console.log('Error sending message:', error);
+              });
+            }
           }
         }
       }
@@ -271,6 +293,20 @@ router.post('/question', function(req, res, next){
       console.log(test);
       test.setHours(test.getHours()+gmtUser);
       req.body.time = test;
+    } else {
+      if (req.body.daily.length != 0){
+        for (var k = 0; k < req.body.daily.length; k++) {
+          var time = new Date('1970-01-01T' + req.body.daily[k] + 'Z');
+          console.log(time);
+          console.log(gmtUser);
+          time.setHours(time.getHours()+gmtUser-1);
+          console.log(time);
+          var hours = ('0'+time.getHours()).slice(-2);
+          var mins = ('0'+time.getMinutes()).slice(-2);
+          req.body.daily[k] = (hours + ":" + mins);
+          console.log(req.body.daily[k]);
+        }
+      }
     }
 
     Question.create(req.body, function(err, question){
@@ -311,7 +347,6 @@ router.get('/question', async function(req, res, next){
             if (question.time != null){
 
               currentUserTime = new Date();
-
 
               var gmtUser;
               if (user.timezones.includes("+")){
@@ -356,7 +391,37 @@ router.get('/question', async function(req, res, next){
                 }
               }
             } else {
-              checkForQuestionAnswer(question, req, answered, questions, j);
+              if (question.daily.length != 0){
+
+                var currentUserTime = new Date();
+                var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+
+                for (var k = 0; k < question.daily.length; k++) {
+                  if (time === question.daily[k]) {
+                    if (question.answers != []){
+                      for (var i = 0; i < question.answers.length; i++) {
+                        await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+                          if(answer){
+                            answered = true;
+                          }
+                        }));
+                        if (answered){
+                          break;
+                        }
+                      }
+                      if (!answered){
+                        questions[j] = question;
+                      }  else {
+                        questions[j] = null;
+                      }
+                    } else {
+                      questions[j] = question;
+                    }
+                  }
+                }
+              } else {
+                checkForQuestionAnswer(question, req, answered, questions, j);
+              }
             }
           } else {
             checkForQuestionAnswer(question, req, answered, questions, j);
@@ -413,7 +478,6 @@ router.get('/study/subscribed', async function(req, res, next){
       flag[i] = false;
       for (var j = 0; j < studies[i].questions.length; j++) {
 
-
         await (Question.findOne({_id: studies[i].questions[j]}).then( async function(question){
           var answered = false;
 
@@ -437,20 +501,35 @@ router.get('/study/subscribed', async function(req, res, next){
               currentUserTime = Date.parse(currentUserTime);
 
               if (question.time != null){
+                if (question.daily.length == 0){
+                  var questionDate = Date.parse(question.time);
+                  console.log("Question time: " +(questionDate));
 
-                var questionDate = Date.parse(question.time);
-                console.log("Question time: " +(questionDate));
+                  var difference = Math.abs((currentUserTime - questionDate));
+                  console.log(difference);
 
-                var difference = Math.abs((currentUserTime - questionDate));
-                console.log(difference);
-
-                if (difference <= 300000){
-                  checkForAnsweredQuestions(question, notifs, answered, req, i);
-                } else if (questionDate > currentUserTime){
-                  flag[i] = true;
+                  if (difference <= 300000){
+                    checkForAnsweredQuestions(question, notifs, answered, req, i);
+                  } else if (questionDate > currentUserTime){
+                    flag[i] = true;
+                  }
                 }
               } else {
-                checkForAnsweredQuestions(question, notifs, answered, req, i);
+                if (question.daily.length != 0){
+
+                  var currentUserTime = new Date();
+                  var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+
+                  for (var k = 0; k < question.daily.length; k++) {
+                    if (time === question.daily[k]) {
+                      checkForAnsweredQuestions(question, notifs, answered, req, i);
+                    } else if (question.daily[k] > time){
+                      flag[i] = true;
+                    }
+                  }
+                } else {
+                  checkForQuestionAnswer(question, req, answered, questions, j);
+                }
               }
             })
 
@@ -647,7 +726,7 @@ router.put('/answer', function(req, res, next){
 
 router.get('/report', function(req, res, next){
 
-    User.findOne({username : req.decoded.username}, {_id : 1}, function(err, user){
+  User.findOne({username : req.decoded.username}, {_id : 1}, function(err, user){
 
     if(err){
       res.status(400).send(err.message);
@@ -661,8 +740,8 @@ router.get('/report', function(req, res, next){
         res.status(400).send(err2.message);
         next();
       }
-      })
     })
+  })
 
 });
 
