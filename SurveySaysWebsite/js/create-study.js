@@ -347,7 +347,7 @@ $(document).ready(function() {
         break;
         case "Daily":
 
-        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><input name='terminationDate' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div>";
+        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><input name='terminationDaily' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div>";
 
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
@@ -377,7 +377,7 @@ $(document).ready(function() {
         break;
         case "Weekly":
 
-        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' class='form-control form-control-user' name='weeklySelection'></select></div><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><input name='terminationDate' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div></div>";
+        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' class='form-control form-control-user' name='weeklySelection'></select></div><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><input name='terminationWeekly' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div></div>";
 
         var weeksUrl = "http://"+ip+":4000/api/references/question/days";
         var weeks = [];
@@ -568,8 +568,10 @@ $(document).ready(function() {
     var frequencyOfSchedule = document.getElementsByName('frequencyOfSchedule');
 
     var dailyTimesSelect = document.getElementsByName('dailySelection');
+    var dailyTermination = document.getElementsByName('terminationDaily');
     var weeklyDaysSelect = document.getElementsByName('dayInWeekSelection');
     var weeklyTimesSelect = document.getElementsByName('weeklySelection');
+    var weeklyTermination = document.getElementsByName('terminationWeekly');
 
     var input1 = document.getElementsByName('input1');
     var input2 = document.getElementsByName('input2');
@@ -599,6 +601,7 @@ $(document).ready(function() {
         // debugger;
         question.daily = [];
         var dailyTimes = dailyTimesSelect[m];
+        question.terminationDate = dailyTermination[m].value;
         for (var z = 0; z < dailyTimes.selectedOptions.length; z++) {
           question.daily[z] = (dailyTimes.selectedOptions[z].text);
         }
@@ -608,6 +611,7 @@ $(document).ready(function() {
         // debugger;
         question.weeklyDay = [];
         var weeklyDays = weeklyDaysSelect[n];
+        question.terminationDate = weeklyTermination[n].value;
         for (var z = 0; z < weeklyDays.selectedOptions.length; z++) {
           question.weeklyDay[z] = weeklyDays.selectedOptions[z].text;
         }
