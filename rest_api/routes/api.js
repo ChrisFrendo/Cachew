@@ -32,13 +32,15 @@ cron.schedule("* * * * *", async function() {
         var condition = "'study_"+ studies[i].id+"' in topics";
         var title = "Study '" + studies[i].title + "' has a new question to answer";
         var question = await (Question.findOne({_id: studies[i].questions[j]}))
+        // console.log(studies[i].title);
 
-        var currentUserTime = new Date();
-        var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
-        // console.log(time);
+        var currentTime = new Date();
+        var time = (currentTime.getHours() + ":" + currentTime.getMinutes());
+        currentUserTime = Date.parse(currentTime);
+
+        // console.log(question);
 
         if (question.time != null){
-          currentUserTime = Date.parse(currentUserTime);
 
           var questionDate = Date.parse(question.time);
           var difference = Math.abs((currentUserTime - questionDate));
@@ -61,9 +63,9 @@ cron.schedule("* * * * *", async function() {
               console.log('Error sending message:', error);
             });
           }
-        } else {
+        } else if (question.daily.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
           for (var k = 0; k < question.daily.length; k++) {
-            if (time === question.daily[k]) {
+            if (time === question.daily[k] && currentUserTime <= Date.parse(question.terminationDate)) {
               var message = {
                 notification: {
                   title: title,
@@ -80,6 +82,37 @@ cron.schedule("* * * * *", async function() {
               .catch((error) => {
                 console.log('Error sending message:', error);
               });
+            }
+          }
+        } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
+          console.log("In weekly branch");
+          for (var k = 0; k < question.weeklyDay.length; k++) {
+            console.log("TIME:"+ time);
+            console.log("Question TIme: " + question.weeklyTime);
+            if (time == question.weeklyTime) {
+              console.log("weeklyTime test passed");
+              for (var l = 0; l < Question.days.length; l++) {
+                if (currentTime.getDay() == l && question.weeklyDay[k] == Question.days[l]){
+                  var message = {
+                    notification: {
+                      title: title,
+                      body: question.title + " is available to answer"
+                    },
+                    condition: condition
+                  };
+
+                  admin.messaging().send(message)
+                  .then((response) => {
+                    // Response is a message ID string.
+                    console.log('Successfully sent message:', response);
+                  })
+                  .catch((error) => {
+                    console.log('Error sending message:', error);
+                  });
+                  break;
+                }
+              }
+
             }
           }
         }
@@ -294,6 +327,9 @@ router.post('/question', function(req, res, next){
       test.setHours(test.getHours()+gmtUser);
       req.body.time = test;
     } else {
+      var termination = new Date(req.body.terminationDate);
+      termination.setHours(termination.getHours()+gmtUser);
+      req.body.terminationDate = termination;
       if (req.body.daily.length != 0){
         for (var k = 0; k < req.body.daily.length; k++) {
           var time = new Date('1970-01-01T' + req.body.daily[k] + 'Z');
@@ -306,6 +342,26 @@ router.post('/question', function(req, res, next){
           req.body.daily[k] = (hours + ":" + mins);
           console.log(req.body.daily[k]);
         }
+      } else if (req.body.weeklyDay.length != 0 && req.body.weeklyTime.length != 0){
+        var time = new Date('1970-01-20T' + req.body.weeklyTime + 'Z');
+        console.log(time);
+        console.log(gmtUser);
+        time.setHours(time.getHours()+gmtUser-1);
+        console.log(time);
+        var hours = ('0'+time.getHours()).slice(-2);
+        var mins = ('0'+time.getMinutes()).slice(-2);
+        req.body.weeklyTime = (hours + ":" + mins);
+
+        if (time.getDate()-20 != 0){
+          for (var k = 0; k < req.body.weeklyDay.length; k++) {
+            for (var p = 0; p < Question.days.length; p++) {
+              if (req.body.weeklyDay[k] === Question.days[p]){
+                req.body.weeklyDay[k] = Question.days[(p+(time.getDate()-20)%p)];
+              }
+            }
+          }
+        }
+
       }
     }
 
@@ -391,7 +447,7 @@ router.get('/question', async function(req, res, next){
                 }
               }
             } else {
-              if (question.daily.length != 0){
+              if (question.daily.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
 
                 for (var k = 0; k < question.daily.length; k++) {
                   var currentUserTime = new Date();
@@ -407,8 +463,27 @@ router.get('/question', async function(req, res, next){
                     questions[j] = question;
                   }
                 }
-              } else {
-                checkForQuestionAnswer(question, req, answered, questions, j);
+              } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
+                // console.log("In weekly branch");
+                for (var k = 0; k < question.weeklyDay.length; k++) {
+                  // console.log("TIME:"+ time);
+                  // console.log("Question TIme: " + question.weeklyTime);
+                  var currentUserTime = new Date();
+                  var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+                  var questionTime = new Date('1970-01-01T' + question.weeklyTime + 'Z');
+                  var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
+
+                  if (minsDifference <= 2) {
+                    // console.log("weeklyTime test passed");
+                    for (var l = 0; l < Question.days.length; l++) {
+                      if (currentUserTime.getDay() == l && question.weeklyDay[k] == Question.days[l]){
+                        questions[j] = question;
+                        break;
+                      }
+                    }
+
+                  }
+                }
               }
             }
           } else {
@@ -503,7 +578,7 @@ router.get('/study/subscribed', async function(req, res, next){
                   }
                 }
               } else {
-                if (question.daily.length != 0){
+                if (question.daily.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
 
                   for (var k = 0; k < question.daily.length; k++) {
                     var currentUserTime = new Date();
@@ -523,8 +598,28 @@ router.get('/study/subscribed', async function(req, res, next){
                       flag[i] = true;
                     }
                   }
-                } else {
-                  checkForQuestionAnswer(question, req, answered, questions, j);
+                }  else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
+                  // console.log("In weekly branch");
+                  for (var k = 0; k < question.weeklyDay.length; k++) {
+                    // console.log("TIME:"+ time);
+                    // console.log("Question TIme: " + question.weeklyTime);
+                    var currentUserTime = new Date();
+                    var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+                    var questionTime = new Date('1970-01-01T' + question.weeklyTime + 'Z');
+                    var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
+
+                    if (minsDifference <= 2) {
+                      // console.log("weeklyTime test passed");
+                      for (var l = 0; l < Question.days.length; l++) {
+                        if (currentUserTime.getDay() == l && question.weeklyDay[k] == Question.days[l]){
+                          notifs[i]++;
+                          break;
+                        }
+                      }
+                    } else {
+                      flag[i] = true;
+                    }
+                  }
                 }
               }
             })
