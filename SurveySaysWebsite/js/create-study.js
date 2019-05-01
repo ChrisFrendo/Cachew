@@ -594,8 +594,14 @@ $(document).ready(function() {
 
       if (frequencyOfSchedule[i].value == "No Schedule"){
         question.time = null;
+        question.daily = [];
+        question.weeklyDay = [];
+        question.weeklyTime = [];
       } else if (frequencyOfSchedule[i].value == "Just Once"){
         question.time = questionDateTime[k].value;
+        question.daily = [];
+        question.weeklyDay = [];
+        question.weeklyTime = [];
         k++;
       } else if (frequencyOfSchedule[i].value == "Daily"){
         // debugger;
@@ -606,8 +612,11 @@ $(document).ready(function() {
           question.daily[z] = (dailyTimes.selectedOptions[z].text);
         }
         console.log(question.daily);
+        question.weeklyDay = [];
+        question.weeklyTime = [];
         m++;
       } else if (frequencyOfSchedule[i].value == "Weekly"){
+        question.daily = [];
         // debugger;
         question.weeklyDay = [];
         var weeklyDays = weeklyDaysSelect[n];
