@@ -415,7 +415,7 @@ router.get('/question', async function(req, res, next){
               currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
 
               console.log("USERTIME: " + currentUserTime);
-              console.log("QUESTION TOME: " + question.time);
+              console.log("QUESTION TIME: " + question.time);
 
               currentUserTime = Date.parse(currentUserTime);
 
@@ -463,8 +463,8 @@ router.get('/question', async function(req, res, next){
                     questions[j] = question;
                   }
                 }
-              } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
-                // console.log("In weekly branch");
+              } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0){
+                console.log("In weekly branch");
                 for (var k = 0; k < question.weeklyDay.length; k++) {
                   // console.log("TIME:"+ time);
                   // console.log("Question TIme: " + question.weeklyTime);
@@ -559,7 +559,7 @@ router.get('/study/subscribed', async function(req, res, next){
               currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
 
               console.log("USERTIME: " + currentUserTime);
-              console.log("QUESTION TOME: " + question.time);
+              console.log("QUESTION TIME: " + question.time);
 
               currentUserTime = Date.parse(currentUserTime);
 
