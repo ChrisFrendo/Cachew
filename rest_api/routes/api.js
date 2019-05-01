@@ -393,30 +393,18 @@ router.get('/question', async function(req, res, next){
             } else {
               if (question.daily.length != 0){
 
-                var currentUserTime = new Date();
-                var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
-
                 for (var k = 0; k < question.daily.length; k++) {
-                  if (time === question.daily[k]) {
-                    if (question.answers != []){
-                      for (var i = 0; i < question.answers.length; i++) {
-                        await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
-                          if(answer){
-                            answered = true;
-                          }
-                        }));
-                        if (answered){
-                          break;
-                        }
-                      }
-                      if (!answered){
-                        questions[j] = question;
-                      }  else {
-                        questions[j] = null;
-                      }
-                    } else {
-                      questions[j] = question;
-                    }
+                  var currentUserTime = new Date();
+                  var questionTime = new Date('1970-01-01T' + question.daily[k] + 'Z');
+                  var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+                  // console.log("USER MINS " + currentUserTime.getMinutes());
+                  // console.log("QUESTION MINS " + questionTime.getMinutes());
+                  var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
+                  // console.log(minsDifference);
+                  // console.log("USER HOURS " + currentUserTime.getHours());
+                  // console.log("QUESTION HOURS " + questionTime.getHours());
+                  if (questionTime.getHours()-1 === currentUserTime.getHours() && minsDifference <= 2) {
+                    questions[j] = question;
                   }
                 }
               } else {
@@ -517,13 +505,21 @@ router.get('/study/subscribed', async function(req, res, next){
               } else {
                 if (question.daily.length != 0){
 
-                  var currentUserTime = new Date();
-                  var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
-
                   for (var k = 0; k < question.daily.length; k++) {
-                    if (time === question.daily[k]) {
-                      checkForAnsweredQuestions(question, notifs, answered, req, i);
-                    } else if (question.daily[k] > time){
+                    var currentUserTime = new Date();
+                    var questionTime = new Date('1970-01-01T' + question.daily[k] + 'Z');
+                    var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
+                    console.log("USER MINS " + currentUserTime.getMinutes());
+                    console.log("QUESTION MINS " + questionTime.getMinutes());
+                    var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
+                    console.log(minsDifference);
+                    console.log("USER HOURS " + currentUserTime.getHours());
+                    console.log("QUESTION HOURS " + questionTime.getHours());
+
+
+                    if (questionTime.getHours()-1 === currentUserTime.getHours() && minsDifference <= 2) {
+                      notifs[i]++;
+                    } else if (questionTime.getHours()-1 >= currentUserTime.getHours()){
                       flag[i] = true;
                     }
                   }
