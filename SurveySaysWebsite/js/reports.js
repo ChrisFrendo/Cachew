@@ -168,6 +168,7 @@ var myPieChart = new Chart(ctx, {
 
 //setting the data for all charts created in Sample Charts Card using the same data of the bar chart
 let userData =  [4000, 5000, 3500, 7841];
+var coloursArray = ['#4e73df', '#1cc88a', '#FF8800', '#36b9cc', '#f50057', '#ffcc00', '#ff66ff', '#69f0ae', '#ffab40']
 var data = {
 
         labels: ["Option A", "Option B", "Option C", "Option D"],
@@ -175,7 +176,7 @@ var data = {
           {
             label: "Users",
             fill: false,
-            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+            backgroundColor: coloursArray,
             borderColor: "#4e73df",
             hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
             hoverBorderColor: "rgba(234, 236, 244, 1)",
