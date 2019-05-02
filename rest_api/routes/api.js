@@ -35,7 +35,9 @@ cron.schedule("* * * * *", async function() {
         // console.log(studies[i].title);
 
         var currentTime = new Date();
-        var time = (currentTime.getHours() + ":" + currentTime.getMinutes());
+        var hours = ('0'+currentTime.getHours()).slice(-2);
+        var mins = ('0'+currentTime.getMinutes()).slice(-2);
+        var time = hours + ":" + mins;
         currentUserTime = Date.parse(currentTime);
 
         // console.log(question);
@@ -51,7 +53,7 @@ cron.schedule("* * * * *", async function() {
                 title: title,
                 body: question.title + " is available to answer"
               },
-              condition: condition
+              topic: "study_"+studies[i].id
             };
 
             admin.messaging().send(message)
@@ -65,7 +67,9 @@ cron.schedule("* * * * *", async function() {
           }
         } else if (question.daily.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
           for (var k = 0; k < question.daily.length; k++) {
-            if (time === question.daily[k] && currentUserTime <= Date.parse(question.terminationDate)) {
+            // console.log(time + ": " + question.daily[k]);
+            if (time === question.daily[k]) {
+              // console.log(question._id);
               var message = {
                 notification: {
                   title: title,
@@ -73,6 +77,7 @@ cron.schedule("* * * * *", async function() {
                 },
                 condition: condition
               };
+              // console.log(message);
 
               admin.messaging().send(message)
               .then((response) => {
@@ -85,12 +90,12 @@ cron.schedule("* * * * *", async function() {
             }
           }
         } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
-          console.log("In weekly branch");
+          // console.log("In weekly branch");
           for (var k = 0; k < question.weeklyDay.length; k++) {
-            console.log("TIME:"+ time);
-            console.log("Question TIme: " + question.weeklyTime);
+            // console.log("TIME:"+ time);
+            // console.log("Question TIme: " + question.weeklyTime);
             if (time == question.weeklyTime) {
-              console.log("weeklyTime test passed");
+              // console.log("weeklyTime test passed");
               for (var l = 0; l < Question.days.length; l++) {
                 if (currentTime.getDay() == l && question.weeklyDay[k] == Question.days[l]){
                   var message = {
@@ -220,9 +225,9 @@ function validateLogin(userTypeCheck, req, res, next){
         expiresIn: 86400
       });
 
+      console.log("tokenised successfuly");
+      res.status(200).send({token: token});
     }
-    console.log("tokenised successfuly");
-    res.status(200).send({token: token});
   })
   .catch(function(error){
     console.log("Error authenticating user");
@@ -327,10 +332,11 @@ router.post('/question', function(req, res, next){
       test.setHours(test.getHours()+gmtUser);
       req.body.time = test;
     } else {
-      var termination = new Date(req.body.terminationDate);
-      termination.setHours(termination.getHours()+gmtUser);
-      req.body.terminationDate = termination;
+
       if (req.body.daily.length != 0){
+        var termination = new Date(req.body.terminationDate);
+        termination.setHours(termination.getHours()+gmtUser);
+        req.body.terminationDate = termination;
         for (var k = 0; k < req.body.daily.length; k++) {
           var time = new Date('1970-01-01T' + req.body.daily[k] + 'Z');
           console.log(time);
@@ -343,6 +349,9 @@ router.post('/question', function(req, res, next){
           console.log(req.body.daily[k]);
         }
       } else if (req.body.weeklyDay.length != 0 && req.body.weeklyTime.length != 0){
+        var termination = new Date(req.body.terminationDate);
+        termination.setHours(termination.getHours()+gmtUser);
+        req.body.terminationDate = termination;
         var time = new Date('1970-01-20T' + req.body.weeklyTime + 'Z');
         console.log(time);
         console.log(gmtUser);
@@ -370,12 +379,14 @@ router.post('/question', function(req, res, next){
       if(err){
         res.status(400).send(err.message);
         next();
+      } else {
+        res.status(200).send(question);
+        console.log(question);
+        console.log("successfuly handled question post request");
       }
-      res.status(200).send(question);
     });
   });
 
-  console.log("successfuly handled question post request");
 });
 
 // used to retrieve a list of available questions which have not already been answered
@@ -446,30 +457,28 @@ router.get('/question', async function(req, res, next){
                   questions[j] = question;
                 }
               }
-            } else {
-              if (question.daily.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
+            } else if (question.daily.length != 0){
+              if (Date.parse(new Date()) < Date.parse(question.terminationDate)){
 
                 for (var k = 0; k < question.daily.length; k++) {
                   var currentUserTime = new Date();
                   var questionTime = new Date('1970-01-01T' + question.daily[k] + 'Z');
-                  var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
                   // console.log("USER MINS " + currentUserTime.getMinutes());
                   // console.log("QUESTION MINS " + questionTime.getMinutes());
                   var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
-                  // console.log(minsDifference);
-                  // console.log("USER HOURS " + currentUserTime.getHours());
-                  // console.log("QUESTION HOURS " + questionTime.getHours());
-                  if (questionTime.getHours()-1 === currentUserTime.getHours() && minsDifference <= 2) {
+                  questionTime.setHours(questionTime.getHours() - 1);
+
+                  if (questionTime.getHours() === currentUserTime.getHours() && minsDifference <= 2) {
                     questions[j] = question;
                   }
                 }
-              } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0){
-                console.log("In weekly branch");
+              }
+            } else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0){
+              if (Date.parse(new Date()) < Date.parse(question.terminationDate)){
                 for (var k = 0; k < question.weeklyDay.length; k++) {
                   // console.log("TIME:"+ time);
                   // console.log("Question TIme: " + question.weeklyTime);
                   var currentUserTime = new Date();
-                  var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
                   var questionTime = new Date('1970-01-01T' + question.weeklyTime + 'Z');
                   var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
 
@@ -485,19 +494,36 @@ router.get('/question', async function(req, res, next){
                   }
                 }
               }
+            } else {
+              if (question.answers != []){
+                for (var i = 0; i < question.answers.length; i++) {
+                  await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
+                    if(answer){
+                      answered = true;
+                    }
+                  }));
+                  if (answered){
+                    break;
+                  }
+                }
+                if (!answered){
+                  questions[j] = question;
+                }  else {
+                  questions[j] = null;
+                }
+              } else {
+                questions[j] = question;
+              }
             }
-          } else {
-            checkForQuestionAnswer(question, req, answered, questions, j);
           }
-
         }));
       }
 
       if (questions == null){
-        console.log("NULL");
+        // console.log("NULL");
         res.send(200).send(null);
       } else {
-        console.log(questions);
+        // console.log(questions);
         res.status(200).send({array : questions});
       }
     });
@@ -505,25 +531,7 @@ router.get('/question', async function(req, res, next){
 });
 
 async function checkForQuestionAnswer(question, req, answered, questions, j){
-  if (question.answers != []){
-    for (var i = 0; i < question.answers.length; i++) {
-      await (Answer.findOne({_id: question.answers[i], user: req.decoded.username}).then( async function(answer) {
-        if(answer){
-          answered = true;
-        }
-      }));
-      if (answered){
-        break;
-      }
-    }
-    if (!answered){
-      questions[j] = question;
-    }  else {
-      questions[j] = null;
-    }
-  } else {
-    questions[j] = question;
-  }
+
 }
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
@@ -557,54 +565,62 @@ router.get('/study/subscribed', async function(req, res, next){
               gmtUser = 2-gmtUser;
 
               currentUserTime.setHours(currentUserTime.getHours()+gmtUser)
-
-              console.log("USERTIME: " + currentUserTime);
-              console.log("QUESTION TIME: " + question.time);
-
               currentUserTime = Date.parse(currentUserTime);
 
               if (question.time != null){
                 if (question.daily.length == 0){
                   var questionDate = Date.parse(question.time);
-                  console.log("Question time: " +(questionDate));
 
                   var difference = Math.abs((currentUserTime - questionDate));
-                  console.log(difference);
 
                   if (difference <= 300000){
-                    checkForAnsweredQuestions(question, notifs, answered, req, i);
+                    if (question.answers != []){
+                      for (var l = 0; l < question.answers.length; l++) {
+                        var answer = await (Answer.findOne({_id: question.answers[l]}));
+                        // console.log("ANSWER" + answer);
+                        if (answer == null){
+                          answered = false;
+                        } else if (answer.user == req.decoded.username){
+                          answered = true;
+                          break;
+                        }
+                      }
+                      if (!answered){
+                        notifs[i]++;
+                      }
+                    } else {
+                      console.log("HERE2");
+                      notifs[i]++;
+                    }
                   } else if (questionDate > currentUserTime){
                     flag[i] = true;
                   }
                 }
-              } else {
-                if (question.daily.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
-
+              } else if (question.daily.length != 0){
+                if (Date.parse(new Date()) < Date.parse(question.terminationDate)){
                   for (var k = 0; k < question.daily.length; k++) {
                     var currentUserTime = new Date();
                     var questionTime = new Date('1970-01-01T' + question.daily[k] + 'Z');
-                    var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
-                    console.log("USER MINS " + currentUserTime.getMinutes());
-                    console.log("QUESTION MINS " + questionTime.getMinutes());
+                    // console.log("USER MINS " + currentUserTime.getMinutes());
+                    // console.log("QUESTION MINS " + questionTime.getMinutes());
                     var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
-                    console.log(minsDifference);
-                    console.log("USER HOURS " + currentUserTime.getHours());
-                    console.log("QUESTION HOURS " + questionTime.getHours());
+                    questionTime.setHours(questionTime.getHours() - 1);
 
 
-                    if (questionTime.getHours()-1 === currentUserTime.getHours() && minsDifference <= 2) {
+                    if (questionTime.getHours() === currentUserTime.getHours() && minsDifference <= 2) {
                       notifs[i]++;
-                    } else if (questionTime.getHours()-1 >= currentUserTime.getHours()){
+                    } else if (questionTime.getHours() >= currentUserTime.getHours()){
                       flag[i] = true;
                     }
                   }
-                }  else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0 && currentUserTime < Date.parse(question.terminationDate)){
-                  // console.log("In weekly branch");
+                }
+              }  else if (question.weeklyDay.length != 0 && question.weeklyTime.length != 0){
+                if (Date.parse(new Date()) < Date.parse(question.terminationDate)){
+
                   for (var k = 0; k < question.weeklyDay.length; k++) {
                     // console.log("TIME:"+ time);
                     // console.log("Question TIme: " + question.weeklyTime);
                     var currentUserTime = new Date();
-                    var time = (currentUserTime.getHours() + ":" + currentUserTime.getMinutes());
                     var questionTime = new Date('1970-01-01T' + question.weeklyTime + 'Z');
                     var minsDifference = Math.abs(currentUserTime.getMinutes() - questionTime.getMinutes());
 
@@ -621,8 +637,30 @@ router.get('/study/subscribed', async function(req, res, next){
                     }
                   }
                 }
+              } else {
+                if (question.answers != []){
+                  for (var l = 0; l < question.answers.length; l++) {
+                    var answer = await (Answer.findOne({_id: question.answers[l]}));
+                    // console.log("ANSWER" + answer);
+                    if (answer == null){
+                      answered = false;
+                    } else if (answer.user == req.decoded.username){
+                      // console.log("ANSWERED");
+                      answered = true;
+                      break;
+                    }
+                  }
+                  if (!answered){
+                    // console.log("HERE");
+                    notifs[i]++;
+                  }
+                } else {
+                  // console.log("HERE2");
+                  notifs[i]++;
+                }
+                // console.log(notifs);
               }
-            })
+            });
 
           }
         }));
@@ -632,31 +670,6 @@ router.get('/study/subscribed', async function(req, res, next){
     res.status(200).send({array: studies, notifications: notifs, flag: flag});
   });
 });
-
-async function checkForAnsweredQuestions(question, notifs, answered, req, i){
-  if (question.answers != []){
-    for (var l = 0; l < question.answers.length; l++) {
-      await (Answer.findOne({_id: question.answers[l]}).then( async function(answer) {
-        console.log("ANSWER" + answer);
-        if (answer == null){
-          answered = false;
-
-        } else if (answer.user == req.decoded.username){
-          answered = true;
-        }
-      }));
-      if (answered){
-        break;
-      }
-    }
-    if (!answered){
-      notifs[i]++;
-    }
-  } else {
-    notifs[i]++;
-  }
-}
-
 
 // get a list of studies which the user is not subscribed to from the db
 router.get('/study/notsubscribed', async function(req, res, next){
@@ -747,6 +760,7 @@ async function validateTargets(res, req, studies){
 
 //  add a new study to the db
 router.post('/study', async function(req, res, next){
+  console.log(req.body);
   Study.create(req.body).then( async function(study){
     console.log("successfuly handled study post request");
 
@@ -755,6 +769,7 @@ router.post('/study', async function(req, res, next){
     pubsub.createTopic(topicName).catch(err => {
       console.error("ERROR: ", err);
     });
+    console.log("Added pubsub topic");
 
     res.status(200).send(study);
   }).catch(next);
@@ -816,9 +831,9 @@ router.put('/answer', function(req, res, next){
 });
 
 router.get('/report', function(req, res, next){
-
+  // console.log("here");
   User.findOne({username : req.decoded.username}, {_id : 1}, function(err, user){
-
+    // console.log(username);
     if(err){
       res.status(400).send(err.message);
       next();
@@ -834,6 +849,79 @@ router.get('/report', function(req, res, next){
     })
   })
 
+});
+
+router.get('/getData', async function(req,res,next){
+  // console.log(req.body.studyID);
+  Study.findOne({_id: req.body.studyID}, async function(err, study){
+    var dataLabels = [];
+    var dataValues = [];
+
+    for (var i = 0; i < study.questions.length; i++) {
+
+      var question = await (Question.findOne({_id: study.questions[i]}));
+      var labels = [];
+      var values = [];
+      // var answers = question.answers;
+      if (question.type == "Boolean"){
+        labels[0] = question.boolean.trueValue;
+        labels[1] = question.boolean.falseValue;
+        // console.log("ANSWER: " + answer.booleanAnswer);
+        // console.log("TRUE: " + question.boolean.trueValue);
+
+        values[0] = 0;
+        values[1] = 0;
+        // console.log(values);
+      } else if (question.type == "Multiple Choice"){
+        for (var j = 0; j < question.multiple.length; j++) {
+          labels[j] = question.multiple[j];
+          // console.log("LENGTH: " + labels.length);
+          values[j] = 0;
+        }
+      } else if (question.type == "Scale"){
+        for (var j = question.scale.min; j <= question.scale.max; j++) {
+          labels[j-question.scale.min] = ""+j;
+          values[j-question.scale.min] = 0;
+        }
+      }
+
+      for (var k = 0; k < question.answers.length; k++) {
+
+        var answer = await (Answer.findOne({_id: question.answers[k]}));
+
+        if (question.type == "Boolean"){
+          if (answer.booleanAnswer == question.boolean.trueValue){
+            values[0]++;
+          } else {
+            values[1]++;
+          }
+        } else if (question.type == "Multiple Choice"){
+          for (var j = 0; j < answer.multAnswer.length; j++) {
+            for (var o = 0; o < labels.length; o++) {
+              if (answer.multAnswer[j] == labels[o]){
+                values[o]++;
+              }
+            }
+          }
+          // console.log("VALUES: " + values);
+        } else if (question.type == "Scale"){
+          for (var j = 0; j < labels.length; j++) {
+            if ((""+answer.scaleAnswer) == labels[j]){
+              values[j]++;
+            }
+          }
+        } else if (question.type == "Free Text"){
+          values.push(answer.freetextAnswer);
+        }
+        // console.log(answer);
+
+      }
+      dataLabels[i] = labels;
+      dataValues[i] = values;
+    }
+    // console.log(data);
+    res.status(200).send({labels: dataLabels, values: dataValues});
+  });
 });
 
 module.exports = router;
