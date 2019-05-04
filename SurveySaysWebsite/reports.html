@@ -141,131 +141,9 @@
           <!-- Content Row -->
           <div class="row">
 
-            <div class="col-md-6">
-                       <select class="form-control form-control-user" type="text" id="selectStudy">
-                         <option value="Select Study">Select Study</option>
-                         <option value="Study 1">Study 1</option>
-                         <option value="Study 2">Study 2</option>
-                         <option value="Study 3">Study 3</option>
-                       </select><br>
-                     </div>
+            <div class="col-md-6" id="selectStudy"></div><br>
+            <div class="col-xl-7 col-lg-6" id="chartCanvas"></div>
 
-
-            <div class="col-xl-7 col-lg-6">
-
-              <!--Sample Answer Report -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Sample Answer Report</h6>
-                </div>
-                <div class="card-body">
-                  <div class="chart-bar">
-                    <canvas id="SampleAnswerReport"></canvas>
-                  </div>
-                  <hr>
-                  <div class="icon-bar text-right">
-
-                      <label>
-                        <input type="radio" name="chart" value="bar" onclick = "newChartType()" style="display:none">
-                        <i class="fa fa-chart-bar fa-lg" style="color:royalblue"></i></a>
-                      </label>
-
-                      <label>
-                          <input type="radio" name="chart" value="doughnut" onclick="newChartType()" style="display:none">
-                          <i class="fa fa-chart-pie fa-lg" style="color:royalblue"></i>
-                      </label>
-
-                        <label>
-                          <input type="radio" name="chart" value="line" onclick = "newChartType()" style="display:none">
-                          <i class="fa fa-chart-line fa-lg" style="color:royalblue"></i></a>
-                        </label>
-
-                        <label>
-                            <input type="radio" name="chart" value="radar" onclick="newChartType()" style="display:none">
-                            <img aria-hidden="true" class="fa fa-chart-area fa-lg" src="img/radar-plot-24.ico" alt="img"></i>
-                          </label>
-                  </div>
-
-              </div>
-
-            </div>
-
-
-              <!-- Bar Chart-->
-              <div class="card shadow mb-4" id="bar">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
-                </div>
-                <div class="card-body">
-                  <div class="chart-bar">
-                    <canvas id="BarChart"></canvas>
-                  </div>
-                  <hr>
-                  <div class="icon-bar text-right">
-
-                      <label>
-                        <input type="radio" name="chart" value="bar" style="display:none">
-                        <i class="fa fa-chart-bar fa-lg" style="color:royalblue"></i></a>
-                      </label>
-
-                      <label>
-                          <input type="radio" name="chart" value="doughnut" style="display:none">
-                          <i class="fa fa-chart-pie fa-lg" style="color:royalblue"></i>
-                      </label>
-
-                        <label>
-                          <input type="radio" name="chart" value="line" style="display:none">
-                          <i class="fa fa-chart-line fa-lg" style="color:royalblue"></i></a>
-                        </label>
-
-                        <label>
-                            <input type="radio" name="chart" value="radar" style="display:none">
-                            <img aria-hidden="true" class="fa fa-chart-area fa-lg" src="img/radar-plot-24.ico" alt="img"></i>
-                          </label>
-                  </div>
-
-              </div>
-            </div>
-
-            <!-- Donut Chart -->
-            <div class="col-xl-7 col-lg-6">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
-                </div>
-                <!-- Card Body-->
-                <div class="card-body">
-                  <div class="chart-pie pt-4">
-                    <canvas id="PieChart"></canvas>
-                  </div>
-                  <hr>
-                  <div class="icon-bar text-right">
-                    <label>
-                      <input type="radio" name="chart" value="bar" style="display:none">
-                      <i class="fa fa-chart-bar fa-lg" style="color:royalblue"></i></a>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="chart" value="doughnut"  style="display:none">
-                        <i class="fa fa-chart-pie fa-lg" style="color:royalblue"></i>
-                      </label>
-
-                      <label>
-                          <input type="radio" name="chart" value="line"  style="display:none">
-                          <i class="fa fa-chart-line fa-lg" style="color:royalblue"></i></a>
-                      </label>
-
-                        <label>
-                            <input type="radio" name="chart" value="radar" style="display:none">
-                            <img aria-hidden="true" class="fa fa-chart-area fa-lg" src="img/radar-plot-24.ico" alt="img"></i>
-                          </label>
-
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
           </div>
 
 
@@ -330,7 +208,7 @@
 
   <script type="text/javascript" src="js/loadusername.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
-  <script type="text/javascript" src="js/reports.js"></script>
+  <script type="text/javascript" src="js/reports-2.js"></script>
 
 </body>
 
