@@ -30,21 +30,17 @@ $.ajax({
   }
 });
 
-$("#selectStudy").append("<select id='studySelection' class='form-control form-control-user' name='studyOption'></select><br>");
-//var studySelect = document.getElementById('studySelection');
-var studySelect = document.getElementsByName('studyOption');
+$("#selectStudy").append("<select id='studySelection' class='form-control form-control-user'></select><br>");
 
+var studySelect = document.getElementById('studySelection');
 
 //Create and append the options
 for (var i = 0; i < studies.length; i++) {
   var option = document.createElement("option");
   option.setAttribute("value", studies[i]);
   option.text = studies[i].title;
-  if (i == 0){
-    option.setAttribute("selected", 'selected');
-  }
-  studySelect[count].appendChild(option);
 
+  studySelect.appendChild(option);
 }
 count++;
 
