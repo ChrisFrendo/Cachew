@@ -65,20 +65,19 @@ $("select")
 
   var counter = chartCanvas.childElementCount;
   for (var i = 0; i < counter; i++){
-  	chartCanvas.removeChild(chartCanvas.firstChild);
+    chartCanvas.removeChild(chartCanvas.firstChild);
   }
 
   for(var j = 0; j < studies.length; j ++) {
     if(studies[j].title == newSelection) {
       console.log(studies[j].questions.length);
       for(var k=0; k < studies[j].questions.length; k++){
-
-        $("#chartCanvas").append("<div class='card shadow mb-4' id='chart'><div class='card-header py-3'><h6 class='m-0 font-weight-bold text-primary'>Sample Answer Report</h6></div><div class='card-body'><div class='chart-bar'><canvas id='SampleAnswerReport'></canvas></div><hr><div class='icon-bar text-right'> <label><input type='radio' name='chart' value='bar' style='display:none'><i class='fa fa-chart-bar fa-lg' style='color:royalblue'></i></a> </label><label><input type='radio' name='chart' value='doughnut' style='display:none'><i class='fa fa-chart-pie fa-lg' style='color:royalblue'></i></label> <label><input type='radio' name='chart' value='line'  style='display:none'><i class='fa fa-chart-line fa-lg' style='color:royalblue'></i></a></label> <label><input type='radio' name='chart' value='radar' style='display:none'><img aria-hidden='true' class='fa fa-chart-area fa-lg' src='img/radar-plot-24.ico' alt='img'></i></label></div></div></div>");
-        createChart();
+        $("#chartCanvas").append("<div class='card shadow mb-4' name='reportChart'><div class='card-header py-3'><h6 class='m-0 font-weight-bold text-primary'>Sample Answer Report</h6></div><div class='card-body'><div class='chart-bar'><canvas name='SampleAnswerReport'></canvas></div><hr><div class='icon-bar text-right'> <label><input type='button' onclick='updateChart(this)' name='chartType' value='bar'><i class='fa fa-chart-bar fa-lg' style='color:royalblue'></i></a> </label><label><input type='button' onclick='updateChart(this)' name='chartType' value='doughnut'><i class='fa fa-chart-pie fa-lg' style='color:royalblue'></i></label> <label><input type='button'  onclick='updateChart(this)' name='chartType' value='line'><i class='fa fa-chart-line fa-lg' style='color:royalblue'></i></a></label> <label><input type='button' onclick='updateChart(this)' name='chartType' value='radar'><img aria-hidden='true' class='fa fa-chart-area fa-lg' src='img/radar-plot-24.ico' alt='img'></i></label></div></div></div>");
+        createChart(k);
       }
     }
-  }
 
+  }
 })
 
 
@@ -102,53 +101,50 @@ var data = {
     }],
   };
 
-  function createChart(){
-
-    var ctx = document.getElementById('SampleAnswerReport').getContext('2d');
+  function createChart(counter){
+    var sampleAnswers = document.getElementsByName('SampleAnswerReport');
+    var choices = document.getElementsByName('chartType');
+    // debugger;
+    var ctx = sampleAnswers[counter].getContext('2d');
     var sampleChart = new Chart(ctx, {
       type: 'radar',
       data: data
     });
+    }
 
+    function updateChart(element){
 
-    //on-click function for icons to change chart type
-    $('input:radio[name="chart"]').change(function(){
+      var chartType = element.value;
 
-      for(var i = 0; i < studies.length; i++){
+      var chartCard = element.parentNode.parentNode.parentNode.parentNode;
+      chartCard.innerHTML = "<div class='card-header py-3'><h6 class='m-0 font-weight-bold text-primary'>Sample Answer Report</h6></div><div class='card-body'><div class='chart-bar'><canvas name='SampleAnswerReport'></canvas></div><hr><div class='icon-bar text-right'> <label><input type='button' onclick='updateChart(this)' name='chartType' value='bar'><i class='fa fa-chart-bar fa-lg' style='color:royalblue'></i></a> </label><label><input type='button' onclick='updateChart(this)' name='chartType' value='doughnut'><i class='fa fa-chart-pie fa-lg' style='color:royalblue'></i></label> <label><input type='button'  onclick='updateChart(this)' name='chartType' value='line'><i class='fa fa-chart-line fa-lg' style='color:royalblue'></i></a></label> <label><input type='button' onclick='updateChart(this)' name='chartType' value='radar'><img aria-hidden='true' class='fa fa-chart-area fa-lg' src='img/radar-plot-24.ico' alt='img'></i></label></div></div>"
 
-        sampleChart.destroy();
+      var myCTX = chartCard.firstChild.nextSibling.firstChild.firstChild;
 
-        var chartType = $("input:radio[name='chart']:checked").val();
-        console.log(chartType);
-        sampleChart = new Chart(ctx, {
-          type: chartType,
-          data: data,
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          options: {
-            title: {
-              display: true,
-              text: 'Question 1: Answer Report'
-            },
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }],
-              xAxes: [{
-                // Change here
-                barPercentage: 0.4
-              }]
+    var sampleChart = new Chart(myCTX, {
+      type: chartType,
+      data: data,
+      gridLines: {
+        display: false,
+        drawBorder: false
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Question 1: Answer Report'
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
             }
+          }],
+          xAxes: [{
+            // Change here
+            barPercentage: 0.4
+          }]
+        }
 
-          },
-        })
-      }
-
+      },
     })
-
-
-  };
+  }
