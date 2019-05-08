@@ -71,7 +71,7 @@ Chart.defaults.global.defaultFontColor = '#858796';
                 var removeChart = document.getElementById('chart');
                 var removeDiv = document.getElementById('chartCanvas');
                 removeDiv.removeChild(removeChart);
-                console.log(k);
+                //console.log(k);
 
               for(var j = 0; j < studies.length; j ++){
                 if(newSelection != selectedItem && newSelection == studies[j].title)
@@ -80,7 +80,8 @@ Chart.defaults.global.defaultFontColor = '#858796';
                   createChart();
                 }
               }
-      })
+      }
+    })
 
 
 
