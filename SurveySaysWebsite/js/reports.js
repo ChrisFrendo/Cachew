@@ -9,6 +9,10 @@ var ip = '10.60.10.66';
 var token = JSON.parse(localStorage.getItem('token'));
 var getReportsURL = "http://"+ip+":4000/api/report?token="+token;
 
+var dataLabels = [];
+var dataValues = [];
+var counter = 0;
+
 
 $.ajax({
   contentType: 'application/json',
@@ -44,26 +48,46 @@ for (var i = 0; i < studies.length; i++) {
 count++;
 
 
-var selectedItem;
-$("select")
-// .focus(function(){
-//
-//  selectedItem = $.trim( $(".form-control option:selected").text());
-//  console.log(selectedItem);
-//
+var studyID;
 
-
-// })
-.change(function() {
+$("select").change(function() {
 
   var newSelection = $.trim( $(".form-control option:selected").text());
   // console.log(selectedItem);
   console.log(newSelection);
   //debugger;
 
+  for(var i =0; i < studies.length; i++)
+  {
+    if(newSelection == studies[i].title)
+    {
+      studyID = studies[i]._id;
+      console.log(studyID);
+    }
+  }
+  var getReportsDataURL = "http://"+ip+":4000/api/getData?token="+token+"&studyID="+studyID;
+
+
+  $.ajax({
+    contentType: 'application/json',
+    type: 'GET',
+    url: getReportsDataURL,
+    async: false,
+    success: function(data){
+      // debugger;
+      dataValues = data.values;
+      dataLabels = data.labels;
+      console.log(dataValues);
+      console.log(dataLabels);
+    },
+    error: function(jqXHR, exception){
+      console.log("Something went wrong");
+    }
+  });
+
   var chartCanvas = document.getElementById('chartCanvas');
 
-  var counter = chartCanvas.childElementCount;
+  counter = chartCanvas.childElementCount;
   for (var i = 0; i < counter; i++){
     chartCanvas.removeChild(chartCanvas.firstChild);
   }
@@ -74,46 +98,50 @@ $("select")
       for(var k=0; k < studies[j].questions.length; k++){
         $("#chartCanvas").append("<div class='card shadow mb-4' name='reportChart'><div class='card-header py-3'><h6 class='m-0 font-weight-bold text-primary'>Sample Answer Report</h6></div><div class='card-body'><div class='chart-bar'><canvas name='SampleAnswerReport'></canvas></div><hr><div class='icon-bar text-right'> <label><input type='button' onclick='updateChart(this)' name='chartType' value='bar'><i class='fa fa-chart-bar fa-lg' style='color:royalblue'></i></a> </label><label><input type='button' onclick='updateChart(this)' name='chartType' value='doughnut'><i class='fa fa-chart-pie fa-lg' style='color:royalblue'></i></label> <label><input type='button'  onclick='updateChart(this)' name='chartType' value='line'><i class='fa fa-chart-line fa-lg' style='color:royalblue'></i></a></label> <label><input type='button' onclick='updateChart(this)' name='chartType' value='radar'><img aria-hidden='true' class='fa fa-chart-area fa-lg' src='img/radar-plot-24.ico' alt='img'></i></label></div></div></div>");
         createChart(k);
+        // var item = document.getElementById("chartCounter").innerHTML = counter;
+        // console.log(item);
       }
     }
 
   }
 })
 
-
-
-//setting the data for all charts created in Sample Charts Card using the same data of the bar chart
-let userData =  [4000, 5000, 3500, 7841];
+//let userData = dataValues;
 var coloursArray = ['#4e73df', '#1cc88a', '#FF8800', '#36b9cc', '#f50057', '#ffcc00', '#ff66ff', '#69f0ae', '#ffab40']
 
-var data = {
-
-  labels: ["Option A", "Option B", "Option C", "Option D"],
-  datasets: [
-    {
-      label: "Users",
-      fill: false,
-      backgroundColor: coloursArray,
-      borderColor: "#4e73df",
-      hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
-      hoverBorderColor: "rgba(234, 236, 244, 1)",
-      data: userData,
-    }],
-  };
+var data;
 
   function createChart(counter){
+
+   data = {
+
+      labels: dataLabels[counter],
+      //labels: dataLabels,
+      datasets: [
+        {
+          label: "User's Selection",
+          fill: false,
+          backgroundColor: coloursArray,
+          borderColor: "#4e73df",
+          hoverBackgroundColor: coloursArray,
+          hoverBorderColor: "rgba(234, 236, 244, 1)",
+          data: dataValues[counter],
+        }],
+      }
+
     var sampleAnswers = document.getElementsByName('SampleAnswerReport');
     var choices = document.getElementsByName('chartType');
     // debugger;
     var ctx = sampleAnswers[counter].getContext('2d');
     var sampleChart = new Chart(ctx, {
-      type: 'radar',
+      type: 'line',
       data: data
     });
+
     }
 
     function updateChart(element){
-
+      var sampleAnswers = document.getElementsByName('SampleAnswerReport');
       var chartType = element.value;
 
       var chartCard = element.parentNode.parentNode.parentNode.parentNode;
@@ -121,30 +149,55 @@ var data = {
 
       var myCTX = chartCard.firstChild.nextSibling.firstChild.firstChild;
 
-    var sampleChart = new Chart(myCTX, {
-      type: chartType,
-      data: data,
-      gridLines: {
-        display: false,
-        drawBorder: false
-      },
-      options: {
-        title: {
-          display: true,
-          text: 'Question 1: Answer Report'
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }],
-          xAxes: [{
-            // Change here
-            barPercentage: 0.4
-          }]
-        }
+      for (var i = 0; i < counter; i++) {
+          if (myCTX === sampleAnswers[i].getContext('2d')){
+            data = {
 
-      },
-    })
+               labels: dataLabels[i],
+               //labels: dataLabels,
+               datasets: [
+                 {
+                   label: "User's Selection",
+                   fill: false,
+                   backgroundColor: coloursArray,
+                   borderColor: "#4e73df",
+                   hoverBackgroundColor: coloursArray,
+                   hoverBorderColor: "rgba(234, 236, 244, 1)",
+                   data: dataValues[i],
+                 }],
+               }
+
+               var sampleChart = new Chart(myCTX, {
+                 type: chartType,
+                 data: data,
+                 gridLines: {
+                   display: false,
+                   drawBorder: false
+                 },
+                 options: {
+                   title: {
+                     display: true,
+                     text: 'Question 1: Answer Report'
+                   },
+                   scales: {
+                     yAxes: [{
+                       ticks: {
+                         beginAtZero: true
+                       }
+                     }],
+                     xAxes: [{
+                       // Change here
+                       barPercentage: 0.4
+                     }]
+                   }
+
+                 },
+               })
+
+               console.log(data);
+
+               break;
+          }
+      }
+
   }
