@@ -31,7 +31,7 @@ $.ajax({
   }
 });
 
-$("#selectStudy").append("<select id='studySelection' class='form-control form-control-user'></select><br>");
+$("#selectStudy").append("<button class='form-group btn btn-primary btn-block' onclick='exportCSV()'>Export to CSV</button><select id='studySelection' class='form-control form-control-user'></select><br>");
 
 var studySelect = document.getElementById('studySelection');
 
@@ -47,6 +47,31 @@ count++;
 
 
 var studyID;
+
+function exportCSV(){
+  const rows = [];
+  const record = [];
+
+  for (var i = 0; i < questionNames.length; i++) {
+    record[i] = [questionNames[i], "Labels", dataLabels[i], "Values", dataValues[i]];
+    rows.push(record[i]);
+  }
+
+  let csvContent = "data:text/csv;charset=utf-8,";
+
+  rows.forEach(function(rowArray) {
+      let row = rowArray.join(",");
+      csvContent += row + "\r\n";
+  });
+
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "data.csv");
+  document.body.appendChild(link); // Required for FF
+
+  link.click(); // This will download the data file named "my_data.csv".
+}
 
 $("select").change(function() {
 
@@ -125,7 +150,6 @@ setInterval(function () {
     }
   }
   var getReportsDataURL = "http://"+ip+":4000/api/getData?token="+token+"&studyID="+studyID;
-
 
   $.ajax({
     contentType: 'application/json',
