@@ -193,7 +193,6 @@ setInterval(function () {
   }
 }, 30 * 1000);
 
-//let userData = dataValues;
 var coloursArray = ['#4e73df', '#1cc88a', '#FF8800', '#36b9cc', '#f50057', '#ffcc00', '#ff66ff', '#69f0ae', '#ffab40']
 
 var data;
@@ -219,28 +218,36 @@ function createChart(counter, type){
     var choices = document.getElementsByName('chartType');
     // debugger;
     var ctx = sampleAnswers[counter].getContext('2d');
-    var sampleChart = new Chart(ctx, {
-      type: type,
-      data: data,
-      gridLines: {
-        display: false,
-        drawBorder: false
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }],
-          xAxes: [{
-            // Change here
-            barPercentage: 0.4
-          }]
+    var chartSchema;
+    if (type === 'doughnut' || type === 'radar'){
+      chartSchema = {
+        type: type,
+        data: data
+      }
+    } else {
+      chartSchema = {
+        type: type,
+        data: data,
+        gridLines: {
+          display: false,
+          drawBorder: false
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }],
+            xAxes: [{
+              // Change here
+              barPercentage: 0.4
+            }]
+          }
         }
-
-      },
-    });
+      }
+    }
+    var sampleChart = new Chart(ctx, chartSchema);
 
   }
 
@@ -272,28 +279,36 @@ function createChart(counter, type){
         }],
       }
 
-      var sampleChart = new Chart(myCTX, {
-        type: chartType,
-        data: data,
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }],
-            xAxes: [{
-              // Change here
-              barPercentage: 0.4
-            }]
+      var chartSchema;
+      if (chartType === 'doughnut' || chartType === 'radar'){
+        chartSchema = {
+          type: chartType,
+          data: data
+        }
+      } else {
+        chartSchema = {
+          type: chartType,
+          data: data,
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }],
+              xAxes: [{
+                // Change here
+                barPercentage: 0.4
+              }]
+            }
           }
-
-        },
-      })
+        }
+      }
+      var sampleChart = new Chart(myCTX, chartSchema);
 
       console.log(data);
 
