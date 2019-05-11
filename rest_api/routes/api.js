@@ -238,7 +238,7 @@ function validateLogin(userTypeCheck, req, res, next){
 
 //  add a new participants to the db
 router.post('/register', function(req, res, next){
-  console.log(req.body);
+  // console.log(req.body);
 
   var password = req.body.password;
   var BCRYPT_SALT_ROUNDS = 12;
@@ -530,9 +530,6 @@ router.get('/question', async function(req, res, next){
   });
 });
 
-async function checkForQuestionAnswer(question, req, answered, questions, j){
-
-}
 // Study DB ROUTES
 // get a list of subscribed to studies from the db
 router.get('/study/subscribed', async function(req, res, next){
@@ -853,15 +850,18 @@ router.get('/report', function(req, res, next){
 
 router.get('/getData', async function(req,res,next){
   // console.log(req.body.studyID);
-  Study.findOne({_id: req.body.studyID}, async function(err, study){
+  Study.findOne({_id: req.query.studyID}, async function(err, study){
+    console.log(req.query.studyID);
     var dataLabels = [];
     var dataValues = [];
-
+    var questionNames = [];
+    console.log(study);
     for (var i = 0; i < study.questions.length; i++) {
-
       var question = await (Question.findOne({_id: study.questions[i]}));
       var labels = [];
       var values = [];
+      questionNames[i] = question.title;
+
       // var answers = question.answers;
       if (question.type == "Boolean"){
         labels[0] = question.boolean.trueValue;
@@ -919,8 +919,8 @@ router.get('/getData', async function(req,res,next){
       dataLabels[i] = labels;
       dataValues[i] = values;
     }
-    // console.log(data);
-    res.status(200).send({labels: dataLabels, values: dataValues});
+    console.log("QUESTION NAMES " + questionNames);
+    res.status(200).send({labels: dataLabels, values: dataValues, titles: questionNames});
   });
 });
 
