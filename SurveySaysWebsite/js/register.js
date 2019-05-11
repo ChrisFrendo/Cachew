@@ -85,7 +85,7 @@ function register(){
     data: jsonString,
     success: function(data){
         console.log("Researcher added successfully"); // do proper success handling here
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     },
     error: function(jqXHR, exception){
       if (jqXHR.status == 400){

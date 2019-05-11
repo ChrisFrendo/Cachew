@@ -1,4 +1,4 @@
 function logout(){
   window.localStorage.clear();
-  window.location.assign("login.html");
+  window.location.assign("index.html");
 }

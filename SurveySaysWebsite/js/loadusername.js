@@ -12,7 +12,7 @@ $.ajax({
   success: function(data, textStatus, xhr){
     if (data.success == false){
       window.alert("Something went wrong");
-      window.location.assign("login.html");
+      window.location.assign("index.html");
       window.localStorage.clear();
     } else {
     console.log(data);
@@ -22,7 +22,7 @@ $.ajax({
   },
   error: function(jqXHR, exception){
     console.log(jqXHR);
-    window.location.assign("login.html");
+    window.location.assign("index.html");
     window.localStorage.clear();
   },
   type: 'GET',
