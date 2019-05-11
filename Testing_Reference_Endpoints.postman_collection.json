@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "b3d6fac7-06c8-4c75-8809-6eb624e4da82",
-		"name": "Testing Reference Endpoints",
+		"name": "Server Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -177,6 +177,431 @@
 						"references",
 						"users",
 						"jobroles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Usernamegen",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c42776c0-6452-42d2-93e2-453a35be635e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/usernamegen",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"usernamegen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Participant Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a9850d74-0ded-4c05-8816-50036b1831b9",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    pm.environment.set(\"token1\", pm.response.json().token);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/login/participant?username=BREXIT&password=12345",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"login",
+						"participant"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "BREXIT"
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Researcher Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e984c955-9fa1-4c9e-a7d3-05a833f4e3fe",
+						"exec": [
+							"pm.test(\"response should be okay to process\", function () { \r",
+							"    pm.response.to.have.status(200); \r",
+							"    pm.environment.set(\"token2\", pm.response.json().token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/login/researcher?username=daniel&password=12345",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"login",
+						"researcher"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "daniel"
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Participant Login ERROR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bda46497-d260-4dad-98f5-3c52878c9281",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/login/participant?username=BREXIT&password=12345678",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"login",
+						"participant"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "BREXIT"
+						},
+						{
+							"key": "password",
+							"value": "12345678"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Researcher Login ERROR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8066d2c-d97f-4fd2-8b0b-bb5d5aac876f",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/login/researcher?username=derek&password=12345678",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"login",
+						"researcher"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "derek"
+						},
+						{
+							"key": "password",
+							"value": "12345678"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Username RETURN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d07f9352-05a3-4100-b94b-e3785f7bc87c",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.body('BREXIT');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/users/username?token={{token1}}",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"users",
+						"username"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "{{token1}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Question CREATED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "34b779c7-5526-4bd0-8ee3-78f9522736f5",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.text()).to.include(\"Question1\");\r",
+							"    pm.globals.set(\"questionid\", pm.response.json()._id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d83150a2-b204-4bbf-8583-8523935c6b71",
+						"exec": [
+							"pm.environment.set(\"terminationDate\", new Date(\"1970-01-01T00:00:00.000Z\"));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\" : \"Question1\",\n\t\"type\" : \"Free Text\",\n\t\"time\" : null,\n\t\"daily\" : [\"00:00\"],\n\t\"weeklyDay\" : [],\n\t\"weeklyTime\" : [],\n\t\"terminationDate\" : \"{{terminationDate}}\",\n\t\"content\" : \"How are you?\"\n}"
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/question?token={{token2}}",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"question"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "{{token2}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Question DELETE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b478503-b7bd-4414-a5eb-6c2ce64aff05",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{questionid}}\"\n}"
+				},
+				"url": {
+					"raw": "http://10.60.10.66:4000/api/question?token={{token2}}",
+					"protocol": "http",
+					"host": [
+						"10",
+						"60",
+						"10",
+						"66"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"question"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "{{token2}}"
+						}
 					]
 				}
 			},
