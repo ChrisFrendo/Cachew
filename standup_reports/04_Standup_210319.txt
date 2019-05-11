@@ -29,5 +29,3 @@ Esther
 
 -Fixed Search study and view subscribed studies pages and worked on create-study page on website
 -Working on targets input on website and on search queries on api
-
--

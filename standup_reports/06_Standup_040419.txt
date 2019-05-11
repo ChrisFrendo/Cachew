@@ -1,1 +1,23 @@
-Esther-Updated study page-Continues to work on the app and researching on pub/sub-Problems with pub/subFrancesca- Created the wireframes for the study page-Working on the study page and researching on pub/sub -Problems with pub/subChris-Fixed issues with multiple choice variables and made server not return questions which have already been asked -Working on app and website bugs-Optimizing queries in mongo dBTristan-Continued on implementing the scheduling frequency options-Still have to implement last few frequency options and fix certain errors-the hiding visibility when scrolling from one function to anotherKelsey-Updated UI for study targets-Helping Tristan with the scheduling task-Problems involving get request Daniel -Get request of questions + test scripts -Testing with Jenkins -jenkins not working 
+Esther
+-Updated study page
+-Continues to work on the app and researching on pub/sub-Problems with pub/sub
+
+Francesca
+- Created the wireframes for the study page
+-Working on the study page and researching on pub/sub 
+-Problems with pub/sub
+
+Chris
+-Fixed issues with multiple choice variables and made server not return questions which have already been asked 
+-Working on app and website bugs
+-Optimizing queries in mongo dB
+
+Tristan
+-Continued on implementing the scheduling frequency options
+-Still have to implement last few frequency options and fix certain errors
+-the hiding visibility when scrolling from one function to another
+
+Kelsey
+-Updated UI for study targets-Helping Tristan with the scheduling task
+-Problems involving get request Daniel -Get request of questions + test scripts 
+-Testing with Jenkins -jenkins not working 
