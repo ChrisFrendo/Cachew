@@ -297,7 +297,7 @@ function salaryOption()
 $(document).ready(function() {
   $("#btnNewQuestion").click(function(e) {
     e.preventDefault();
-    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-2 mb-3 mb-sm-0'><select id='frequency' class='form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option><option value='Monthly'>Monthly</option></select></div><div class='col-sm-4 mb-3 mb-sm-0'></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
+    $("#testForm").append("<div id='questionDiv'><div class='form-group'><input type='text' name='questionTitle' required='true' placeholder='Question Title' class='form-control form-control-user'/></div><div class='form-group'><select id='selectForm' class='form-control form-control-user' name='questionType'></select></div><div class='form-group'><textarea required='true' rows='10' class='form-control form-control-user' type='text' name='questionContent' placeholder='Question Content'></textarea></div><div class='form-group' id='paramaters'></div><div id='delete-button' class='form-group row'><div class='col-sm-2 mb-3 mb-sm-0'><select id='frequency' class='form-control form-control-user' name='frequencyOfSchedule'><option value='No Schedule' selected='selected'>No Schedule</option><option value='Just Once'>Just Once</option><option value='Daily'>Daily</option><option value='Weekly'>Weekly</option></select></div><div class='col-sm-4 mb-3 mb-sm-0'></div><div class='col-sm-6 mb-3 mb-sm-0'><button class='btn btn-primary btn-user form-control' type='button' onclick='removeQuestion(this)'>Delete Question</button></div></div></div>");
 
     var questionTypeSelect = document.getElementsByName("questionType");
 
@@ -346,9 +346,7 @@ $(document).ready(function() {
         this.parentNode.nextSibling.innerHTML = "<input name='questionDateTime' required='true' type='datetime-local' class='form-control form-control-user'/>";
         break;
         case "Daily":
-
-        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><input name='terminationDaily' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div>";
-
+        this.parentNode.nextSibling.innerHTML = "<select id='dailySelect' multiple=true class='form-control form-control-user' name='dailySelection'></select><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><label>Termination Date</label><input name='terminationDaily' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div>";
 
         var timesUrl = "http://"+ip+":4000/api/references/question/times";
         var times = [];
@@ -377,7 +375,7 @@ $(document).ready(function() {
         break;
         case "Weekly":
 
-        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' class='form-control form-control-user' name='weeklySelection'></select></div><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><input name='terminationWeekly' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div></div>";
+        this.parentNode.nextSibling.innerHTML = "<div class='row'><div class='col-sm-6 mb-3 mb-sm-0'><select id='dayInWeek' multiple=true class='form-control form-control-user' name='dayInWeekSelection'></select></div><div class='col-sm-6 mb-3 mb-sm-0'><select id='weeklySelect' class='form-control form-control-user' name='weeklySelection'></select></div><div style='padding:10px' class='form-group col-sm-12 mb-3 mb-sm-0'><label>Termination Date</label><input name='terminationWeekly' required='true' title='Termination Date' type='datetime-local' class='form-control form-control-user'/></div></div>";
 
         var weeksUrl = "http://"+ip+":4000/api/references/question/days";
         var weeks = [];
