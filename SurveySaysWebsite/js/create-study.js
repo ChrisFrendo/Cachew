@@ -663,7 +663,7 @@ $(document).ready(function() {
           questionIds[i] = data._id;
         },
         error: function(jqXHR, exception){
-          console.log("Some error occoured");
+          window.alert("Some error occured");
           return false;
         },
         type: 'POST',
@@ -733,6 +733,7 @@ $(document).ready(function() {
       },
       error: function(jqXHR, exception){
         console.log("Some error occoured");
+        window.alert("Some error occoured");
       },
       type: 'GET',
       url: "http://"+ip+":4000/api/users/userID?token="+token,
@@ -750,11 +751,13 @@ $(document).ready(function() {
       contentType: 'application/json',
       data: studyJsonString,
       success: function(data){
-        window.alert("Study created Successfully");
         console.log(data);
+        window.alert("Study created Successfully");
+
       },
       error: function(jqXHR, exception){
         console.log("Some error occoured");
+        window.alert("Some error occoured");
         for (var i = 0; i < questionIds.length; i++) {
           deleteQuestion(questionIds[i]);
         }
@@ -789,6 +792,7 @@ $(document).ready(function() {
       },
       error: function(jqXHR, exception){
         console.log("Some error occoured");
+        window.alert("Some error occoured");
       },
       type: 'DELETE',
       url: deleteQuestionUrl,
