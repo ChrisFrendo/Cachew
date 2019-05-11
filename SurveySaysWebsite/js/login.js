@@ -13,7 +13,7 @@ function login(){
         if (xhr.status == 200){
           window.alert("Account found. Logging in now...");
           localStorage.setItem('token', JSON.stringify(data.token));
-          window.location.assign("dashboard.html");
+          window.location = "dashboard.html";
           return false;
         } else {
           window.alert("Account not found, please check username and password");
