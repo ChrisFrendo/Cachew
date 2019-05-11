@@ -1,0 +1,22 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Project Process}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}First meeting}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Iteration 0}{4}{section.2.2}
+\contentsline {section}{\numberline {2.3}Iteration 1}{5}{section.2.3}
+\contentsline {subsubsection}{Retrospectives}{5}{section.2.3}
+\contentsline {section}{\numberline {2.4}Iteration 2}{6}{section.2.4}
+\contentsline {subsubsection}{Retrospectives}{9}{section.2.4}
+\contentsline {section}{\numberline {2.5}Iteration 3}{10}{section.2.5}
+\contentsline {subsubsection}{Retrospectives}{13}{section.2.5}
+\contentsline {section}{\numberline {2.6}Iteration 4}{14}{section.2.6}
+\contentsline {subsubsection}{Retrospectives}{17}{section.2.6}
+\contentsline {section}{\numberline {2.7}Wire Frames}{18}{section.2.7}
+\contentsline {section}{\numberline {2.8}Improvements throughout the iterations}{23}{section.2.8}
+\contentsline {section}{\numberline {2.9}Showcases}{23}{section.2.9}
+\contentsline {paragraph}{\mskip \thickmuskip \mskip \thickmuskip \mskip \medmuskip }{23}{section.2.9}
+\contentsline {paragraph}{\mskip \thickmuskip \mskip \medmuskip \mskip \medmuskip }{23}{section.2.9}
+\contentsline {chapter}{\numberline {3}Jenkins configuration and instructions}{24}{chapter.3}
+\contentsline {chapter}{\numberline {4}Process Evaluation}{26}{chapter.4}
+\contentsline {section}{\numberline {4.1}Limitations}{26}{section.4.1}
+\contentsline {chapter}{\numberline {5}Bibliography}{27}{chapter.5}
